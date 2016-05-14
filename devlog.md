@@ -1,6 +1,6 @@
 # Development log
 
-All of the steps I took to build this app, from start to finish.
+All of the steps I'm taking to build this app, from start to finish.
 
 ### Day 1: Concept and tech
 
