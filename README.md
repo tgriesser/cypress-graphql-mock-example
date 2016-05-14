@@ -1,6 +1,8 @@
 # GitHunt
 Concept for an Apollo full-stack example app that demonstrates all of the important concepts
 
+Want to see how it's going? Read the [development log](devlog.md)!
+
 ## Code patterns to demonstrate
 
 1. Routes and data loading
