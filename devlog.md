@@ -170,3 +170,24 @@ It's not yet clear to me what return values from mutations should be. There are 
 3. Return the root query object itself, so that we can refetch anything we want after the mutation, in one request
 
 I'd like to try all three eventually and see how they feel in this app. Apollo Client should probably have one or two situations that it deals with the best, so that we can recommend people use that for best results.
+
+#### Getting mocked server running
+
+One great function of Apollo Server is the ability to easily mock data so that you can run some queries against your server without writing any resolvers. Let's get that going.
+
+To do that, we need to set up some build tooling for our server. This would be extra trivial if we used Meteor, but we'll try to go the more generic route and set up babel ourselves. I googled and found this great simple setup: https://github.com/babel/example-node-server
+
+First, let's install some packages:
+
+```txt
+npm init
+npm install --save-dev nodemon babel-cli babel-preset-es2015 babel-preset-stage-2
+```
+
+Let's add a `start` script to our app. We're using `nodemon` so that our app restarts automatically if we change server code.
+
+```js
+"scripts": {
+  "start": "nodemon index.js --exec babel-node --presets es2015,stage-2"
+}
+```
