@@ -193,3 +193,15 @@ Let's add a `start` script to our app. We're using `nodemon` so that our app res
 ```
 
 Then if we set up some "hello world" index file, we can run `npm start` and confirm that compilation worked.
+
+Let's get Apollo Server going!
+
+```txt
+npm install --save express apollo-server
+```
+
+Then I massaged the boilerplate from the starter kit: https://github.com/apollostack/apollo-starter-kit
+
+Now, I have a mocked version of my schema going, after some syntax errors like writing `Number` instead of `Int` in my sketch above. The default mocking just uses `"Hello world!"` for every string so it's not that exciting, but at least it means the server is running properly and the schema is being loaded!
+
+![Basic graphiql!](screenshots/default-mock.png)

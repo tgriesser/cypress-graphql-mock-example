@@ -1,8 +1,19 @@
-import http from 'http';
+import express from 'express';
+import { apolloServer } from 'apollo-server';
 
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(3000, '127.0.0.1');
+import schema from './api/schema';
 
-console.log('Server running at http://127.0.0.1:3000/');
+const PORT = 3000;
+
+const app = express();
+
+app.use('/graphql', apolloServer({
+  graphiql: true,
+  pretty: true,
+  mocks: {},
+  schema,
+}));
+
+app.listen(PORT, () => console.log(
+  `Server is now running on http://localhost:${PORT}`
+));
