@@ -78,7 +78,7 @@ Someone that has logged in to the app.
 
 Now let's put it all together to see what our GraphQL schema might look like. Let's keep in mind that this is just a sketch - the mechanics of our app might require some changes.
 
-```txt
+```graphql
 # This uses the exact field names returned by the GitHub API for simplicity
 type Repository {
   name: String!
@@ -110,7 +110,7 @@ type Entry {
   postedBy: User!
   createdAt: String! # Actually a date
   score: Number!
-  comments: [Comment]!
+  comments: [Comment]! # Should this be paginated?
   commentCount: Number!
 }
 ```
