@@ -2,7 +2,10 @@
 
 All of the steps I'm taking to build this app, from start to finish.
 
-### Day 1: Concept and tech
+- [Day 1: Concept and tech](#day-1)
+- [Day 2: Listing views, schema design](#day-2)
+
+<h3 id="day-1">Day 1: Concept and tech</h3>
 
 It's Friday 5/13, and we have decided to come up with a new example app.
 
@@ -23,7 +26,7 @@ I've also made a list of technology choices, listed in the README:
 
 I drew a [quick mockup of the desired UI](mockup.jpg). It's quite simple, and should be easy to implement in bootstrap.
 
-### Day 2: Listing different views and designing schema
+<h3 id="day-2">Day 2: Listing different views and designing schema</h3>
 
 We want to make this app as simple as possible, but also useful. I think I'll design it the way I would a real app, and then simplify if necessary. Here are some ideas for different views in the app:
 
