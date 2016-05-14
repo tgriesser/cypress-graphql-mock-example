@@ -136,3 +136,34 @@ type Query {
   currentUser: User
 }
 ```
+
+OK, one last thing - we need to define a few mutations, which will be the way we modify our server-side data. These are basically just all of the actions a user can take in our app:
+
+```graphql
+# Type of vote
+enum VoteType {
+  UP
+  DOWN
+  CANCEL
+}
+
+type Mutation {
+  # Submit a new repository
+  submitRepository(repoFullName: String!): Entry
+
+  # Vote on a repository
+  vote(repoFullName: String!, type: VoteType!): Entry
+
+  # Comment on a repository
+  # TBD: Should this return an Entry or just the new Comment?
+  comment(repoFullName: String!, content: String!): Entry
+}
+```
+
+It's not yet clear to me what return values from mutations should be. There are a few possible approaches:
+
+1. Return parent of thing being modified - then we can incorporate the result into the store more easily
+2. Return the thing being modified - then we have to figure out where it goes into the store
+3. Return the root query object itself, so that we can refetch anything we want after the mutation, in one request
+
+I'd like to try all three eventually and see how they feel in this app. Apollo Client should probably have one or two situations that it deals with the best, so that we can recommend people use that for best results.
