@@ -202,6 +202,8 @@ npm install --save express apollo-server
 
 Then I massaged the boilerplate from the starter kit: https://github.com/apollostack/apollo-starter-kit
 
+See the code in this commit: https://github.com/apollostack/GitHunt/commit/5f5ad68b28d15139e10d653c1ad24b15535d2706
+
 Now, I have a mocked version of my schema going, after some syntax errors like writing `Number` instead of `Int` in my sketch above. The default mocking just uses `"Hello world!"` for every string so it's not that exciting, but at least it means the server is running properly and the schema is being loaded!
 
 ![Basic graphiql!](screenshots/default-mock.png)
