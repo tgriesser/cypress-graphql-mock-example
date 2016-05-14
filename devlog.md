@@ -10,6 +10,8 @@ It's Friday 5/13, and we have decided to come up with a new example app.
 
 I've also made a list of technology choices:
 
+- Apollo server - to put a nice unified API on top of our GitHub and local data
+- Apollo client - to load that data declaratively into our UI
 - React - it's a great way to build UIs, and has the best integration with Apollo and Redux
 - React router - it seems to be the most popular React router today, and has some great hooks and techniques for SSR. It seems like James Baxley has had some success with implementing this stuff already with React Router.
 - Webpack - the Meteor build system is by far the most convenient, but comes with a dependency on mongo, its own account system, etc. Since we want to learn how Apollo works without all of these things, we're going to not use it even though it would reduce the complexity of the code.
