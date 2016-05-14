@@ -115,4 +115,24 @@ type Entry {
 }
 ```
 
-Looks pretty good so far!
+Looks pretty good so far! We might also want some root queries as entry points into our data. These are probably going to correlate to the different views we want for our data:
+
+```graphql
+# To select the sort order of the feed
+enum FeedType {
+  HOT
+  NEW
+}
+
+type Query {
+  # For the home page, after arg is optional to get a new page of the feed
+  # Pagination TBD - what's the easiest way to have the client handle this?
+  feed(type: FeedType!, after: String): [Entry]
+
+  # For the entry page
+  entry(repoFullName: String!): Entry
+
+  # To display the current user on the submission page, and the navbar
+  currentUser: User
+}
+```
