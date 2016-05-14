@@ -22,3 +22,62 @@ I've also made a list of technology choices, listed in the README:
 - Bootstrap for styling - I already know how to use it, and I don't want the styling to be the focus of the app. Let's keep it as simple as possible.
 
 I drew a [quick mockup of the desired UI](mockup.jpg). It's quite simple, and should be easy to implement in bootstrap.
+
+### Day 2: Listing different views and designing schema
+
+We want to make this app as simple as possible, but also useful. I think I'll design it the way I would a real app, and then simplify if necessary. Here are some ideas for different views in the app:
+
+- Home page: "Hot" feed, which ranks by number of upvotes and time since posting
+- "new" page, which lists stuff that was just posted, but hasn't had time yet to be upvoted
+- Submission page, which is a form that lets people put in info about the repository - perhaps it's just a link to the repo, maybe a comment as well?
+- Repo page, where you can look at a particular repository, and its upvotes and comments
+
+Given this, let's design our GraphQL schema for the app. I think this is a great place to start the process because it will let us set up some mocked data, and work on the UI and API in parallel as we need to.
+
+#### Repository
+
+This represents a repository on GitHub - all of its data is fetched from the GitHub API. I think it will be convenient to separate data from different APIs into different types in my schema, rather than having one type that merges both the local data (upvotes etc) and the GitHub data (description etc). This can theoretically have [all of the fields that GitHub returns](https://developer.github.com/v3/repos/#get), but we're probably interested mostly in high-level data like:
+
+- Repository name
+- Organization/author avatar
+- Description
+- Number of stars
+- Number of issues
+- Number of PRs
+- Number of contributors
+- Date created
+
+#### Entry
+
+This represents a GitHub repository submitted to GitHunt. It will have data specific to our application:
+
+- User that posted this repository
+- Date posted
+- The related repository object from GitHub
+- Display score (probably just upvotes - downvotes)
+- Comments
+- Number of comments
+
+#### Comment
+
+Just a comment posted on an entry.
+
+- User that posted this comment
+- Date posted
+- Comment content
+
+#### User
+
+Someone that has logged in to the app.
+
+- Username
+- Avatar
+- GitHub profile URL
+
+#### In GraphQL schema language
+
+Now let's put it all together to see what our GraphQL schema might look like. Let's keep in mind that this is just a sketch - the mechanics of our app might require some changes.
+
+```txt
+TBD
+```
