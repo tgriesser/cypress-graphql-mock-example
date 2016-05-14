@@ -191,3 +191,5 @@ Let's add a `start` script to our app. We're using `nodemon` so that our app res
   "start": "nodemon index.js --exec babel-node --presets es2015,stage-2"
 }
 ```
+
+Then if we set up some "hello world" index file, we can run `npm start` and confirm that compilation worked.
