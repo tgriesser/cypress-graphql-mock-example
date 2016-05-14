@@ -8,7 +8,7 @@ It's Friday 5/13, and we have decided to come up with a new example app.
 
 [We wrote down all of the stuff we want to demonstrate about building an app with Apollo.](README.md)
 
-I've also made a list of technology choices:
+I've also made a list of technology choices, listed in the README:
 
 - Apollo server - to put a nice unified API on top of our GitHub and local data
 - Apollo client - to load that data declaratively into our UI
