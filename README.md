@@ -42,6 +42,8 @@ Does it demonstrate all of the required features above?
 - Redux
 - Passport for login
 
-## Page mockups
+## Page mockup
 
-Coming soon!
+The front page:
+
+![Front page mockup](mockup.jpg)
