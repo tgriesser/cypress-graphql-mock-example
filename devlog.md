@@ -3,7 +3,7 @@
 All of the steps I'm taking to build this app, from start to finish.
 
 - [Day 1: Concept and tech](#day-1)
-- [Day 2: Listing views, schema design](#day-2)
+- [Day 2: Listing views, schema design, running mock server](#day-2)
 
 <h3 id="day-1">Day 1: Concept and tech</h3>
 
@@ -205,3 +205,5 @@ Then I massaged the boilerplate from the starter kit: https://github.com/apollos
 Now, I have a mocked version of my schema going, after some syntax errors like writing `Number` instead of `Int` in my sketch above. The default mocking just uses `"Hello world!"` for every string so it's not that exciting, but at least it means the server is running properly and the schema is being loaded!
 
 ![Basic graphiql!](screenshots/default-mock.png)
+
+Now there's a decision to make - should we write a mocked backend and then implement the UI, or wire up the actual backend right now?
