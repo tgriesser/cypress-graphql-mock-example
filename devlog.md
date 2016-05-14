@@ -79,5 +79,40 @@ Someone that has logged in to the app.
 Now let's put it all together to see what our GraphQL schema might look like. Let's keep in mind that this is just a sketch - the mechanics of our app might require some changes.
 
 ```txt
-TBD
+# This uses the exact field names returned by the GitHub API for simplicity
+type Repository {
+  name: String!
+  full_name: String!
+  description: String
+  html_url: String!
+  stargazers_count: Number!
+  open_issues_count: Number
+
+  # We should investigate how best to represent dates
+  created_at: String!
+}
+
+# Uses exact field names from GitHub for simplicity
+type User {
+  login
+  avatar_url
+  html_url
+}
+
+type Comment {
+  postedBy: User!
+  createdAt: String! # Actually a date
+  content: String!
+}
+
+type Entry {
+  repository: Repository!
+  postedBy: User!
+  createdAt: String! # Actually a date
+  score: Number!
+  comments: [Comment]!
+  commentCount: Number!
+}
 ```
+
+Looks pretty good so far!
