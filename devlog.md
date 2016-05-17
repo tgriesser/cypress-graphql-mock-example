@@ -209,3 +209,33 @@ Now, I have a mocked version of my schema going, after some syntax errors like w
 ![Basic graphiql!](screenshots/default-mock.png)
 
 Now there's a decision to make - should we write a mocked backend and then implement the UI, or wire up the actual backend right now?
+
+<h3 id="day-3">Day 3: Start wiring up real backend</h3>
+
+OK, setting up a client build system is a bit annoying - since we can test our server via GraphiQL, let's just use that and connect our schema to a real database.
+
+First, let's split up our schema into multiple files, which correspond to the different models we need to implement in our DB. We are going to follow some of Jonas' recommendations from [the proposed connector spec on GraphQL-Tools](https://github.com/apollostack/graphql-tools/blob/bc7d106cebbb6b03512df7282d4c91f19edb464e/connectors.md). This means we need a few things for our backend:
+
+1. One model for each GraphQL type we want to fetch: Repository, User, Comment, and Entry
+2. One connector for each type of backend we are fetching from: GitHub API, and SQL
+
+Probably we want to start from the connectors, because those are more general. We should probably test them in some way. According to the connector document, we want our connectors to definitely do two things:
+
+1. Batching - when we want to fetch multiple objects of the same type, we should batch them into one request if possible (for example, by running a query with an array of IDs, rather than many queries with one ID each)
+2. Caching - if we make multiple requests for the same exact object in one query, we should make sure we only do one request if possible and reuse the result. So if we ask for a particular item from the GitHub API, we don't want to fetch it multiple times per request. In our case, we want to implement one more thing in our GitHub connector: ETags and conditional requests, which will let us check the API for changes without running into our rate limit: https://developer.github.com/v3/#conditional-requests
+
+Let's start with the GitHub connector. I think we basically need just one method on the connector:
+
+```
+GitHub.getObject(url);
+```
+
+Since the GitHub API doesn't support any batching (we can't get multiple repository objects with one request, for example) we can't take advantage of having any more detailed information than the URL in the connector itself. Converting the object type and ID into the URL is something we can do in the model, which will be type-specific.
+
+Let's go over the functionality we want in this connector:
+
+1. It should not load the same GitHub URL twice in the same request, using something like [DataLoader](https://github.com/facebook/dataloader)
+2. It should keep track of `ETag` headers for as many GitHub objects as possible, and send them with requests to both speed up API accesses and avoid hitting the rate limit
+3. It doesn't need to send any authentication information other than our API key, because none of the data we are requesting is per-user (although we might want to add this in the future, since the rate limits on the GitHub API are per user)
+
+This means that the connector needs to have both per-request and per-server state - per-request for (1) and per-server for (2). We can make further optimizations later if we end up hitting the GitHub API limit but this seems like a good start.
