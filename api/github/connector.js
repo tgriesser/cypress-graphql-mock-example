@@ -4,12 +4,14 @@ import DataLoader from 'dataloader';
 // Keys are GitHub API URLs, values are { etag, result } objects
 const eTagCache = {};
 
+const GITHUB_API_ROOT = 'https://api.github.com';
+
 export class GitHubConnector {
   constructor() {
-    this.loader = new DataLoader(this.fetch);
+    this.loader = new DataLoader(this._fetch);
   }
 
-  fetch(urls) {
+  _fetch(urls) {
     const options = {
       json: true,
     };
@@ -23,5 +25,9 @@ export class GitHubConnector {
         ...options,
       });
     }));
+  }
+
+  get(path) {
+    return this.loader.load(GITHUB_API_ROOT + path);
   }
 }
