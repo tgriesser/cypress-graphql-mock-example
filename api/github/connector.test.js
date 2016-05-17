@@ -87,4 +87,28 @@ describe('GitHub connector', () => {
       assert.deepEqual(result, { id: 1 });
     });
   });
+
+  it('passes through the API token for unauthenticated requests', () => {
+    const connector = new GitHubConnector({
+      client_id: 'fake_client_id',
+      client_secret: 'fake_client_secret',
+    });
+
+    pushMockRequest({
+      options: {
+        uri: '/endpoint',
+        qs: {
+          client_id: 'fake_client_id',
+          client_secret: 'fake_client_secret',
+        },
+      },
+      result: {
+        id: 1,
+      },
+    });
+
+    return connector.get('/endpoint').then((result) => {
+      assert.deepEqual(result, { id: 1 });
+    });
+  });
 });

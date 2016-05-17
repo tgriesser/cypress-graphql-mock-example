@@ -7,10 +7,12 @@ const eTagCache = {};
 const GITHUB_API_ROOT = 'https://api.github.com';
 
 export class GitHubConnector {
-  constructor() {
-    this.rp = rp;
+  constructor({ client_id, client_secret } = {}) {
+    this.client_id = client_id;
+    this.client_secret = client_secret;
 
     // Allow mocking request promise for tests
+    this.rp = rp;
     if (GitHubConnector.__mockRequestPromise) {
       this.rp = GitHubConnector.__mockRequestPromise;
     }
@@ -22,6 +24,13 @@ export class GitHubConnector {
     const options = {
       json: true,
     };
+
+    if (this.client_id) {
+      options.qs = {
+        client_id: this.client_id,
+        client_secret: this.client_secret,
+      };
+    }
 
     // TODO: implement ETags
     // TODO: pass GitHub API key
