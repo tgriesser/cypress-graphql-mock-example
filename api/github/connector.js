@@ -8,6 +8,11 @@ const GITHUB_API_ROOT = 'https://api.github.com';
 
 export class GitHubConnector {
   constructor() {
+    // Allow mocking request promise for tests
+    if (GitHubConnector.__mockRequestPromise) {
+      rp = GitHubConnector.__mockRequestPromise;
+    }
+
     this.loader = new DataLoader(this._fetch);
   }
 
