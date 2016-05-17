@@ -249,3 +249,9 @@ Let's implement a simple model layer over our connector - this is going to be th
 > - NOTE: When I get a runtime error in my resolver, GraphiQL shows it to me but I don't get to see where in my server code it actually happened.
 > - NOTE: The connectors property on apollo server is misnamed.
 > - NOTE: If I wanted to share a connector instance between models, the current API doesn't have a great way to do that since I don't get to call the constructor myself. I feel like I could just attach those to context manually and not be sad about it.
+
+Alright, we've got the GitHub API going!
+
+![GitHub API!](screenshots/github-api.png)
+
+Next stop is implementing the SQL connector/models, so that we can actually insert some entries into our database.
