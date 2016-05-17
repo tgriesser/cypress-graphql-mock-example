@@ -4,6 +4,7 @@ All of the steps I'm taking to build this app, from start to finish.
 
 - [Day 1: Concept and tech](#day-1)
 - [Day 2: Listing views, schema design, running mock server](#day-2)
+- [Day 3: Wiring up the GitHub API](#day-3)
 
 <h3 id="day-1">Day 1: Concept and tech</h3>
 
@@ -210,7 +211,7 @@ Now, I have a mocked version of my schema going, after some syntax errors like w
 
 Now there's a decision to make - should we write a mocked backend and then implement the UI, or wire up the actual backend right now?
 
-<h3 id="day-3">Day 3: Start wiring up real backend</h3>
+<h3 id="day-3">Day 3: Wire up GitHub API</h3>
 
 OK, setting up a client build system is a bit annoying - since we can test our server via GraphiQL, let's just use that and connect our schema to a real database.
 
