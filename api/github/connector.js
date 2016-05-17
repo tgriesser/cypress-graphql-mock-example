@@ -15,7 +15,7 @@ export class GitHubConnector {
       this.rp = GitHubConnector.__mockRequestPromise;
     }
 
-    this.loader = new DataLoader(this._fetch);
+    this.loader = new DataLoader(this._fetch.bind(this));
   }
 
   _fetch(urls) {
@@ -28,7 +28,7 @@ export class GitHubConnector {
 
     return Promise.all(urls.map((url) => {
       return this.rp({
-        url: url,
+        uri: url,
         ...options,
       });
     }));
