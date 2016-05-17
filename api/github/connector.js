@@ -17,7 +17,11 @@ export class GitHubConnector {
       this.rp = GitHubConnector.__mockRequestPromise;
     }
 
-    this.loader = new DataLoader(this._fetch.bind(this));
+    this.loader = new DataLoader(this._fetch.bind(this), {
+      // The GitHub API doesn't have batching, so we should send requests as
+      // soon as we know about them
+      batch: false,
+    });
   }
 
   _fetch(urls) {
