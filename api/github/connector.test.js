@@ -27,6 +27,9 @@ function mockRequestPromise(requestOptions) {
 function pushMockRequest({ options, result, error }) {
   const defaultOptions = {
     json: true,
+    headers: {
+      'user-agent': 'GitHunt',
+    },
   };
 
   options.uri = 'https://api.github.com' + options.uri;

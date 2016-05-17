@@ -242,3 +242,8 @@ Let's go over the functionality we want in this connector:
 This means that the connector needs to have both per-request and per-server state - per-request for (1) and per-server for (2). We can make further optimizations later if we end up hitting the GitHub API limit but this seems like a good start.
 
 OK, we implemented a basic connector and tested (1) and (2). (3) is an optimization, so let's wire up the connector and try running some queries before we do that.
+
+Let's implement a simple model layer over our connector - this is going to be the layer that knows about the different kinds of objects we want to fetch, and the URLs for those.
+
+> NOTE: Following this method, I had to add a bunch of "not implemented" resolvers to my schema right away. Not sure how to overcome that.
+> NOTE: When I get a runtime error in my resolver, GraphiQL shows it to me but I don't get to see where in my server code it actually happened.

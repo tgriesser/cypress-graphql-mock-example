@@ -1,39 +1,9 @@
-const schema = `
-# This uses the exact field names returned by the GitHub API for simplicity
-type Repository {
-  name: String!
-  full_name: String!
-  description: String
-  html_url: String!
-  stargazers_count: Int!
-  open_issues_count: Int
+import { merge } from 'lodash';
 
-  # We should investigate how best to represent dates
-  created_at: String!
-}
+import { schema as gitHubSchema } from './github/schema';
+import { schema as sqlSchema, resolvers as sqlResolvers } from './sql/schema';
 
-# Uses exact field names from GitHub for simplicity
-type User {
-  login: String!
-  avatar_url: String!
-  html_url: String!
-}
-
-type Comment {
-  postedBy: User!
-  createdAt: String! # Actually a date
-  content: String!
-}
-
-type Entry {
-  repository: Repository!
-  postedBy: User!
-  createdAt: String! # Actually a date
-  score: Int!
-  comments: [Comment]! # Should this be paginated?
-  commentCount: Int!
-}
-
+const rootSchema = [`
 # To select the sort order of the feed
 enum FeedType {
   HOT
@@ -75,6 +45,34 @@ schema {
   query: Query
   mutation: Mutation
 }
-`;
+`];
 
-export default [schema];
+const rootResolvers = {
+  Query: {
+    feed() {
+      throw new Error('Not implemented.');
+    },
+    entry(_, { repoFullName }) {
+      return {
+        fullName: repoFullName,
+      };
+    },
+    currentUser() {
+      throw new Error('Not implemented.');
+    },
+  },
+  Mutation: {
+    submitRepository() {
+      throw new Error('Not implemented.');
+    },
+    vote() {
+      throw new Error('Not implemented.');
+    },
+    comment() {
+      throw new Error('Not implemented.');
+    },
+  }
+};
+
+export const schema = [...rootSchema, ...gitHubSchema, ...sqlSchema];
+export const resolvers = merge(rootResolvers, sqlResolvers);

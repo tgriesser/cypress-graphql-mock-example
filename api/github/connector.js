@@ -23,6 +23,9 @@ export class GitHubConnector {
   _fetch(urls) {
     const options = {
       json: true,
+      headers: {
+        'user-agent': 'GitHunt',
+      }
     };
 
     if (this.client_id) {
