@@ -68,4 +68,23 @@ describe('GitHub connector', () => {
       assert.deepEqual(result, { id: 1 });
     });
   });
+
+  it('fetches each endpoint only once per instance', () => {
+    const connector = new GitHubConnector();
+
+    pushMockRequest({
+      options: { uri: '/endpoint' },
+      result: { id: 1 },
+    });
+
+    return connector.get('/endpoint').then((result) => {
+      assert.deepEqual(result, { id: 1 });
+    }).then(() => {
+      // This get call doesn't actually call the API - note that we only
+      // enqueued the request mock once!
+      return connector.get('/endpoint');
+    }).then((result) => {
+      assert.deepEqual(result, { id: 1 });
+    });
+  });
 });
