@@ -234,6 +234,7 @@ Since the GitHub API doesn't support any batching (we can't get multiple reposit
 
 Let's go over the functionality we want in this connector:
 
+1. It should pass the correct GitHub API key
 1. It should not load the same GitHub URL twice in the same request, using something like [DataLoader](https://github.com/facebook/dataloader)
 2. It should keep track of `ETag` headers for as many GitHub objects as possible, and send them with requests to both speed up API accesses and avoid hitting the rate limit
 3. It doesn't need to send any authentication information other than our API key, because none of the data we are requesting is per-user (although we might want to add this in the future, since the rate limits on the GitHub API are per user)
