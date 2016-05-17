@@ -247,3 +247,5 @@ Let's implement a simple model layer over our connector - this is going to be th
 
 > NOTE: Following this method, I had to add a bunch of "not implemented" resolvers to my schema right away. Not sure how to overcome that.
 > NOTE: When I get a runtime error in my resolver, GraphiQL shows it to me but I don't get to see where in my server code it actually happened.
+> NOTE: The connectors property on apollo server is misnamed.
+> NOTE: If I wanted to share a connector instance between models, the current API doesn't have a great way to do that since I don't get to call the constructor myself. I feel like I could just attach those to context manually and not be sad about it.
