@@ -7,7 +7,7 @@ export class Entries {
     }
 
     return knex('entries')
-      .select('*', knex.raw('SUM(votes.vote_value) as score'))
+      .select('entries.*', knex.raw('SUM(votes.vote_value) as score'))
       .leftJoin('votes', 'entries.id', 'votes.entry_id')
       .groupBy('entries.id')
       .orderBy('created_at', 'desc').then((rows) => {
