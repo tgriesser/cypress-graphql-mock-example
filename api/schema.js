@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 
-import { schema as gitHubSchema } from './github/schema';
+import { schema as gitHubSchema, resolvers as gitHubResolvers } from './github/schema';
 import { schema as sqlSchema, resolvers as sqlResolvers } from './sql/schema';
 
 const rootSchema = [`
@@ -74,4 +74,4 @@ const rootResolvers = {
 };
 
 export const schema = [...rootSchema, ...gitHubSchema, ...sqlSchema];
-export const resolvers = merge(rootResolvers, sqlResolvers);
+export const resolvers = merge(rootResolvers, gitHubResolvers, sqlResolvers);

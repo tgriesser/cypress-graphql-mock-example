@@ -1,3 +1,5 @@
+import { property } from 'lodash';
+
 export const schema = [`
 # This uses the exact field names returned by the GitHub API for simplicity
 type Repository {
@@ -10,6 +12,8 @@ type Repository {
 
   # We should investigate how best to represent dates
   created_at: String!
+
+  owner: User
 }
 
 # Uses exact field names from GitHub for simplicity
@@ -19,3 +23,9 @@ type User {
   html_url: String!
 }
 `];
+
+export const resolvers = {
+  Repository: {
+    owner: property('owner'),
+  },
+};
