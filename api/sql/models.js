@@ -34,7 +34,7 @@ export class Entries {
       throw new Error(`Feed type ${type} not implemented.`);
     }
 
-    return convertNullColsToZero(query);
+    return mapNullColsToZero(query);
   }
 
   getByRepoFullName(name) {
@@ -44,7 +44,7 @@ export class Entries {
       .where({ repository_name: name })
       .first();
 
-    return convertNullColsToZero(query);
+    return mapNullColsToZero(query);
   }
 }
 

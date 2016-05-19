@@ -1,13 +1,13 @@
 import express from 'express';
 import { apolloServer } from 'apollo-server';
 
-import { schema, resolvers } from './api/schema';
+import { schema, resolvers } from './schema';
 
-import { GitHubConnector } from './api/github/connector';
-import { Repositories } from './api/github/models';
-import { Entries } from './api/sql/models';
+import { GitHubConnector } from './github/connector';
+import { Repositories } from './github/models';
+import { Entries } from './sql/models';
 
-const PORT = 3000;
+const PORT = 3010;
 
 const app = express();
 

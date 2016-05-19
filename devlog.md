@@ -318,3 +318,11 @@ commentCount: constant(0),
 ```
 
 Couldn't help myself: https://medium.com/@stubailo/one-weird-trick-to-make-your-graphql-js-resolvers-more-concise-8cab3072b80#.oolym5t5b
+
+OK, added a few more queries to the SQL model. We don't have caching/batching yet, but we'll implement that when we get there.
+
+### Day 5: Implement basic frontend
+
+OK, I'm now tired of learning SQL, although it was very informative. Let's get that frontend build going and load some data with Apollo Client!
+
+Let's steal the config from [the Graph.Cool example app](https://github.com/graphcool-examples/react-apollo-todo-example).
