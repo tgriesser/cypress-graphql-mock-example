@@ -6,16 +6,23 @@ export class Entries {
       throw new Error('Only NEW feed implemented so far.');
     }
 
-    return knex('entries')
+    const query = knex('entries')
       .select('entries.*', knex.raw('SUM(votes.vote_value) as score'))
       .leftJoin('votes', 'entries.id', 'votes.entry_id')
-      .groupBy('entries.id')
-      .orderBy('created_at', 'desc').then((rows) => {
-        return rows.map((row) => {
-          row.score = row.score || 0;
-          return row;
-        });
+      .groupBy('entries.id');
+
+    if (type === 'NEW') {
+      query.orderBy('created_at', 'desc');
+    } else {
+      throw new Error(`Feed type ${type} not implemented.`);
+    }
+
+    return query.then((rows) => {
+      return rows.map((row) => {
+        row.score = row.score || 0;
+        return row;
       });
+    });
   }
 
   getByRepoFullName(name) {

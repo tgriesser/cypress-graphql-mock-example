@@ -1,8 +1,6 @@
-import { GitHubConnector } from './connector';
-
 export class Repositories {
-  constructor() {
-    this.connector = new GitHubConnector();
+  constructor({ connector }) {
+    this.connector = connector;
   }
 
   getByFullName(fullName) {
@@ -11,8 +9,8 @@ export class Repositories {
 }
 
 export class Users {
-  constructor() {
-    this.connector = new GitHubConnector();
+  constructor({ connector }) {
+    this.connector = connector;
   }
 
   getByLogin(username) {
