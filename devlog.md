@@ -327,6 +327,8 @@ OK, I'm now tired of learning SQL, although it was very informative. Let's get t
 
 Let's steal the config from [the Graph.Cool example app](https://github.com/graphcool-examples/react-apollo-todo-example).
 
+I learned about the `concurrently` NPM module from the Angular 2 getting started example, so I'm using that to run the webpack dev server and nodemon at the same time, for the server and client builds. I'm also using Webpack dev server `proxy` to pass `/graphql` to my API server.
+
 OK, after fiddling around with a bunch of stuff we now have a basic UI, and no surprises yet!
 
 ![Basic UI screenshot](screenshots/first-ui.png)
