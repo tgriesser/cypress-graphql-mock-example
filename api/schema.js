@@ -8,6 +8,7 @@ const rootSchema = [`
 enum FeedType {
   HOT
   NEW
+  TOP
 }
 
 type Query {

@@ -2,10 +2,6 @@ import knex from './connector';
 
 export class Entries {
   getForFeed(type, after) {
-    if (type !== 'NEW') {
-      throw new Error('Only NEW feed implemented so far.');
-    }
-
     const query = knex('entries')
       .select('entries.*', knex.raw('SUM(votes.vote_value) as score'))
       .leftJoin('votes', 'entries.id', 'votes.entry_id')
@@ -13,6 +9,8 @@ export class Entries {
 
     if (type === 'NEW') {
       query.orderBy('created_at', 'desc');
+    } else if (type === 'TOP') {
+      query.orderBy('score', 'desc');
     } else {
       throw new Error(`Feed type ${type} not implemented.`);
     }
