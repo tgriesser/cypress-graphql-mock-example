@@ -326,3 +326,7 @@ OK, added a few more queries to the SQL model. We don't have caching/batching ye
 OK, I'm now tired of learning SQL, although it was very informative. Let's get that frontend build going and load some data with Apollo Client!
 
 Let's steal the config from [the Graph.Cool example app](https://github.com/graphcool-examples/react-apollo-todo-example).
+
+OK, after fiddling around with a bunch of stuff we now have a basic UI, and no surprises yet!
+
+![Basic UI screenshot](screenshots/first-ui.png)
