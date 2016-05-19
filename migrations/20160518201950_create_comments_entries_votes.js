@@ -19,6 +19,7 @@ exports.up = function(knex, Promise) {
     knex.schema.createTable('votes', function (table) {
       table.increments();
       table.timestamps();
+      table.integer('entry_id');
       table.integer('vote_value');
       table.string('username');
     }),
