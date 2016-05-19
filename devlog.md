@@ -316,3 +316,5 @@ createdAt: property('created_at'),
 score: constant(0),
 commentCount: constant(0),
 ```
+
+Couldn't help myself: https://medium.com/@stubailo/one-weird-trick-to-make-your-graphql-js-resolvers-more-concise-8cab3072b80#.oolym5t5b
