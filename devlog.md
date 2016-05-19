@@ -301,40 +301,18 @@ What does that translate to in SQL types? We'll use [SQLite](https://www.sqlite.
 
 When we get to auth, we might need something to store login tokens as well, but we'll cross that bridge when we get there.
 
-Here's our migration code:
+[Here's the current migration code.](https://github.com/apollostack/GitHunt/blob/5ba0136f57d109629c6d2dfcf6a7cfbaeff86517/migrations/20160518201950_create_comments_entries_votes.js)
+
+OK, after messing about with some various Knex and GraphQL stuff, we've also set up some simple seed data, and written some basic resolvers/models. There's still a good way to go until we have a good SQL connector, but we can move on for now. My goal is to get a backend that returns the data we want first, then optimize later.
+
+Also, I found a cool trick to simplify resolvers:
 
 ```js
-exports.up = function(knex, Promise) {
-  return Promise.all([
-    knex.schema.createTable('comments', function (table) {
-      table.increments();
-      table.timestamps();
-      table.string('posted_by');
-      table.text('content');
-      table.integer('entry_id');
-    }),
+import { property, constant } from 'lodash';
 
-    knex.schema.createTable('entries', function (table) {
-      table.increments();
-      table.timestamps();
-      table.string('repository_name');
-      table.string('posted_by');
-    }),
+...
 
-    knex.schema.createTable('votes', function (table) {
-      table.increments();
-      table.timestamps();
-      table.integer('vote_value');
-      table.string('username');
-    }),
-  ]);
-};
-
-exports.down = function(knex, Promise) {
-  return Promise.all([
-    knex.schema.dropTable('comments'),
-    knex.schema.dropTable('entries'),
-    knex.schema.dropTable('votes'),
-  ]);
-};
+createdAt: property('created_at'),
+score: constant(0),
+commentCount: constant(0),
 ```
