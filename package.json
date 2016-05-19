@@ -42,6 +42,7 @@
     "knex": "^0.11.3",
     "lodash": "^4.12.0",
     "react": "^15.0.2",
+    "react-apollo": "^0.3.4",
     "react-dom": "^15.0.2",
     "react-router": "^2.4.1",
     "redux": "^3.5.2",
