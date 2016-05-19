@@ -256,3 +256,47 @@ Alright, we've got the GitHub API going!
 ![GitHub API!](screenshots/github-api.png)
 
 Next stop is implementing the SQL connector/models, so that we can actually insert some entries into our database.
+
+<h3 id="day-4">Day 4: Setting up SQL</h3>
+
+We want to store our local non-GitHub data in SQL. To do that, we first have to design our SQL schema. It shouldn't be too hard to base this on our GraphQL schema. There are two types that we want to keep in our database:
+
+- Comment
+- Entry
+
+To recap, here are the fields they have in the GraphQL schema:
+
+```graphql
+type Comment {
+  postedBy: User!
+  createdAt: String! # Actually a date
+  content: String!
+}
+
+type Entry {
+  repository: Repository!
+  postedBy: User!
+  createdAt: String! # Actually a date
+  score: Int!
+  comments: [Comment]! # Should this be paginated?
+  commentCount: Int!
+}
+```
+
+What does that translate to in SQL types? We'll use [SQLite](https://www.sqlite.org/datatype3.html) type names. All should have timestamps and ids, just in case we need them (we're not trying to demo the most optimized SQL schema of all time in this particular app).
+
+- `comments` table
+  - `posted_by`: TEXT (GitHub username)
+  - `created_at`: INTEGER (Unix time)
+  - `content`: TEXT
+  - `entry_id`: INTEGER
+- `entries` table
+  - `repository`: TEXT (GitHub name)
+  - `posted_by`: TEXT (GitHub username)
+  - `created_at`: INTEGER (Unix time)
+- `votes` table (since we need to keep track of who has already upvoted a particular thing)
+  - `entry_id`: INTEGER
+  - `vote_value`: INTEGER (-1 or +1)
+  - `username`: TEXT (GitHub username)
+
+When we get to auth, we might need something to store login tokens as well, but we'll cross that bridge when we get there.
