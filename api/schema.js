@@ -52,10 +52,8 @@ const rootResolvers = {
     feed() {
       throw new Error('Not implemented.');
     },
-    entry(_, { repoFullName }) {
-      return {
-        fullName: repoFullName,
-      };
+    entry(_, { repoFullName }, context) {
+      return context.Entries.getByRepoFullName(repoFullName);
     },
     currentUser() {
       throw new Error('Not implemented.');

@@ -1,3 +1,5 @@
+import { property, constant } from 'lodash';
+
 export const schema = [`
 type Comment {
   postedBy: User!
@@ -17,8 +19,8 @@ type Entry {
 
 export const resolvers = {
   Entry: {
-    repository({ fullName }, _, { connectors }) {
-      return connectors.Repositories.getByFullName(fullName);
+    repository({ repository_name }, _, context) {
+      return context.Repositories.getByFullName(repository_name);
     },
     postedBy() {
       throw new Error('Not implemented.');
@@ -26,6 +28,9 @@ export const resolvers = {
     comments() {
       throw new Error('Not implemented.');
     },
+    createdAt: property('created_at'),
+    score: constant(0),
+    commentCount: constant(0),
   },
   Comment: {
     postedBy() {

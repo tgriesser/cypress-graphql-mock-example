@@ -300,3 +300,41 @@ What does that translate to in SQL types? We'll use [SQLite](https://www.sqlite.
   - `username`: TEXT (GitHub username)
 
 When we get to auth, we might need something to store login tokens as well, but we'll cross that bridge when we get there.
+
+Here's our migration code:
+
+```js
+exports.up = function(knex, Promise) {
+  return Promise.all([
+    knex.schema.createTable('comments', function (table) {
+      table.increments();
+      table.timestamps();
+      table.string('posted_by');
+      table.text('content');
+      table.integer('entry_id');
+    }),
+
+    knex.schema.createTable('entries', function (table) {
+      table.increments();
+      table.timestamps();
+      table.string('repository_name');
+      table.string('posted_by');
+    }),
+
+    knex.schema.createTable('votes', function (table) {
+      table.increments();
+      table.timestamps();
+      table.integer('vote_value');
+      table.string('username');
+    }),
+  ]);
+};
+
+exports.down = function(knex, Promise) {
+  return Promise.all([
+    knex.schema.dropTable('comments'),
+    knex.schema.dropTable('entries'),
+    knex.schema.dropTable('votes'),
+  ]);
+};
+```
