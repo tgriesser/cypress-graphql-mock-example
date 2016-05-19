@@ -332,3 +332,7 @@ I learned about the `concurrently` NPM module from the Angular 2 getting started
 OK, after fiddling around with a bunch of stuff we now have a basic UI, and no surprises yet!
 
 ![Basic UI screenshot](screenshots/first-ui.png)
+
+It's a scientific fact that everything is more exciting with images!
+
+![UI screenshot with avatars](screenshots/avatars.png)
