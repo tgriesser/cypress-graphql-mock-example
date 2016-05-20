@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-apollo';
+import TimeAgo from 'react-timeago';
 
 const Loading = () => (
   <div>Loading...</div>
@@ -26,9 +27,13 @@ const FeedContent = ({ entries }) => (
           <h4 className="media-heading">{ entry.repository.full_name}</h4>
           <p>{ entry.repository.description }</p>
           <p>
+            <InfoLabel label="Score" value={ entry.score } />
+            &nbsp;
             <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
             &nbsp;
             <InfoLabel label="Issues" value={ entry.repository.open_issues_count } />
+            &nbsp;&nbsp;&nbsp;
+            Submitted <TimeAgo date={ entry.createdAt } />
           </p>
         </div>
       </div>
