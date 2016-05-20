@@ -336,3 +336,12 @@ OK, after fiddling around with a bunch of stuff we now have a basic UI, and no s
 It's a scientific fact that everything is more exciting with images!
 
 ![UI screenshot with avatars](screenshots/avatars.png)
+
+### Day 6: Implement GitHub login
+
+We're going to implement GitHub login. First, let's read Jonas' excellent series on auth in GraphQL ([part 1](https://medium.com/apollo-stack/a-guide-to-authentication-in-graphql-e002a4039d1#.swmmlfyex), [part 2](https://medium.com/apollo-stack/auth-in-graphql-part-2-c6441bcc4302#.4ozv5kdzl)). Based on those ideas, we'll use some of the following libraries:
+
+- [passport](http://passportjs.org/)
+- [passport-github](https://github.com/jaredhanson/passport-github)
+- [express-session](https://github.com/expressjs/session)
+- [connect-session-knex](https://github.com/llambda/connect-session-knex).
