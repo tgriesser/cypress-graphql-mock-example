@@ -3,6 +3,13 @@ import session from 'express-session';
 import passport from 'passport';
 import { apolloServer } from 'apollo-server';
 import { Strategy as GitHubStrategy } from 'passport-github';
+import cookieParser from 'cookie-parser';
+import knex from './sql/connector';
+
+var KnexSessionStore = require('connect-session-knex')(session);
+var store = new KnexSessionStore({
+  knex,
+});
 
 import { schema, resolvers } from './schema';
 import { GitHubConnector } from './github/connector';
@@ -21,6 +28,7 @@ app.use(session({
   secret: 'your secret',
   resave: true,
   saveUninitialized: true,
+  store,
 }));
 
 app.use(passport.initialize());
@@ -30,12 +38,13 @@ app.get('/login/github',
   passport.authenticate('github'));
 
 app.get('/login/github/callback',
-  passport.authenticate('github', { failureRedirect: '/login' }),
+  passport.authenticate('github', { failureRedirect: '/' }),
   function(req, res) {
     res.redirect('/');
   });
 
-app.use('/graphql', apolloServer(() => {
+app.use('/graphql', apolloServer((req) => {
+  console.log(req.user);
   const gitHubConnector = new GitHubConnector({
     client_id: GITHUB_CLIENT_ID,
     client_secret: GITHUB_CLIENT_SECRET,
