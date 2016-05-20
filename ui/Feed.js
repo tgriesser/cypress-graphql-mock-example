@@ -5,6 +5,10 @@ const Loading = () => (
   <div>Loading...</div>
 );
 
+const InfoLabel = ({ label, value }) => (
+  <span className="label label-info">{ label }: { value }</span>
+)
+
 const FeedContent = ({ entries }) => (
   <div> {
     entries.map((entry) => (
@@ -20,7 +24,12 @@ const FeedContent = ({ entries }) => (
         </div>
         <div className="media-body">
           <h4 className="media-heading">{ entry.repository.full_name}</h4>
-          { entry.repository.description }
+          <p>{ entry.repository.description }</p>
+          <p>
+            <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
+            &nbsp;
+            <InfoLabel label="Issues" value={ entry.repository.open_issues_count } />
+          </p>
         </div>
       </div>
     ))
