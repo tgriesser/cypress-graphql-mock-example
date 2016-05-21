@@ -43,8 +43,24 @@ app.get('/login/github/callback',
     res.redirect('/');
   });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 app.use('/graphql', apolloServer((req) => {
-  console.log(req.user);
+  let user;
+  if (req.user) {
+    // We get req.user from passport-github with some pretty oddly named fields,
+    // let's convert that to the fields in our schema, which match the GitHub
+    // API field names.
+    user = {
+      login: req.user.username,
+      html_url: req.user.profileUrl,
+      avatar_url: req.user.photos[0].value,
+    };
+  }
+
   const gitHubConnector = new GitHubConnector({
     client_id: GITHUB_CLIENT_ID,
     client_secret: GITHUB_CLIENT_SECRET,
@@ -56,6 +72,7 @@ app.use('/graphql', apolloServer((req) => {
     resolvers,
     schema,
     context: {
+      user,
       Repositories: new Repositories({ connector: gitHubConnector }),
       Entries: new Entries({ connector: gitHubConnector }),
     }

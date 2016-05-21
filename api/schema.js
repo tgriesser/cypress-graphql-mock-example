@@ -56,8 +56,8 @@ const rootResolvers = {
     entry(_, { repoFullName }, context) {
       return context.Entries.getByRepoFullName(repoFullName);
     },
-    currentUser() {
-      throw new Error('Not implemented.');
+    currentUser(_, __, context) {
+      return context.user;
     },
   },
   Mutation: {
