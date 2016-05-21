@@ -48,6 +48,8 @@ export class Entries {
   }
 
   voteForEntry(repoFullName, voteValue, username) {
+    let entry_id;
+
     return Promise.resolve()
 
     // First, get the entry_id from repoFullName
@@ -55,18 +57,29 @@ export class Entries {
       return knex('entries')
         .where({ repository_name: repoFullName })
         .select([ 'id '])
-        .first();
+        .first()
+        .then(({ id }) => {
+          entry_id = id;
+        });
     })
 
-    // XXX remove any previous votes by this person
+    // Remove any previous votes by this person
+    .then(() => {
+      return knex('votes')
+        .where({
+          entry_id,
+          username,
+        })
+        .delete();
+    })
 
     // Then, insert a vote
-    .then(({ id }) => {
+    .then(() => {
       return knex('votes')
         .insert({
-          entry_id: id,
-          vote_value: voteValue,
+          entry_id,
           username,
+          vote_value: voteValue,
         });
     });
   }
