@@ -344,4 +344,18 @@ We're going to implement GitHub login. First, let's read Jonas' excellent series
 - [passport](http://passportjs.org/)
 - [passport-github](https://github.com/jaredhanson/passport-github)
 - [express-session](https://github.com/expressjs/session)
-- [connect-session-knex](https://github.com/llambda/connect-session-knex).
+- [connect-session-knex](https://github.com/llambda/connect-session-knex)
+
+Everything was pretty much following the boilerplate in the tutorial and the docs of the various packages (even though I ran into some issues where the docs for the github package were outdated) except one thing:
+
+> NOTE: By default `fetch` doesn't send cookies, and you need to pass the `credentials` option.
+
+Thankfully, passing that option was very easy once I realized I needed it:
+
+```js
+const client = new ApolloClient({
+  networkInterface: createNetworkInterface('/graphql', {
+    credentials: 'same-origin',
+  }),
+});
+```
