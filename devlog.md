@@ -359,3 +359,33 @@ const client = new ApolloClient({
   }),
 });
 ```
+
+### Day 7: Add upvote/downvote mutation
+
+OK, we have a pretty good UI going. Next step is to implement our first mutation - `vote`. Let's refresh our memory of what we wrote down before:
+
+```graphql
+# Vote on a repository
+vote(repoFullName: String!, type: VoteType!): Entry
+```
+
+This mutation needs to insert or update a row in our `votes` table, let's remind ourselves what that looks like:
+
+```js
+knex.schema.createTable('votes', function (table) {
+  table.increments();
+  table.timestamps();
+  table.integer('entry_id');
+  table.integer('vote_value');
+  table.string('username');
+}),
+```
+
+I'm sitting at a coffee shop with Angela Zhang, so I'll ask her since she knows more about SQL things.
+
+Notes from Angela:
+
+1. We might want to have a primary key of (repo id, user id) on votes so that we can use upsert, and quickly find all of the votes for a particular repository.
+2. We might want to use GitHub user IDs instead of usernames as the primary key.
+3. GitHub warns users a lot about changing their username, so people will expect stuff to break in that case.
+4. We can use this SO answer to get the username from a GitHub id if we want to: http://stackoverflow.com/questions/11976393/get-github-username-by-id
