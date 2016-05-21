@@ -46,6 +46,30 @@ export class Entries {
 
     return mapNullColsToZero(query);
   }
+
+  voteForEntry(repoFullName, voteValue, username) {
+    return Promise.resolve()
+
+    // First, get the entry_id from repoFullName
+    .then(() => {
+      return knex('entries')
+        .where({ repository_name: repoFullName })
+        .select([ 'id '])
+        .first();
+    })
+
+    // XXX remove any previous votes by this person
+
+    // Then, insert a vote
+    .then(({ id }) => {
+      return knex('votes')
+        .insert({
+          entry_id: id,
+          vote_value: voteValue,
+          username,
+        });
+    });
+  }
 }
 
 export class Comments {

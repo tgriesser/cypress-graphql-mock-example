@@ -389,3 +389,5 @@ Notes from Angela:
 2. We might want to use GitHub user IDs instead of usernames as the primary key.
 3. GitHub warns users a lot about changing their username, so people will expect stuff to break in that case.
 4. We can use this SO answer to get the username from a GitHub id if we want to: http://stackoverflow.com/questions/11976393/get-github-username-by-id
+
+Hopefully we can optimize all of this stuff later; for now I'm just going to build something that works.
