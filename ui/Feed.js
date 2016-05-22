@@ -70,7 +70,9 @@ const Feed = ({ data, mutations }) => {
     return <FeedContent
       entries={ data.feed }
       currentUser={ data.currentUser }
-      vote={ mutations.vote }
+      vote={ (...args) => {
+        mutations.vote(...args).then(() => data.refetch());
+      } }
     />
   }
 }
