@@ -391,3 +391,9 @@ Notes from Angela:
 4. We can use this SO answer to get the username from a GitHub id if we want to: http://stackoverflow.com/questions/11976393/get-github-username-by-id
 
 Hopefully we can optimize all of this stuff later; for now I'm just going to build something that works.
+
+OK, I implemented the first mutation. The code is absolutely horrible, but it works!
+
+![First mutation](screenshots/first-mutation.png)
+
+Now let's integrate it into the UI. Fortunately we can start by just copying that into our JS code.

@@ -10,7 +10,26 @@ const InfoLabel = ({ label, value }) => (
   <span className="label label-info">{ label }: { value }</span>
 )
 
-const FeedContent = ({ entries }) => (
+const VoteButtons = ({ onVote }) => {
+  return (
+    <span>
+      <button
+        className="btn btn-xs btn-primary"
+        onClick={ onVote.bind(null, 'UP') }
+      >+</button>
+
+      &nbsp;
+
+      <button
+        className="btn btn-xs btn-primary"
+        onClick={ onVote.bind(null, 'DOWN') }
+      >-</button>
+      &nbsp;
+    </span>
+  )
+}
+
+const FeedContent = ({ entries, currentUser, vote }) => (
   <div> {
     entries.map((entry) => (
       <div className="media">
@@ -24,9 +43,12 @@ const FeedContent = ({ entries }) => (
           </a>
         </div>
         <div className="media-body">
-          <h4 className="media-heading">{ entry.repository.full_name}</h4>
+          <h4 className="media-heading">{ entry.repository.full_name }</h4>
           <p>{ entry.repository.description }</p>
           <p>
+            { currentUser && <VoteButtons onVote={(type) => {
+              vote(entry.repository.full_name, type);
+            }}/> }
             <InfoLabel label="Score" value={ entry.score } />
             &nbsp;
             <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
@@ -41,11 +63,15 @@ const FeedContent = ({ entries }) => (
   } </div>
 );
 
-const Feed = ({ data }) => {
+const Feed = ({ data, mutations }) => {
   if (data.loading) {
     return <Loading />
   } else {
-    return <FeedContent entries={data.feed} />
+    return <FeedContent
+      entries={ data.feed }
+      currentUser={ data.currentUser }
+      vote={ mutations.vote }
+    />
   }
 }
 
@@ -54,6 +80,12 @@ const FeedWithData = connect({
     data: {
       query: gql`
         query Feed($type: FeedType!) {
+          # Eventually move this into a no fetch query right on the entry
+          # since we literally just need this info to determine whether to
+          # show upvote/downvote buttons
+          currentUser {
+            login
+          }
           feed(type: $type) {
             createdAt
             score
@@ -77,7 +109,23 @@ const FeedWithData = connect({
         type: 'TOP',
       },
     },
-  })
+  }),
+
+  mapMutationsToProps: () => ({
+    vote: (repoFullName, type) => ({
+      mutation: gql`
+        mutation vote($repoFullName: String!, $type: VoteType!) {
+          vote(repoFullName: $repoFullName, type: $type) {
+            score
+          }
+        }
+      `,
+      variables: {
+        repoFullName,
+        type,
+      },
+    }),
+  }),
 })(Feed);
 
 export default FeedWithData;
