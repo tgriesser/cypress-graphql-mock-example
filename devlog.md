@@ -409,3 +409,45 @@ Now let's integrate it into the UI. Fortunately we can start by just copying tha
 > When what I really want is this:
 
 ![Useful error from network tab](screenshots/useful-error.png)
+
+Alright, let's add some routing to our app. As we mentioned before, we want at least three different routes:
+
+1. Home page/feed
+2. Page to add a new entry
+3. Page for a specific entry, perhaps with a comment list
+
+Right now, let's just do (1) and (2) - I feel like (3) and implementing comments might be a fair bit of work that we don't need to do at the moment.
+
+We're going to go with React Router for this app, so let's get that set up. We already have `Layout` and `Feed` components that we should just be able to drop into the routes. They'll probably look like this:
+
+```js
+// Sketch of code, not guaranteed to work
+
+// Before, no router
+render(
+  <ApolloProvider client={client}>
+    <Layout><Feed /></Layout>
+  </ApolloProvider>,
+  document.getElementById('root')
+)
+
+// After, with routes
+render((
+  <ApolloProvider client={client}>
+    <Router history={browserHistory}>
+      <Route path="/" component={Layout}>
+        <IndexRoute component={Feed} />
+        <Route path="new" component={NewEntry}/>
+        <Route path="*" component={NoMatch}/>
+      </Route>
+    </Router>
+  </ApolloProvider>
+), document.body)
+```
+
+In addition to adding the routes, we need to implement:
+
+1. `NewEntry`, a simple form for adding a new component, and
+2. `NoMatch`, basically a 404 page.
+
+Also, this is a good opportunity to add a `new` feed in addition to `top`, which can be driven by query parameters and links in the navbar.
