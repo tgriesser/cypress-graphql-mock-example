@@ -7,7 +7,8 @@
     "start-server": "nodemon api/index.js --watch api --exec babel-node",
     "start-client": "webpack-dev-server -d --hot --inline --no-info --port 3000",
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
-    "test": "mocha --compilers js:babel-core/register --reporter spec --full-trace 'api/**/*.test.js'"
+    "test": "mocha --compilers js:babel-core/register --reporter spec --full-trace 'api/**/*.test.js'",
+    "seed": "knex seed:run"
   },
   "repository": {
     "type": "git",

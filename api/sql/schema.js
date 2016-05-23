@@ -22,8 +22,8 @@ export const resolvers = {
     repository({ repository_name }, _, context) {
       return context.Repositories.getByFullName(repository_name);
     },
-    postedBy() {
-      throw new Error('Not implemented.');
+    postedBy({ posted_by }, _, context) {
+      return context.Users.getByLogin(posted_by);
     },
     comments() {
       throw new Error('Not implemented.');

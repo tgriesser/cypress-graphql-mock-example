@@ -1,9 +1,18 @@
 const _ = require('lodash');
 
-const repoNames = [
-  'apollostack/apollo-client',
-  'apollostack/apollo-server',
-  'meteor/meteor',
+const repos = [
+  {
+    repository_name: 'apollostack/apollo-client',
+    posted_by: 'stubailo',
+  },
+  {
+    repository_name: 'apollostack/apollo-server',
+    posted_by: 'helfer',
+  },
+  {
+    repository_name: 'meteor/meteor',
+    posted_by: 'tmeasday',
+  },
 ];
 
 const repoIds = {};
@@ -14,14 +23,14 @@ const usenames = [
 ];
 
 const votes = {
-  [repoNames[0]]: {
+  [repos[0].repository_name]: {
     stubailo: 1,
     helfer: 1,
   },
-  [repoNames[1]]: {
+  [repos[1].repository_name]: {
     helfer: 1,
   },
-  [repoNames[2]]: {
+  [repos[2].repository_name]: {
 
   },
 };
@@ -34,14 +43,14 @@ export function seed(knex, Promise) {
 
   // Insert some entries for the repositories
   .then(() => {
-    return Promise.all(repoNames.map(function (repoName, i) {
+    return Promise.all(repos.map(({ repository_name, posted_by }, i) => {
       return knex('entries').insert({
         created_at: Date.now() - i * 10000,
         updated_at: Date.now() - i * 10000,
-        repository_name: repoName,
-        posted_by: 1,
+        repository_name,
+        posted_by,
       }).then(([id]) => {
-        repoIds[repoName] = id;
+        repoIds[repository_name] = id;
       });
     }))
   })

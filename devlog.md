@@ -397,3 +397,15 @@ OK, I implemented the first mutation. The code is absolutely horrible, but it wo
 ![First mutation](screenshots/first-mutation.png)
 
 Now let's integrate it into the UI. Fortunately we can start by just copying that into our JS code.
+
+> NOTE: Right now we have a hacky way of reloading the whole UI to display the new vote count. I've filed an issue to improve it, maybe Dhaivat can take a look: https://github.com/apollostack/GitHunt/issues/3
+
+### Day 8: Adding more features and fixes
+
+> NOTE: It's hard to identify network or GraphQL errors when using react-apollo. It's not that hard to look into the network tab, but I get something like this:
+
+![Useless stack trace](screenshots/error-stack.png)
+
+> When what I really want is this:
+
+![Useful error from network tab](screenshots/useful-error.png)

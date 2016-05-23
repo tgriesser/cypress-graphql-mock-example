@@ -92,6 +92,11 @@ const FeedWithData = connect({
             createdAt
             score
             commentCount
+            postedBy {
+              login
+              html_url
+            }
+
             repository {
               name
               full_name
