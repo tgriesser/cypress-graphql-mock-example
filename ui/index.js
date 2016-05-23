@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-
+import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { registerGqlTag } from 'apollo-client/gql'
@@ -17,9 +17,12 @@ const client = new ApolloClient({
   }),
 });
 
-render(
+render((
   <ApolloProvider client={client}>
-    <Layout><Feed /></Layout>
-  </ApolloProvider>,
-  document.getElementById('root')
-)
+    <Router history={browserHistory}>
+      <Route path="/" component={Layout}>
+        <IndexRoute component={Feed} />
+      </Route>
+    </Router>
+  </ApolloProvider>
+), document.getElementById('root'));
