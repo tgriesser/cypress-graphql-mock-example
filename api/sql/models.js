@@ -83,6 +83,16 @@ export class Entries {
         });
     });
   }
+
+  submitRepository(repoFullName, username) {
+    return knex('entries')
+      .insert({
+        created_at: Date.now(),
+        updated_at: Date.now(),
+        repository_name: repoFullName,
+        posted_by: username,
+      });
+  }
 }
 
 export class Comments {

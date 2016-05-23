@@ -26,5 +26,8 @@ module.exports = {
       "/login/*": "http://localhost:3010",
       "/logout": "http://localhost:3010"
     },
-  }
+    historyApiFallback: {
+      index: '/',
+    },
+  },
 }

@@ -61,9 +61,19 @@ const rootResolvers = {
     },
   },
   Mutation: {
-    submitRepository() {
-      throw new Error('Not implemented.');
+    submitRepository(_, { repoFullName }, context) {
+      if (! context.user) {
+        throw new Error('Must be logged in to vote.');
+      }
+
+      return context.Entries.submitRepository(
+        repoFullName,
+        context.user.login
+      ).then(() => {
+        return context.Entries.getByRepoFullName(repoFullName)
+      });;
     },
+
     vote(_, { repoFullName, type }, context) {
       if (! context.user) {
         throw new Error('Must be logged in to vote.');
@@ -83,6 +93,7 @@ const rootResolvers = {
         return context.Entries.getByRepoFullName(repoFullName)
       });
     },
+
     comment() {
       throw new Error('Not implemented.');
     },

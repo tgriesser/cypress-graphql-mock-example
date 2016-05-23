@@ -80,7 +80,7 @@ const Feed = ({ data, mutations }) => {
 }
 
 const FeedWithData = connect({
-  mapQueriesToProps: () => ({
+  mapQueriesToProps: ({ ownProps }) => ({
     data: {
       query: gql`
         query Feed($type: FeedType!) {
@@ -115,7 +115,11 @@ const FeedWithData = connect({
         }
       `,
       variables: {
-        type: 'TOP',
+        type: (
+          ownProps.params &&
+          ownProps.params.type &&
+          ownProps.params.type.toUpperCase()
+        ) || 'TOP',
       },
     },
   }),

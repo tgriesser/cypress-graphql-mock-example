@@ -7,6 +7,7 @@ import { registerGqlTag } from 'apollo-client/gql'
 
 import Feed from './Feed';
 import Layout from './Layout';
+import NewEntry from './NewEntry';
 
 // Globally register gql template literal tag
 registerGqlTag()
@@ -22,6 +23,8 @@ render((
     <Router history={browserHistory}>
       <Route path="/" component={Layout}>
         <IndexRoute component={Feed} />
+        <Route path="feed/:type" component={Feed} />
+        <Route path="new" component={NewEntry} />
       </Route>
     </Router>
   </ApolloProvider>
