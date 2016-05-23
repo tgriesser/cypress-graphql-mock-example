@@ -400,7 +400,7 @@ Now let's integrate it into the UI. Fortunately we can start by just copying tha
 
 > NOTE: Right now we have a hacky way of reloading the whole UI to display the new vote count. I've filed an issue to improve it, maybe Dhaivat can take a look: https://github.com/apollostack/GitHunt/issues/3
 
-### Day 8: Adding more features and fixes
+### Day 8: Adding routes, the ability to submit new entries, and more features
 
 > NOTE: It's hard to identify network or GraphQL errors when using react-apollo. It's not that hard to look into the network tab, but I get something like this:
 
