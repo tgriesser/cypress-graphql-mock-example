@@ -14,6 +14,7 @@ type Entry {
   score: Int!
   comments: [Comment]! # Should this be paginated?
   commentCount: Int!
+  id: Int!
 }
 `];
 
