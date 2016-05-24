@@ -8,7 +8,8 @@
     "start-client": "webpack-dev-server -d --hot --inline --no-info --port 3000",
     "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
     "test": "mocha --compilers js:babel-core/register --reporter spec --full-trace 'api/**/*.test.js'",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "migrate": "knex migrate:latest"
   },
   "repository": {
     "type": "git",

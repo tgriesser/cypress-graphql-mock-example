@@ -12,7 +12,7 @@ exports.up = function(knex, Promise) {
     knex.schema.createTable('entries', function (table) {
       table.increments();
       table.timestamps();
-      table.string('repository_name');
+      table.string('repository_name').unique();
       table.string('posted_by');
     }),
 
@@ -22,6 +22,7 @@ exports.up = function(knex, Promise) {
       table.integer('entry_id');
       table.integer('vote_value');
       table.string('username');
+      table.unique(['entry_id', 'username']);
     }),
   ]);
 };
