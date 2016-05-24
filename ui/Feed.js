@@ -82,7 +82,7 @@ const Feed = ({ data, mutations }) => {
       entries={ data.feed }
       currentUser={ data.currentUser }
       onVote={ (...args) => {
-        mutations.vote(...args).then(() => data.refetch());
+        mutations.vote(...args)
       } }
     />
   }
@@ -103,6 +103,7 @@ const FeedWithData = connect({
             createdAt
             score
             commentCount
+            id
             postedBy {
               login
               html_url
@@ -140,6 +141,7 @@ const FeedWithData = connect({
         mutation vote($repoFullName: String!, $type: VoteType!) {
           vote(repoFullName: $repoFullName, type: $type) {
             score
+            id
           }
         }
       `,
