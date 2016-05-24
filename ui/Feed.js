@@ -29,38 +29,42 @@ const VoteButtons = ({ onVote }) => {
   )
 }
 
-const FeedContent = ({ entries, currentUser, vote }) => (
+const FeedEntry = ({ entry, currentUser, onVote }) => (
+  <div className="media">
+    <div className="media-left">
+      <a href="#">
+        <img
+          className="media-object"
+          style={{width: '64px', height: '64px'}}
+          src={ entry.repository.owner.avatar_url }
+        />
+      </a>
+    </div>
+    <div className="media-body">
+      <h4 className="media-heading">{ entry.repository.full_name }</h4>
+      <p>{ entry.repository.description }</p>
+      <p>
+        { currentUser && <VoteButtons onVote={(type) => {
+          onVote(entry.repository.full_name, type);
+        }}/> }
+        <InfoLabel label="Score" value={ entry.score } />
+        &nbsp;
+        <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
+        &nbsp;
+        <InfoLabel label="Issues" value={ entry.repository.open_issues_count } />
+        &nbsp;&nbsp;&nbsp;
+        Submitted <TimeAgo date={ entry.createdAt } />
+        &nbsp;by&nbsp;
+        <a href={entry.postedBy.html_url}>{ entry.postedBy.login }</a>
+      </p>
+    </div>
+  </div>
+)
+
+const FeedContent = ({ entries, currentUser, onVote }) => (
   <div> {
     entries.map((entry) => (
-      <div className="media">
-        <div className="media-left">
-          <a href="#">
-            <img
-              className="media-object"
-              style={{width: '64px', height: '64px'}}
-              src={ entry.repository.owner.avatar_url }
-            />
-          </a>
-        </div>
-        <div className="media-body">
-          <h4 className="media-heading">{ entry.repository.full_name }</h4>
-          <p>{ entry.repository.description }</p>
-          <p>
-            { currentUser && <VoteButtons onVote={(type) => {
-              vote(entry.repository.full_name, type);
-            }}/> }
-            <InfoLabel label="Score" value={ entry.score } />
-            &nbsp;
-            <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
-            &nbsp;
-            <InfoLabel label="Issues" value={ entry.repository.open_issues_count } />
-            &nbsp;&nbsp;&nbsp;
-            Submitted <TimeAgo date={ entry.createdAt } />
-            &nbsp;by&nbsp;
-            <a href={entry.postedBy.html_url}>{ entry.postedBy.login }</a>
-          </p>
-        </div>
-      </div>
+      <FeedEntry entry={entry} currentUser={currentUser} onVote={onVote} />
     ))
   } </div>
 );
@@ -72,7 +76,7 @@ const Feed = ({ data, mutations }) => {
     return <FeedContent
       entries={ data.feed }
       currentUser={ data.currentUser }
-      vote={ (...args) => {
+      onVote={ (...args) => {
         mutations.vote(...args).then(() => data.refetch());
       } }
     />
