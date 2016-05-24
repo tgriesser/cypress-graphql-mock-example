@@ -19,8 +19,8 @@ const client = new ApolloClient({
   }),
   queryTransformer: addTypenameToSelectionSet,
   dataIdFromObject: (result) => {
-    if (result.id != undefined && result.__typename != undefined) {
-      return (result.__typename + result.id);
+    if (result.id && result.__typename) {
+      return result.__typename + result.id;
     }
   },
 });

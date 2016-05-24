@@ -31,7 +31,6 @@ export const resolvers = {
     },
     createdAt: property('created_at'),
     commentCount: constant(0),
-    id: property('id'),
   },
   Comment: {
     postedBy() {
