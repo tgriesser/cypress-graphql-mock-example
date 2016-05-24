@@ -64,7 +64,12 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
 const FeedContent = ({ entries, currentUser, onVote }) => (
   <div> {
     entries.map((entry) => (
-      <FeedEntry entry={entry} currentUser={currentUser} onVote={onVote} />
+      <FeedEntry
+        key={entry.repository.full_name}
+        entry={entry}
+        currentUser={currentUser}
+        onVote={onVote}
+      />
     ))
   } </div>
 );

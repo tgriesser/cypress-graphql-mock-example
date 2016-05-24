@@ -32,9 +32,11 @@ const Profile = ({ data }) => {
         </p>
         <Link
           type="submit"
-          className="btn btn-default navbar-btn navbar-right"
+          className="btn navbar-btn navbar-right btn-success"
           to="/submit"
         >
+          <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+          &nbsp;
           Submit
         </Link>
       </span>
@@ -68,12 +70,20 @@ const Layout = ({ children, params }) => (
     <nav className="navbar navbar-default">
       <div className="container">
         <div className="navbar-header">
-          <a className="navbar-brand" href="#">GitHunt</a>
+          <Link className="navbar-brand" to="/feed/top">GitHunt</Link>
         </div>
 
         <ul className="nav navbar-nav">
-          <NavbarLink title="Top" href="/feed/top" />
-          <NavbarLink title="New" href="/feed/new" />
+          <NavbarLink
+            title="Top"
+            href="/feed/top"
+            active={ params.type === 'top' }
+          />
+          <NavbarLink
+            title="New"
+            href="/feed/new"
+            active={ params.type === 'new' }
+          />
         </ul>
 
         <ProfileWithData />
