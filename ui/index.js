@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { addTypenameToSelectionSet } from 'apollo-client/queries/queryTransform';
 import { ApolloProvider } from 'react-apollo';
 import { registerGqlTag } from 'apollo-client/gql'
 
@@ -16,6 +17,12 @@ const client = new ApolloClient({
   networkInterface: createNetworkInterface('/graphql', {
     credentials: 'same-origin',
   }),
+  queryTransformer: addTypenameToSelectionSet,
+  dataIdFromObject: (result) => {
+    if (result.id != undefined) {
+      return (result.__typename + result.id);
+    }
+  },
 });
 
 render((

@@ -14,6 +14,7 @@ type Entry {
   score: Int!
   comments: [Comment]! # Should this be paginated?
   commentCount: Int!
+  id: Int!
 }
 `];
 
@@ -30,6 +31,7 @@ export const resolvers = {
     },
     createdAt: property('created_at'),
     commentCount: constant(0),
+    id: property('id'),
   },
   Comment: {
     postedBy() {
