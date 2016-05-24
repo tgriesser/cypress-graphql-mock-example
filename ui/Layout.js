@@ -24,11 +24,20 @@ const Profile = ({ data }) => {
     );
   } else if (data.currentUser) {
     return (
-      <p className="navbar-text navbar-right">
-        { data.currentUser.login }
-        &nbsp;
-        <a href="/logout">Log out</a>
-      </p>
+      <span>
+        <p className="navbar-text navbar-right">
+          { data.currentUser.login }
+          &nbsp;
+          <a href="/logout">Log out</a>
+        </p>
+        <Link
+          type="submit"
+          className="btn btn-default navbar-btn navbar-right"
+          to="/submit"
+        >
+          Submit
+        </Link>
+      </span>
     );
   } else {
     return (
