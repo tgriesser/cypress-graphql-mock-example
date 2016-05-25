@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
-import emoji from 'node-emoji';
+import { emojify } from 'node-emoji';
 
 const Loading = () => (
   <div>Loading...</div>
@@ -50,7 +50,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
           { entry.repository.full_name }
         </a>
       </h4>
-      <p>{ emoji.emojify(entry.repository.description) }</p>
+      <p>{ emojify(entry.repository.description) }</p>
       <p>
         <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
         &nbsp;
