@@ -1,0 +1,27 @@
+.media-vote {
+  display: table-cell;
+  vertical-align: top;
+  padding-right: 10px;
+}
+.media-vote .btn-score {
+  border: none;
+  background-color: transparent;
+  font-size: 1.3em;
+  padding: 3px 12px;
+  line-height: 0;
+  color: rgba(91, 192, 222, 0.52);
+}
+.media-vote .btn-score:hover {
+  color: #5bc0de;
+}
+.media-vote .btn-score:active {
+  color: #5BA2DE;
+  box-shadow: none;
+}
+.media-vote .btn-score:focus {
+  outline: none;
+}
+.media-vote .vote-score {
+  text-align: center;
+  font-size: 1.2em;
+}

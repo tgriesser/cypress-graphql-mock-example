@@ -30,9 +30,11 @@
     "babel-preset-stage-2": "^6.5.0",
     "chai": "^3.5.0",
     "concurrently": "^2.1.0",
+    "css-loader": "^0.23.1",
     "html-webpack-plugin": "^2.17.0",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.2",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
   },
