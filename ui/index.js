@@ -10,6 +10,8 @@ import Feed from './Feed';
 import Layout from './Layout';
 import NewEntry from './NewEntry';
 
+import './style.css';
+
 // Globally register gql template literal tag
 registerGqlTag()
 

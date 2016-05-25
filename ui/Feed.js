@@ -10,20 +10,20 @@ const InfoLabel = ({ label, value }) => (
   <span className="label label-info">{ label }: { value }</span>
 )
 
-const VoteButtons = ({ onVote }) => {
+const VoteButtons = ({ score, onVote }) => {
   return (
     <span>
       <button
-        className="btn btn-xs btn-primary"
+        className="btn btn-score"
         onClick={ onVote.bind(null, 'UP') }
-      >+</button>
+      ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
 
-      &nbsp;
+    <div className="vote-score">{ score }</div>
 
       <button
-        className="btn btn-xs btn-primary"
+        className="btn btn-score"
         onClick={ onVote.bind(null, 'DOWN') }
-      >-</button>
+      ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
       &nbsp;
     </span>
   )
@@ -31,6 +31,11 @@ const VoteButtons = ({ onVote }) => {
 
 const FeedEntry = ({ entry, currentUser, onVote }) => (
   <div className="media">
+    <div className="media-vote">
+      { currentUser && <VoteButtons score={ entry.score } onVote={(type) => {
+        onVote(entry.repository.full_name, type);
+      }}/> }
+    </div>
     <div className="media-left">
       <a href="#">
         <img
@@ -48,11 +53,6 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
       </h4>
       <p>{ entry.repository.description }</p>
       <p>
-        { currentUser && <VoteButtons onVote={(type) => {
-          onVote(entry.repository.full_name, type);
-        }}/> }
-        <InfoLabel label="Score" value={ entry.score } />
-        &nbsp;
         <InfoLabel label="Stars" value={ entry.repository.stargazers_count } />
         &nbsp;
         <InfoLabel label="Issues" value={ entry.repository.open_issues_count } />
