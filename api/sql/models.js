@@ -85,13 +85,32 @@ export class Entries {
   }
 
   submitRepository(repoFullName, username) {
-    return knex('entries')
-      .insert({
-        created_at: Date.now(),
-        updated_at: Date.now(),
-        repository_name: repoFullName,
-        posted_by: username,
-      });
+    const rateLimitMs = 60 * 60 * 1000;
+    const rateLimitThresh = 3;
+
+    // Rate limiting logic
+    return knex.transaction((trx) => {
+      return trx('entries') 
+        .count()
+        .where('posted_by', '=', username)
+        .where('created_at', '>', Date.now() - rateLimitMs)
+        .then((obj) => {
+          // If the user has already submitted too many times, we don't
+          // post the repo.
+          const postCount = obj[0]['count(*)'];
+          if (postCount > rateLimitThresh) {
+            throw new Error('Too many repos submitted in the last hour!');
+          } else {
+            return trx('entries')
+              .insert({
+                created_at: Date.now(),
+                updated_at: Date.now(),
+                repository_name: repoFullName,
+                posted_by: username
+              });
+          }             
+        }); 
+    });
   }
 }
 
