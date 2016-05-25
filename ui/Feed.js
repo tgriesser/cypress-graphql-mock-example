@@ -17,9 +17,7 @@ const VoteButtons = ({ score, onVote }) => {
         className="btn btn-score"
         onClick={ onVote.bind(null, 'UP') }
       ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
-
-    <div className="vote-score">{ score }</div>
-
+      <div className="vote-score">{ score }</div>
       <button
         className="btn btn-score"
         onClick={ onVote.bind(null, 'DOWN') }
