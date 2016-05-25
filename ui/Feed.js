@@ -41,7 +41,11 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
       </a>
     </div>
     <div className="media-body">
-      <h4 className="media-heading">{ entry.repository.full_name }</h4>
+      <h4 className="media-heading">
+        <a href={ entry.repository.html_url }>
+          { entry.repository.full_name }
+        </a>
+      </h4>
       <p>{ entry.repository.description }</p>
       <p>
         { currentUser && <VoteButtons onVote={(type) => {
