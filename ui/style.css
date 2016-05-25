@@ -25,3 +25,20 @@
   text-align: center;
   font-size: 1.2em;
 }
+#footer {
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+  width: 100%;
+  background-color: #f0f0f0;
+  border-top: 1px solid #c4c4c4;
+  padding-top: 10px;
+}
+
+#footer li {
+  display: inline;
+  margin: 40px;
+  text-transform: uppercase;
+  color: #999;
+  font-size: 13px;
+}
