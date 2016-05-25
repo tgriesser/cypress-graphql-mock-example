@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
+import emoji from 'node-emoji';
 
 const Loading = () => (
   <div>Loading...</div>
@@ -46,7 +47,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
           { entry.repository.full_name }
         </a>
       </h4>
-      <p>{ entry.repository.description }</p>
+      <p>{ emoji.emojify(entry.repository.description) }</p>
       <p>
         { currentUser && <VoteButtons onVote={(type) => {
           onVote(entry.repository.full_name, type);
