@@ -10,6 +10,11 @@ function mockRequestPromise(requestOptions) {
 
   const nextRequest = requestQueue.shift();
 
+  console.log("Expected: ");
+  console.log(requestOptions);
+  console.log("Actual: ");
+  console.log(nextRequest);
+
   // Ensure this is the request we expected
   assert.deepEqual(requestOptions, nextRequest.options);
 
@@ -37,8 +42,8 @@ function pushMockRequest({ options, result, error }) {
 
   requestQueue.push({
     options: {
-      ...options,
       ...defaultOptions,
+      ...options,
     },
     result,
     error,
@@ -113,4 +118,46 @@ describe('GitHub connector', () => {
       assert.deepEqual(result, { id: 1 });
     });
   });
+
+  it('should correctly interpret etags from Github', (done) => {
+    const connector = new GitHubConnector({
+      client_id: 'fake_client_id',
+      client_secret: 'fake_client_secret',
+    });
+    const testEtag = 'notarealetag';
+
+    pushMockRequest({
+      options: {
+        uri: '/endpoint',
+        qs: {
+          client_id: 'fake_client_id',
+          client_secret: 'fake_client_secret',
+        },
+      },
+      result: {headers : {'etag': testEtag}, body: {id: 1}},
+    });
+
+
+    pushMockRequest({
+      options: {
+        uri: '/endpoint',
+        qs: {
+          client_id: 'fake_client_id',
+          client_secret: 'fake_client_secret',
+        },
+        headers: {
+          'If-None-Match': testEtag
+        },
+      },
+      result: {headers: {'etag': testEtag}, body: {id: 1}}
+    });
+
+    connector.get('/endpoint').then((res1) => {
+      connector.get('/endpoint').then((result) => {
+        assert.deepEqual(result, { id: 1 });
+        done();
+      });
+    });   
+  });
 });
+
