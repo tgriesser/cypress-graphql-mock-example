@@ -65,7 +65,7 @@ const ProfileWithData = connect({
   })
 })(Profile);
 
-const Layout = ({ children, params }) => (
+const Layout = ({ children, params, location }) => (
   <div>
     <nav className="navbar navbar-default">
       <div className="container">
@@ -77,7 +77,7 @@ const Layout = ({ children, params }) => (
           <NavbarLink
             title="Top"
             href="/feed/top"
-            active={ params.type === 'top' }
+            active={ location.pathname === '/' || params.type === 'top' }
           />
           <NavbarLink
             title="New"
