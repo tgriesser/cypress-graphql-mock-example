@@ -3,11 +3,11 @@ Concept for an Apollo full-stack example app that demonstrates all of the import
 
 ## Running the app
 
-### 1. Node
+### 1. Install Node/npm
 
-Make sure you have Node installed (the app has been tested with node v4.4.5)
+Make sure you have Node.js installed (the app has been tested with node v4.4.5)
 
-### 2. Clone the app
+### 2. Clone and install dependencies
 
 ```
 git clone https://github.com/apollostack/GitHunt.git
@@ -20,8 +20,8 @@ npm install
 Set up the SQLite database and run migrations/seed data with the following commands:
 
 ```
-> npm run migrate
-> npm run seed
+npm run migrate
+npm run seed
 ```
 
 ### 4. Get GitHub API keys
@@ -43,14 +43,16 @@ On the following page, grab:
 ### 5. Add Environment Variables
 Set your Client ID and Client Secret Environment variables:
 
-`> GITHUB_CLIENT_ID="your Client ID"; export GITHUB_CLIENT_ID`
-
-`> GITHUB_CLIENT_SECRET="your Client Secret" export GITHUB_CLIENT_SECRET`
-
+```
+export GITHUB_CLIENT_ID="your Client ID"
+export GITHUB_CLIENT_SECRET="your Client Secret"
+```
 
 ### 6. Run the app
 
-`> npm run start`
+```
+npm start
+```
 
 - Open the client at http://localhost:3000
 - Click "Log in with GitHub" in the upper right corner
@@ -68,13 +70,10 @@ Review the new item, up vote it and visit the repo via the link.
 ![GitHunt App](screenshots/GitHunt-new.png)
 
 #### Apollo Server
-The server will run on port 3010. You can access the server's GraphiQL UI at http://localhost:3010/graphql
+
+The server will run on port 3010, but the Webpack dev server proxies it to 3000. You can access the server's GraphiQL UI at <http://localhost:3000/graphql>.
 
 ![GitHunt App](screenshots/GitHunt-GraphQL.png)
-
-[Install and Run the Demo App](#demo-installation)
-
-Want to see how it's going? Read the [development log](devlog.md)!
 
 ## Code patterns to demonstrate
 
@@ -120,9 +119,3 @@ Does it demonstrate all of the required features above?
 - Passport.js for login - this seems to be the most common login solution for Express/Node, and has a great GitHub login solution. Jonas has already written a tutorial for using that with GraphQL.
 - SQL for local data - We'll use SQLite for dev, and Postgres for production. TBD - should we use Sequelize or some other ORM? Or just Knex for query building?
 - Bootstrap for styling - I already know how to use it, and I don't want the styling to be the focus of the app. Let's keep it as simple as possible.
-
-## Page mockup
-
-The front page:
-
-![Front page mockup](mockup.jpg)
