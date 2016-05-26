@@ -44,7 +44,7 @@ export class GitHubConnector {
     
     return Promise.all(urls.map((url) => {
       const cachedRes = eTagCache[url];
-      if(cachedRes) {
+      if(cachedRes && cachedRes.eTag) {
         options.headers['If-None-Match'] = cachedRes.eTag;
       }
       return new Promise((resolve, reject) => {

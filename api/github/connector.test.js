@@ -30,6 +30,7 @@ function pushMockRequest({ options, result, error }) {
     headers: {
       'user-agent': 'GitHunt',
     },
+    resolveWithFullResponse: true,
   };
 
   options.uri = 'https://api.github.com' + options.uri;
@@ -64,7 +65,7 @@ describe('GitHub connector', () => {
 
     pushMockRequest({
       options: { uri: '/endpoint' },
-      result: { id: 1 },
+      result: {headers: {}, body: { id: 1 }},
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -77,7 +78,7 @@ describe('GitHub connector', () => {
 
     pushMockRequest({
       options: { uri: '/endpoint' },
-      result: { id: 1 },
+      result: { headers: {}, body: {id: 1 }},
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -105,9 +106,7 @@ describe('GitHub connector', () => {
           client_secret: 'fake_client_secret',
         },
       },
-      result: {
-        id: 1,
-      },
+      result: {headers : {}, body: {id: 1}},
     });
 
     return connector.get('/endpoint').then((result) => {
