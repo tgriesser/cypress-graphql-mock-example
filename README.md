@@ -86,7 +86,7 @@ Seed the application by running the following npm scripts:
 - Register your application like below
 - Click 'Register application' button
 
-![Github OAuth](screenshots/github-oath-app.png)
+![Github OAuth](screenshots/github-oath-setup.png)
 
 On the following page, grab:
 - Client ID
