@@ -16,7 +16,12 @@ import { GitHubConnector } from './github/connector';
 import { Repositories, Users } from './github/models';
 import { Entries } from './sql/models';
 
-const PORT = 3010;
+let PORT = 3010;
+
+if (process.env.PORT) {
+  PORT = parseInt(process.env.PORT, 10) + 100;
+}
+
 const {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
