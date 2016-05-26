@@ -1,5 +1,16 @@
 # GitHunt
-Concept for an Apollo full-stack example app that demonstrates all of the important concepts
+
+A full-stack Apollo Client and Server example app.
+
+[![Get on Slack](http://slack.apollostack.com/badge.svg)](http://slack.apollostack.com/)
+
+Demonstrates:
+
+1. GraphQL schema, resolvers, models, and connectors to read from two different data sources, GitHub REST API and SQL
+2. Web server with authentication and basic authorization using Express, Passport, and Apollo Server
+3. React app with React Router and Apollo Client that displays data and does some writes
+
+As Apollo Client and Server gain more features, we'll add them to this app. Please submit a pull request if you see anything that can be improved!
 
 ## Running the app
 
