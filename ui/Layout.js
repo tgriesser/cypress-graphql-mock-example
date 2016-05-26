@@ -77,7 +77,7 @@ const Layout = ({ children, params }) => (
           <NavbarLink
             title="Top"
             href="/feed/top"
-            active={ !params.type || params.type === 'top' }
+            active={ params.type === 'top' }
           />
           <NavbarLink
             title="New"
