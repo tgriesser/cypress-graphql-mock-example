@@ -104,7 +104,7 @@ Set your Client ID and Client Secret Environment variables:
 
 ### 6. Run the app
 
-`> run npm start`
+`> npm run start`
 
 - Open the client at http://localhost:3000
 - Click "Log in with GitHub" in the upper right corner
