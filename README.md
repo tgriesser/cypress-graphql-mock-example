@@ -1,6 +1,77 @@
 # GitHunt
 Concept for an Apollo full-stack example app that demonstrates all of the important concepts
 
+## Running the app
+
+### 1. Node
+
+Make sure you have Node installed (the app has been tested with node v4.4.5)
+
+### 2. Clone the app
+
+```
+git clone https://github.com/apollostack/GitHunt.git
+cd GitHunt
+npm install
+```
+
+### 3. Run Migrations
+
+Set up the SQLite database and run migrations/seed data with the following commands:
+
+```
+> npm run migrate
+> npm run seed
+```
+
+### 4. Get GitHub API keys
+
+- Go to [OAuth applications > Developer applications](https://github.com/settings/developers) in GitHub settings
+- Click 'Register a new application' button
+- Register your application like below
+- Click 'Register application' button
+
+![Github OAuth](screenshots/github-oath-setup.png)
+
+On the following page, grab:
+
+- Client ID
+- Client Secret
+
+![OAuth Key](screenshots/github-oauth-keys.png)
+
+### 5. Add Environment Variables
+Set your Client ID and Client Secret Environment variables:
+
+`> GITHUB_CLIENT_ID="your Client ID"; export GITHUB_CLIENT_ID`
+
+`> GITHUB_CLIENT_SECRET="your Client Secret" export GITHUB_CLIENT_SECRET`
+
+
+### 6. Run the app
+
+`> npm run start`
+
+- Open the client at http://localhost:3000
+- Click "Log in with GitHub" in the upper right corner
+- You'll be presented with the seed items in the app
+
+![GitHunt App](screenshots/GitHunt-app.png)
+
+#### Submit a Repo
+Click the green Submit button and add repo with the username/repo-name pattern.
+
+![GitHunt App](screenshots/GitHunt-add.png)
+
+#### New Item
+Review the new item, up vote it and visit the repo via the link.   
+![GitHunt App](screenshots/GitHunt-new.png)
+
+#### Apollo Server
+The server will run on port 3010. You can access the server's GraphiQL UI at http://localhost:3010/graphql
+
+![GitHunt App](screenshots/GitHunt-GraphQL.png)
+
 [Install and Run the Demo App](#demo-installation)
 
 Want to see how it's going? Read the [development log](devlog.md)!
@@ -55,73 +126,3 @@ Does it demonstrate all of the required features above?
 The front page:
 
 ![Front page mockup](mockup.jpg)
-
----
-
-## Demo Installation
-### 1. Node
-Make sure you have Node v4.x.x installed (app has been tested with node v4.4.5)
-
-### 2. Clone the app
-
-```
-> mkdir myGitHunt && cd $_
-> git clone https://github.com/apollostack/GitHunt.git
-> npm install
-```
-
-### 3. Run Migrations
-Seed the application by running the following npm scripts:
-```
-> npm run migrate
-> npm run seed
-```
-
-
-### 4. Setup Github OAuth App
-- Under your Github profile dropdown, choose 'Settings'
-- On the left nav, choose 'OAuth applications'
-- Choose the 'Developer Applications' tab at the top of the page
-- Click 'Register a new application' button
-- Register your application like below
-- Click 'Register application' button
-
-![Github OAuth](screenshots/github-oath-setup.png)
-
-On the following page, grab:
-- Client ID
-- Client Secret
-
-![OAuth Key](screenshots/github-oauth-keys.png)
-
-### 5. Add Environment Variables
-Set your Client ID and Client Secret Environment variables:
-
-`> GITHUB_CLIENT_ID="your Client ID"; export GITHUB_CLIENT_ID`
-
-`> GITHUB_CLIENT_SECRET="your Client Secret" export GITHUB_CLIENT_SECRET`
-
-
-### 6. Run the app
-
-`> npm run start`
-
-- Open the client at http://localhost:3000
-- Click "Log in with GitHub" in the upper right corner
-- You'll be presented with the seed items in the app
-
-![GitHunt App](screenshots/GitHunt-app.png)
-
-#### Submit a Repo
-Click the green Submit button and add repo with the username/repo-name pattern.
-
-![GitHunt App](screenshots/GitHunt-add.png)
-
-#### New Item
-Review the new item, up vote it and visit the repo via the link.   
-![GitHunt App](screenshots/GitHunt-new.png)
-
-#### Apollo Server
-The server will run on port 3010. You can access the server's GraphiQL UI at http://localhost:3010/graphql
-
-![GitHunt App](screenshots/GitHunt-GraphQL.png)
