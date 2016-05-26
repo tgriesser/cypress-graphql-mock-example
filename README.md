@@ -1,7 +1,7 @@
 # GitHunt
 Concept for an Apollo full-stack example app that demonstrates all of the important concepts
 
-[Install and Run the Demo App](###demo-installation)
+[Install and Run the Demo App](#demo-installation)
 
 Want to see how it's going? Read the [development log](devlog.md)!
 
