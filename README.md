@@ -71,7 +71,7 @@ Make sure you have Node v4.x.x installed (app has been tested with node v4.4.5)
 ```
 
 ### 3. Run Migrations
-Seed the application
+Seed the application by running the following npm scripts:
 ```
 > npm run migrate
 > npm run seed
