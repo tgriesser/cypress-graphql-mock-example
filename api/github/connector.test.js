@@ -9,7 +9,7 @@ function mockRequestPromise(requestOptions) {
   assert.notEqual(requestQueue.length, 0);
 
   const nextRequest = requestQueue.shift();
-
+  
   // Ensure this is the request we expected
   assert.deepEqual(requestOptions, nextRequest.options);
 
@@ -30,14 +30,15 @@ function pushMockRequest({ options, result, error }) {
     headers: {
       'user-agent': 'GitHunt',
     },
+    resolveWithFullResponse: true,
   };
 
   options.uri = 'https://api.github.com' + options.uri;
 
   requestQueue.push({
     options: {
-      ...options,
       ...defaultOptions,
+      ...options,
     },
     result,
     error,
@@ -64,7 +65,7 @@ describe('GitHub connector', () => {
 
     pushMockRequest({
       options: { uri: '/endpoint' },
-      result: { id: 1 },
+      result: {headers: {}, body: { id: 1 }},
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -77,7 +78,7 @@ describe('GitHub connector', () => {
 
     pushMockRequest({
       options: { uri: '/endpoint' },
-      result: { id: 1 },
+      result: { headers: {}, body: {id: 1 }},
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -105,13 +106,41 @@ describe('GitHub connector', () => {
           client_secret: 'fake_client_secret',
         },
       },
-      result: {
-        id: 1,
-      },
+      result: {headers : {}, body: {id: 1}},
     });
 
     return connector.get('/endpoint').then((result) => {
       assert.deepEqual(result, { id: 1 });
     });
   });
+
+  it('should correctly interpret etags from Github', () => {
+    const connector = new GitHubConnector();
+    const etag = 'etag';
+
+    pushMockRequest({
+      options: { uri: '/endpoint' },
+      result: {headers: {'etag': etag}, body: { id: 1 }},
+    });
+    
+    const connector2 = new GitHubConnector();
+    
+    pushMockRequest({
+      options: { 
+        uri: '/endpoint',
+        headers: {
+          'If-None-Match': etag,
+          'user-agent': 'GitHunt',
+        } 
+      },
+      result: {headers: {}, body: { id: 1 }},
+    });
+
+    return connector.get('/endpoint').then(() => {
+      return connector2.get('/endpoint');
+    }).then((result) => {
+      assert.deepEqual(result, {id: 1});
+    });
+  });
 });
+
