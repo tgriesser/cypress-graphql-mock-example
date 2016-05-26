@@ -2,7 +2,7 @@ import rp from 'request-promise';
 import DataLoader from 'dataloader';
 
 // Keys are GitHub API URLs, values are { etag, result } objects
-let eTagCache = {};
+const eTagCache = {};
 
 const GITHUB_API_ROOT = 'https://api.github.com';
 
@@ -44,12 +44,7 @@ export class GitHubConnector {
     // TODO: pass GitHub API key
     
     return Promise.all(urls.map((url) => {
-      console.log("etagcache");
-      console.log(eTagCache);
-
       const cachedRes = eTagCache[url];
-      console.log("cachedRes");
-      console.log(cachedRes);
 
       if(cachedRes && cachedRes.eTag) {
         options.headers['If-None-Match'] = cachedRes.eTag;
