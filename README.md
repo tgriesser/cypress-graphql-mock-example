@@ -5,7 +5,7 @@ Concept for an Apollo full-stack example app that demonstrates all of the import
 
 ### 1. Install Node/npm
 
-Make sure you have Node.js installed (the app has been tested with node v4.4.5)
+Make sure you have Node.js installed (the app has been tested with Node `4.4.5` and `5.3.0`)
 
 ### 2. Clone and install dependencies
 
