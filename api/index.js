@@ -4,6 +4,7 @@ import passport from 'passport';
 import { apolloServer } from 'apollo-server';
 import { Strategy as GitHubStrategy } from 'passport-github';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import knex from './sql/connector';
 
 var KnexSessionStore = require('connect-session-knex')(session);
@@ -16,6 +17,7 @@ import { GitHubConnector } from './github/connector';
 import { Repositories, Users } from './github/models';
 import { Entries } from './sql/models';
 
+dotenv.config({silent: true});
 let PORT = 3010;
 
 if (process.env.PORT) {

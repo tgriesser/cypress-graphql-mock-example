@@ -59,6 +59,10 @@ export GITHUB_CLIENT_ID="your Client ID"
 export GITHUB_CLIENT_SECRET="your Client Secret"
 ```
 
+Or you can use `dotenv`.
+
+`cp .env.default .env` and edit with your Github keys.
+
 ### 6. Run the app
 
 ```
