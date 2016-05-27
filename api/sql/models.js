@@ -56,7 +56,7 @@ export class Entries {
     .then(() => {
       return knex('entries')
         .where({ repository_name: repoFullName })
-        .select([ 'id '])
+        .select(['id'])
         .first()
         .then(({ id }) => {
           entry_id = id;
@@ -84,13 +84,37 @@ export class Entries {
     });
   }
 
+  haveVotedForEntry(repoFullName, username) {
+    let entry_id;
+
+    return Promise.resolve()
+
+    // First, get the entry_id from repoFullName
+    .then(() => {
+      return knex('entries')
+        .where({ repository_name: repoFullName })
+        .select(['id'])
+        .first()
+        .then(({ id }) => {
+          entry_id = id;
+        });
+    })
+
+    .then(() => {
+      return knex('votes')
+        .where({ entry_id, username })
+        .select(['id', 'vote_value'])
+        .first();
+    })
+  }
+
   submitRepository(repoFullName, username) {
     const rateLimitMs = 60 * 60 * 1000;
     const rateLimitThresh = 3;
 
     // Rate limiting logic
     return knex.transaction((trx) => {
-      return trx('entries') 
+      return trx('entries')
         .count()
         .where('posted_by', '=', username)
         .where('created_at', '>', Date.now() - rateLimitMs)
@@ -108,8 +132,8 @@ export class Entries {
                 repository_name: repoFullName,
                 posted_by: username
               });
-          }             
-        }); 
+          }
+        });
     });
   }
 }
