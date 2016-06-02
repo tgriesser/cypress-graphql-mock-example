@@ -6,6 +6,9 @@ import { addTypenameToSelectionSet } from 'apollo-client/queries/queryTransform'
 import { ApolloProvider } from 'react-apollo';
 import { registerGqlTag } from 'apollo-client/gql'
 
+// Polyfill fetch
+import 'whatwg-fetch';
+
 import Feed from './Feed';
 import Layout from './Layout';
 import NewEntry from './NewEntry';
