@@ -106,6 +106,8 @@ export class Entries {
         .select(['id', 'vote_value'])
         .first();
     })
+
+    .then((vote) => vote || { vote_value: 0 });
   }
 
   submitRepository(repoFullName, username) {
