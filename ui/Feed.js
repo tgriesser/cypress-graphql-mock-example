@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
+import classNames from 'classnames';
 
 const Loading = () => (
   <div>Loading...</div>
@@ -11,26 +12,31 @@ const InfoLabel = ({ label, value }) => (
   <span className="label label-info">{label}: {value}</span>
 );
 
-const VoteButtons = ({ score, onVote, vote }) => (
-  <span>
-    <button
-      className={vote.vote_value === 1 ? 'btn btn-score active' : 'btn btn-score'}
-      onClick={() => onVote('UP')}
-    ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
-    <div className="vote-score">{score}</div>
-    <button
-      className={vote.vote_value === -1 ? 'btn btn-score active' : 'btn btn-score'}
-      onClick={() => onVote('DOWN')}
-    ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
-    &nbsp;
-  </span>
-);
+const VoteButtons = ({ canVote, score, onVote, vote }) => {
+  const buttonClasses = classNames('btn', 'btn-score', { invisible: ! canVote });
+
+  return (
+    <span>
+      <button
+        className={classNames(buttonClasses, { active: vote.vote_value === 1 })}
+        onClick={() => onVote('UP')}
+      ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
+      <div className="vote-score">{score}</div>
+      <button
+        className={classNames(buttonClasses, { active: vote.vote_value === -1 })}
+        onClick={() => onVote('DOWN')}
+      ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
+      &nbsp;
+    </span>
+  )
+};
 
 const FeedEntry = ({ entry, currentUser, onVote }) => (
   <div className="media">
     <div className="media-vote">
       {currentUser &&
         <VoteButtons
+          canVote={!! currentUser}
           score={entry.score}
           vote={entry.vote}
           onVote={(type) => onVote(entry.repository.full_name, type)}

@@ -49,6 +49,7 @@
     "apollo-client": "^0.3.12",
     "apollo-server": "^0.1.1",
     "body-parser": "^1.15.1",
+    "classnames": "^2.2.5",
     "connect-session-knex": "^1.0.23",
     "cookie-parser": "^1.4.1",
     "dataloader": "^1.2.0",
