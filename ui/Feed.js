@@ -28,7 +28,7 @@ const VoteButtons = ({ canVote, score, onVote, vote }) => {
       ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
       &nbsp;
     </span>
-  )
+  );
 };
 
 const FeedEntry = ({ entry, currentUser, onVote }) => (
@@ -46,7 +46,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
       <a href="#">
         <img
           className="media-object"
-          style={{width: '64px', height: '64px'}}
+          style={{ width: '64px', height: '64px' }}
           src={entry.repository.owner.avatar_url}
         />
       </a>
