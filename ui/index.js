@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { addTypenameToSelectionSet } from 'apollo-client/queries/queryTransform';
 import { ApolloProvider } from 'react-apollo';
-import { registerGqlTag } from 'apollo-client/gql'
+import { registerGqlTag } from 'apollo-client/gql';
 
 // Polyfill fetch
 import 'whatwg-fetch';
@@ -16,7 +16,7 @@ import NewEntry from './NewEntry';
 import './style.css';
 
 // Globally register gql template literal tag
-registerGqlTag()
+registerGqlTag();
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface('/graphql', {
@@ -27,6 +27,7 @@ const client = new ApolloClient({
     if (result.id && result.__typename) {
       return result.__typename + result.id;
     }
+    return '';
   },
 });
 

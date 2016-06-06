@@ -3,17 +3,17 @@ import { connect } from 'react-apollo';
 import { Link } from 'react-router';
 
 const NavbarLink = ({ title, href, active=false }) => (
-  <li className={ active && "active"}>
+  <li className={active && 'active'}>
     <Link to={href}>
-      { title }
-      { active && (
+      {title}
+      {active && (
         <span className="sr-only">
           (current)
         </span>
-      ) }
+      )}
     </Link>
   </li>
-)
+);
 
 const Profile = ({ data }) => {
   if (data.loading) {
@@ -26,7 +26,7 @@ const Profile = ({ data }) => {
     return (
       <span>
         <p className="navbar-text navbar-right">
-          { data.currentUser.login }
+          {data.currentUser.login}
           &nbsp;
           <a href="/logout">Log out</a>
         </p>
@@ -41,13 +41,12 @@ const Profile = ({ data }) => {
         </Link>
       </span>
     );
-  } else {
-    return (
-      <p className="navbar-text navbar-right">
-        <a href="/login/github">Log in with GitHub</a>
-      </p>
-    );
   }
+  return (
+    <p className="navbar-text navbar-right">
+      <a href="/login/github">Log in with GitHub</a>
+    </p>
+  );
 };
 
 const ProfileWithData = connect({
@@ -62,7 +61,7 @@ const ProfileWithData = connect({
         }
       `,
     },
-  })
+  }),
 })(Profile);
 
 const Layout = ({ children, params, location }) => (
@@ -77,12 +76,12 @@ const Layout = ({ children, params, location }) => (
           <NavbarLink
             title="Top"
             href="/feed/top"
-            active={ location.pathname === '/' || params.type === 'top' }
+            active={location.pathname === '/' || params.type === 'top'}
           />
           <NavbarLink
             title="New"
             href="/feed/new"
-            active={ params.type === 'new' }
+            active={params.type === 'new'}
           />
         </ul>
 
@@ -90,7 +89,7 @@ const Layout = ({ children, params, location }) => (
       </div>
     </nav>
     <div className="container">
-      { children }
+      {children}
     </div>
   </div>
 );
