@@ -27,6 +27,10 @@
   font-size: 1.2em;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 body {
   padding-bottom: 60px;
 }
