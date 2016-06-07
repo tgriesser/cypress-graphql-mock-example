@@ -27,7 +27,7 @@ const client = new ApolloClient({
     if (result.id && result.__typename) {
       return result.__typename + result.id;
     }
-    return '';
+    return null;
   },
 });
 
