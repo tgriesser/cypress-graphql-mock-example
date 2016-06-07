@@ -45,5 +45,5 @@ export const resolvers = {
     postedBy() {
       throw new Error('Not implemented.');
     },
-  }
-}
+  },
+};

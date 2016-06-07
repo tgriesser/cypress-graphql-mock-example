@@ -7,8 +7,8 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import knex from './sql/connector';
 
-var KnexSessionStore = require('connect-session-knex')(session);
-var store = new KnexSessionStore({
+const KnexSessionStore = require('connect-session-knex')(session);
+const store = new KnexSessionStore({
   knex,
 });
 
@@ -17,7 +17,7 @@ import { GitHubConnector } from './github/connector';
 import { Repositories, Users } from './github/models';
 import { Entries } from './sql/models';
 
-dotenv.config({silent: true});
+dotenv.config({ silent: true });
 let PORT = 3010;
 
 if (process.env.PORT) {
@@ -41,7 +41,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/login/github',
@@ -49,11 +49,9 @@ app.get('/login/github',
 
 app.get('/login/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+  (req, res) => res.redirect('/'));
 
-app.get('/logout', function(req, res){
+app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
@@ -95,7 +93,7 @@ app.use('/graphql', apolloServer((req) => {
       Repositories: new Repositories({ connector: gitHubConnector }),
       Users: new Users({ connector: gitHubConnector }),
       Entries: new Entries(),
-    }
+    },
   };
 }));
 
@@ -106,17 +104,12 @@ app.listen(PORT, () => console.log(
 const gitHubStrategyOptions = {
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/login/github/callback"
+  callbackURL: 'http://localhost:3000/login/github/callback',
 };
 
 passport.use(new GitHubStrategy(gitHubStrategyOptions, (accessToken, refreshToken, profile, cb) => {
   cb(null, profile);
 }));
 
-passport.serializeUser(function(user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function(obj, cb) {
-  cb(null, obj);
-});
+passport.serializeUser((user, cb) => cb(null, user));
+passport.deserializeUser((obj, cb) => cb(null, obj));

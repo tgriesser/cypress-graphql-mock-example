@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-apollo';
-import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router';
 
 class NewEntry extends React.Component {
   constructor() {
@@ -28,7 +28,7 @@ class NewEntry extends React.Component {
 
         <form onSubmit={this._submitForm}>
           <div className="form-group">
-            <label for="exampleInputEmail1">
+            <label htmlFor="exampleInputEmail1">
               Repository name
             </label>
 
@@ -41,11 +41,11 @@ class NewEntry extends React.Component {
             />
           </div>
 
-          { this.props.submitRepository.errors && (
+          {this.props.submitRepository.errors && (
             <div className="alert alert-danger" role="alert">
-              { this.props.submitRepository.errors[0].message }
+              {this.props.submitRepository.errors[0].message}
             </div>
-          ) }
+          )}
 
 
           <button type="submit" className="btn btn-primary">

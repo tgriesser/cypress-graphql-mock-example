@@ -98,16 +98,16 @@ const rootResolvers = {
       return context.Entries.voteForEntry(
         repoFullName,
         voteValue,
-        context.user.login,
-      ).then(() => {
-        return context.Entries.getByRepoFullName(repoFullName)
-      });
+        context.user.login
+      ).then(() => (
+        context.Entries.getByRepoFullName(repoFullName)
+      ));
     },
 
     comment() {
       throw new Error('Not implemented.');
     },
-  }
+  },
 };
 
 export const schema = [...rootSchema, ...gitHubSchema, ...sqlSchema];

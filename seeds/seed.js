@@ -52,7 +52,7 @@ export function seed(knex, Promise) {
       }).then(([id]) => {
         repoIds[repository_name] = id;
       });
-    }))
+    }));
   })
 
   // Insert some votes so that we can render a sorted feed
@@ -66,5 +66,5 @@ export function seed(knex, Promise) {
         });
       }));
     }));
-  })
-};
+  });
+}
