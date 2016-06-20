@@ -15,16 +15,25 @@ const InfoLabel = ({ label, value }) => (
 const VoteButtons = ({ canVote, score, onVote, vote }) => {
   const buttonClasses = classNames('btn', 'btn-score', { invisible: ! canVote });
 
+  function submitVote(type) {
+    const voteValue = {
+      UP: 1,
+      DOWN: -1,
+    }[type];
+
+    onVote(vote.vote_value === voteValue ? 'CANCEL' : type);
+  }
+
   return (
     <span>
       <button
         className={classNames(buttonClasses, { active: vote.vote_value === 1 })}
-        onClick={() => onVote('UP')}
+        onClick={() => submitVote('UP')}
       ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
       <div className="vote-score">{score}</div>
       <button
         className={classNames(buttonClasses, { active: vote.vote_value === -1 })}
-        onClick={() => onVote('DOWN')}
+        onClick={() => submitVote('DOWN')}
       ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
       &nbsp;
     </span>
