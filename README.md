@@ -2,7 +2,7 @@
 
 A full-stack Apollo Client and Server example app.
 
-[![Get on Slack](http://slack.apollostack.com/badge.svg)](http://slack.apollostack.com/)
+[![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollostack.com/#slack)
 
 Demonstrates:
 
