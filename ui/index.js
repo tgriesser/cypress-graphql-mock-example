@@ -5,8 +5,6 @@ import ApolloClient, { createNetworkInterface, addTypename } from 'apollo-client
 import { ApolloProvider } from 'react-apollo';
 import { registerGqlTag } from 'apollo-client/gql';
 
-console.log(addTypename);
-
 // Polyfill fetch
 import 'whatwg-fetch';
 
