@@ -46,7 +46,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "apollo-client": "^0.3.12",
+    "apollo-client": "^0.3.19",
     "apollo-server": "^0.1.1",
     "body-parser": "^1.15.1",
     "classnames": "^2.2.5",
