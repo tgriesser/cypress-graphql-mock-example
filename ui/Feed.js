@@ -52,7 +52,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
         />}
     </div>
     <div className="media-left">
-      <a href="#">
+      <a href={"/"+entry.repository.full_name}>
         <img
           className="media-object"
           style={{ width: '64px', height: '64px' }}
