@@ -2,20 +2,29 @@ import React from 'react';
 import { connect } from 'react-apollo';
 import { Link } from 'react-router';
 
-const NavbarLink = ({ title, href, active=false }) => (
-  <li className={active && 'active'}>
-    <Link to={href}>
-      {title}
-      {active && (
-        <span className="sr-only">
-          (current)
-        </span>
-      )}
-    </Link>
-  </li>
-);
+function NavbarLink({ title, href, active = false }) {
+  return (
+    <li className={active && 'active'}>
+      <Link to={href}>
+        {title}
+        {active && (
+          <span className="sr-only">
+            (current)
+          </span>
+        )}
+      </Link>
+    </li>
+  );
+}
 
-const Profile = ({ data }) => {
+NavbarLink.propTypes = {
+  title: React.PropTypes.string,
+  href: React.PropTypes.string,
+  active: React.PropTypes.bool,
+};
+
+
+function Profile({ data }) {
   if (data.loading) {
     return (
       <p className="navbar-text navbar-right">
@@ -35,7 +44,10 @@ const Profile = ({ data }) => {
           className="btn navbar-btn navbar-right btn-success"
           to="/submit"
         >
-          <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+          <span
+            className="glyphicon glyphicon-plus"
+            aria-hidden="true"
+          />
           &nbsp;
           Submit
         </Link>
@@ -47,6 +59,10 @@ const Profile = ({ data }) => {
       <a href="/login/github">Log in with GitHub</a>
     </p>
   );
+}
+
+Profile.propTypes = {
+  data: React.PropTypes.object,
 };
 
 const ProfileWithData = connect({
@@ -64,34 +80,42 @@ const ProfileWithData = connect({
   }),
 })(Profile);
 
-const Layout = ({ children, params, location }) => (
-  <div>
-    <nav className="navbar navbar-default">
-      <div className="container">
-        <div className="navbar-header">
-          <Link className="navbar-brand" to="/feed/top">GitHunt</Link>
+function Layout({ children, params, location }) {
+  return (
+    <div>
+      <nav className="navbar navbar-default">
+        <div className="container">
+          <div className="navbar-header">
+            <Link className="navbar-brand" to="/feed/top">GitHunt</Link>
+          </div>
+
+          <ul className="nav navbar-nav">
+            <NavbarLink
+              title="Top"
+              href="/feed/top"
+              active={location.pathname === '/' || params.type === 'top'}
+            />
+            <NavbarLink
+              title="New"
+              href="/feed/new"
+              active={params.type === 'new'}
+            />
+          </ul>
+
+          <ProfileWithData />
         </div>
-
-        <ul className="nav navbar-nav">
-          <NavbarLink
-            title="Top"
-            href="/feed/top"
-            active={location.pathname === '/' || params.type === 'top'}
-          />
-          <NavbarLink
-            title="New"
-            href="/feed/new"
-            active={params.type === 'new'}
-          />
-        </ul>
-
-        <ProfileWithData />
+      </nav>
+      <div className="container">
+        {children}
       </div>
-    </nav>
-    <div className="container">
-      {children}
     </div>
-  </div>
-);
+  );
+}
+
+Layout.propTypes = {
+  location: React.PropTypes.object,
+  params: React.PropTypes.object,
+  children: React.PropTypes.element,
+};
 
 export default Layout;

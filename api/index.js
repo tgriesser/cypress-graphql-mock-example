@@ -97,7 +97,7 @@ app.use('/graphql', apolloServer((req) => {
   };
 }));
 
-app.listen(PORT, () => console.log(
+app.listen(PORT, () => console.log( // eslint-disable-line no-console
   `Server is now running on http://localhost:${PORT}`
 ));
 
