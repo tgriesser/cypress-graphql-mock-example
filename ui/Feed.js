@@ -3,6 +3,7 @@ import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 import classNames from 'classnames';
+import gql from 'graphql-tag';
 
 const Loading = () => (
   <div>Loading...</div>
