@@ -67,7 +67,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
           {entry.repository.full_name}
         </a>
       </h4>
-      <p>{emojify(entry.repository.description)}</p>
+      <p>{entry.repository.description && emojify(entry.repository.description)}</p>
       <p>
         <InfoLabel label="Stars" value={entry.repository.stargazers_count} />
         &nbsp;
