@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import { browserHistory } from 'react-router';
+import gql from 'graphql-tag';
 
 class NewEntry extends React.Component {
   constructor() {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import { Link } from 'react-router';
+import gql from 'graphql-tag';
 
 const NavbarLink = ({ title, href, active=false }) => (
   <li className={active && 'active'}>
