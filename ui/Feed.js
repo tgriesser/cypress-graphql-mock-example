@@ -52,7 +52,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
         />}
     </div>
     <div className="media-left">
-      <a href={"/"+entry.repository.full_name}>
+      <a href={"#"}>
         <img
           className="media-object"
           style={{ width: '64px', height: '64px' }}
@@ -70,8 +70,8 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
       <p>
         <InfoLabel label="Stars" value={entry.repository.stargazers_count} />
         &nbsp;
-        <InfoLabel label="Issues" value={entry.repository.open_issues_count} />
-        &nbsp;&nbsp;&nbsp;
+        <InfoLabel label="Issues" value={entry.repository.open_issues_count} />&nbsp;
+        <a href={"/"+entry.repository.full_name}>Comments</a>&nbsp;&nbsp;&nbsp;
         Submitted <TimeAgo date={entry.createdAt} />
         &nbsp;by&nbsp;
         <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>

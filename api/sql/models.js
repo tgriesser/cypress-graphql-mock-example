@@ -21,7 +21,25 @@ function mapNullColsToZero(query) {
   });
 }
 
+export class Comments {
+  getCommentsByRepoName(name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .first();
+
+    return mapNullColsToZero(query);
+  }
+}
+
 export class Entries {
+  getCommentsByRepoName(name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .first();
+
+    return mapNullColsToZero(query);
+  }
+
   getForFeed(type, after) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
@@ -138,10 +156,35 @@ export class Entries {
         });
     });
   }
+
+  submitComment(repoFullName, username, content) {
+  	const rateLimitMs = 60 * 60 * 1000;
+    const rateLimitThresh = 3;
+
+    // Rate limiting logic
+    return knex.transaction((trx) => {
+      return trx('comments')
+        .count()
+        .where('posted_by', '=', username)
+        .where('created_at', '>', Date.now() - rateLimitMs)
+        .then((obj) => {
+          // If the user has already submitted too many times, we don't
+          // post the repo.
+          return trx('comments')
+            .insert({
+              content: content,
+              created_at: Date.now().toString(),
+              repository_name: repoFullName,
+              posted_by: username
+            });
+        
+        });
+    });
+  }
 }
 
-export class Comments {
+/*export class Comments {
   getAllByEntryId(entryId) {
     // No need to batch
   }
-}
+}*/
