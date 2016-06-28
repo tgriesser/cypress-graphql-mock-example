@@ -6,9 +6,11 @@ function addSelectToEntryQuery(query) {
     .groupBy('entries.id');
 }
 
-function convertNullColsToZero(row) {
-  row.score = row.score || 0;
-  return row;
+function convertNullColsToZero({ score = 0, ...rest }) {
+  return {
+    score,
+    ...rest,
+  };
 }
 
 function mapNullColsToZero(query) {
@@ -22,7 +24,7 @@ function mapNullColsToZero(query) {
 }
 
 export class Entries {
-  getForFeed(type, after) {
+  getForFeed(type) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
 
@@ -41,7 +43,9 @@ export class Entries {
     // No need to batch
     const query = knex('entries')
       .modify(addSelectToEntryQuery)
-      .where({ repository_name: name })
+      .where({
+        repository_name: name,
+      })
       .first();
 
     return mapNullColsToZero(query);
@@ -52,36 +56,36 @@ export class Entries {
 
     return Promise.resolve()
 
-    // First, get the entry_id from repoFullName
-    .then(() => {
-      return knex('entries')
-        .where({ repository_name: repoFullName })
-        .select(['id'])
-        .first()
-        .then(({ id }) => {
-          entry_id = id;
-        });
-    })
-
-    // Remove any previous votes by this person
-    .then(() => {
-      return knex('votes')
-        .where({
-          entry_id,
-          username,
-        })
-        .delete();
-    })
-
-    // Then, insert a vote
-    .then(() => {
-      return knex('votes')
-        .insert({
-          entry_id,
-          username,
-          vote_value: voteValue,
-        });
-    });
+      // First, get the entry_id from repoFullName
+      .then(() => (
+        knex('entries')
+          .where({
+            repository_name: repoFullName,
+          })
+          .select(['id'])
+          .first()
+          .then(({ id }) => {
+            entry_id = id;
+          })
+      ))
+      // Remove any previous votes by this person
+      .then(() => (
+        knex('votes')
+          .where({
+            entry_id,
+            username,
+          })
+          .delete()
+      ))
+      // Then, insert a vote
+      .then(() => (
+        knex('votes')
+          .insert({
+            entry_id,
+            username,
+            vote_value: voteValue,
+          })
+      ));
   }
 
   haveVotedForEntry(repoFullName, username) {
@@ -89,25 +93,30 @@ export class Entries {
 
     return Promise.resolve()
 
-    // First, get the entry_id from repoFullName
-    .then(() => {
-      return knex('entries')
-        .where({ repository_name: repoFullName })
-        .select(['id'])
-        .first()
-        .then(({ id }) => {
-          entry_id = id;
-        });
-    })
+      // First, get the entry_id from repoFullName
+      .then(() => (
+        knex('entries')
+          .where({
+            repository_name: repoFullName,
+          })
+          .select(['id'])
+          .first()
+          .then(({ id }) => {
+            entry_id = id;
+          })
+      ))
 
-    .then(() => {
-      return knex('votes')
-        .where({ entry_id, username })
-        .select(['id', 'vote_value'])
-        .first();
-    })
+      .then(() => (
+        knex('votes')
+          .where({
+            entry_id,
+            username,
+          })
+          .select(['id', 'vote_value'])
+          .first()
+      ))
 
-    .then((vote) => vote || { vote_value: 0 });
+      .then((vote) => vote || { vote_value: 0 });
   }
 
   submitRepository(repoFullName, username) {
@@ -115,8 +124,8 @@ export class Entries {
     const rateLimitThresh = 3;
 
     // Rate limiting logic
-    return knex.transaction((trx) => {
-      return trx('entries')
+    return knex.transaction((trx) => (
+      trx('entries')
         .count()
         .where('posted_by', '=', username)
         .where('created_at', '>', Date.now() - rateLimitMs)
@@ -132,16 +141,16 @@ export class Entries {
                 created_at: Date.now(),
                 updated_at: Date.now(),
                 repository_name: repoFullName,
-                posted_by: username
+                posted_by: username,
               });
           }
-        });
-    });
+        })
+    ));
   }
 }
 
 export class Comments {
-  getAllByEntryId(entryId) {
+  getAllByEntryId() {
     // No need to batch
   }
 }

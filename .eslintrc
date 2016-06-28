@@ -1,3 +1,15 @@
 {
-  "extends": "airbnb"
+  "env": {
+    "node": true,
+    "mocha": true,
+  },
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "globals": {
+    "gql": true,
+    "ga": true
+  },
+  "rules": {
+    "camelcase": 1
+  }
 }
