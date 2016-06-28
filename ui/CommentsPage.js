@@ -2,23 +2,45 @@ import React from 'react';
 import { connect } from 'react-apollo';
 import { browserHistory } from 'react-router';
 
-class CommentsPage extends React.Component{
-  constructor() {
-    super();
+var CommentsPage = React.createClass ({
+  propTypes: {
+    data: React.PropTypes.shape({
+      currentUser: React.PropTypes.shape({
+        login: React.PropTypes.string
+      }),
+      entry: React.PropTypes.shape({
+        comments: React.PropTypes.arrayOf(
+          React.PropTypes.shape({
 
-    this._submitForm = this._submitForm.bind(this);
-  }
 
-  _submitForm(event){
+            postedBy: React.PropTypes.shape({
+              login: React.PropTypes.string
+            }),
+            createdAt: React.PropTypes.number,
+            content: React.PropTypes.string
+          })
+        )
+      })
+    })
+  },
+  getDefaultProps: function() {
+    return {
+      comments: []
+    };
+  },
+  _submitForm: function(event){
+    event.preventDefault();
     const repositoryName = this.props.params.org+"/"+this.props.params.repoName;
     const commentContent = event.target.newCommentContent.value;
     this.props.mutations.submitComment(repositoryName, commentContent).then((res) => {
       if (! res.errors) {
-        browserHistory.push('/feed/new');
+        browserHistory.push('/' +this.props.params.org+"/"+this.props.params.repoName);
       }
     });
-  }
-  render(){
+  },
+  render: function(){
+    const {data} = this.props;
+    console.log(data);
     return (
       <div>
       <h1>Comments for {this.props.params.org}/{this.props.params.repoName}</h1>
@@ -26,6 +48,7 @@ class CommentsPage extends React.Component{
           <div className="form-group">
             <label htmlFor="newComment">
               Comment
+
             </label>
 
             <input
@@ -51,10 +74,11 @@ class CommentsPage extends React.Component{
         <div>
         Past comments
         </div>
+
       </div>
     );
   }
-};
+});
 
 const NewCommentWithData = connect({
   mapQueriesToProps: ({ ownProps }) => ({
@@ -87,7 +111,7 @@ const NewCommentWithData = connect({
   mapMutationsToProps: () => ({
     submitComment: (repoFullName, commentContent) => ({
       mutation: gql`
-        mutation submitComment($repoFullName: String!, commentContent: String!) {
+        mutation submitComment($repoFullName: String!, $commentContent: String!) {
           submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
             createdAt
           }

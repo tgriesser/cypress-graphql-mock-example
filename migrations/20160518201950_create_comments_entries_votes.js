@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
       table.timestamps();
       table.string('posted_by');
       table.text('content');
-      table.string('repository_name').unique();
+      table.string('repository_name');
     }),
 
     knex.schema.createTable('entries', function (table) {

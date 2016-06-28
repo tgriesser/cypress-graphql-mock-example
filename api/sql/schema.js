@@ -3,8 +3,9 @@ import { property, constant } from 'lodash';
 export const schema = [`
 type Comment {
   postedBy: User!
-  createdAt: String!
+  createdAt: Float! # Actually a date
   content: String!
+  repoName: String!
 }
 
 type Vote {
@@ -32,7 +33,8 @@ export const resolvers = {
       return context.Users.getByLogin(posted_by);
     },
     comments({ repository_name }, _, context) {
-      return context.Entries.getCommentsByRepoName(repository_name);
+      console.log("entry: comments");
+      return context.Comments.getCommentsByRepoName(repository_name);
     },
     createdAt: property('created_at'),
     commentCount: constant(0),
@@ -42,8 +44,9 @@ export const resolvers = {
     },
   },
   Comment: {
-    postedBy() {
-      throw new Error('Not implemented.');
+    createdAt: property('created_at'),
+    postedBy({ posted_by }, _, context) {
+      return context.Users.getByLogin(posted_by);
     },
   },
 };
