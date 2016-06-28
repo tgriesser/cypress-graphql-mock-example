@@ -3,7 +3,6 @@ import { render } from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import ApolloClient, { createNetworkInterface, addTypename } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-import { registerGqlTag } from 'apollo-client/gql';
 const ReactGA = require('react-ga');
 // Polyfill fetch
 import 'whatwg-fetch';

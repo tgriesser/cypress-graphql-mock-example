@@ -3,6 +3,7 @@ import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 import classNames from 'classnames';
+import gql from 'graphql-tag';
 
 function Loading() {
   return (
@@ -89,8 +90,8 @@ function FeedEntry({ entry, currentUser, onVote }) {
             {entry.repository.full_name}
           </a>
         </h4>
-        <p>{emojify(entry.repository.description)}</p>
-        <p>
+      <p>{entry.repository.description && emojify(entry.repository.description)}</p>
+      <p>
           <InfoLabel
             label="Stars"
             value={entry.repository.stargazers_count}

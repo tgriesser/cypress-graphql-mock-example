@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import { Link } from 'react-router';
+import gql from 'graphql-tag';
 
 function NavbarLink({ title, href, active = false }) {
   return (
