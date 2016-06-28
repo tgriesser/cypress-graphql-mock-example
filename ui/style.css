@@ -35,6 +35,11 @@ body {
   padding-bottom: 60px;
 }
 
+.comment-box { 
+  border-top:1px solid black;
+  padding: 5px;
+}
+
 #footer {
   position: fixed;
   bottom: 0px;

@@ -87,6 +87,9 @@ const rootResolvers = {
     	if (!context.user) {
     		throw new Error('Must be logged in to submit a comment.');
     	}
+      if (!commentContent) {
+        throw new Error('Comment must have content.');
+      }
     	return Promise.resolve()
     		.then(() => {
           return context.Comments.submitComment(

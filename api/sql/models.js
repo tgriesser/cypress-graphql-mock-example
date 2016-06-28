@@ -29,8 +29,8 @@ function mapNullColsToZero(query, makeEmpty=false) {
 export class Comments {
   getCommentsByRepoName(name) {
     const query = knex('comments')
-      .where({ repository_name: name });
-
+      .where({ repository_name: name })
+      .orderBy('created_at', 'desc');
     return mapNullColsToZero(query, true);
   }
   submitComment(repoFullName, username, content) {
@@ -41,7 +41,7 @@ export class Comments {
       return trx('comments')
         .insert({
           content: content,
-          created_at: Date.now().toString(),
+          created_at: Date.now(),
           repository_name: repoFullName,
           posted_by: username
         });

@@ -33,7 +33,6 @@ export const resolvers = {
       return context.Users.getByLogin(posted_by);
     },
     comments({ repository_name }, _, context) {
-      console.log("entry: comments");
       return context.Comments.getCommentsByRepoName(repository_name);
     },
     createdAt: property('created_at'),
