@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 var Comment = React.createClass ({
   propTypes: {
     username: React.PropTypes.string.isRequired,
+    user_url: React.PropTypes.string.isRequired,
     content: React.PropTypes.string.isRequired,
     createdAt: React.PropTypes.number.isRequired
   },
@@ -13,7 +14,7 @@ var Comment = React.createClass ({
     return (
       <div className="comment-box">
         <b>{ this.props.content }</b><br/>
-        Submitted <TimeAgo date={this.props.createdAt} /> by {this.props.username}
+        Submitted <TimeAgo date={this.props.createdAt} /> by <a href={this.props.user_url}>{this.props.username}</a>
       </div>
     );
   }
@@ -60,16 +61,16 @@ var CommentsPage = React.createClass ({
   },
   render: function(){
     const {data} = this.props;
-    const repoName = this.props.params.org+"/"+this.props.params.repoName;
     if (data.loading){
       return (
         <div>Loading...</div>
       );
     }
+    const repoName = data.entry.repository.full_name;
     return (
       <div>
         <div>
-          <h1>Comments for {repoName}</h1>
+          <h1>Comments for <a href={data.entry.repository.html_url}>{repoName}</a></h1>
           {data.currentUser && <form onSubmit={this._submitForm}>
             <div className="form-group">
 
@@ -91,6 +92,7 @@ var CommentsPage = React.createClass ({
               Submit
             </button>
           </form>}
+          {!data.currentUser && <div><em>Log in to comment.</em></div>}
         </div>
         <br/>
         <div>
@@ -101,6 +103,7 @@ var CommentsPage = React.createClass ({
                 username={comment.postedBy.login} 
                 content={comment.content} 
                 createdAt={comment.createdAt}
+                user_url={comment.postedBy.html_url}
               />
             ))
           }</div>
@@ -121,14 +124,20 @@ const NewCommentWithData = connect({
           # show upvote/downvote buttons
           currentUser {
             login
+            html_url
           }
           entry(repoFullName: $repoName) {
             comments {
               postedBy {
                 login
+                html_url
               }
               createdAt
               content
+            }
+            repository {
+              full_name
+              html_url
             }
           }
         }

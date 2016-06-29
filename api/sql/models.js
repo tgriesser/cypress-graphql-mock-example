@@ -33,6 +33,16 @@ export class Comments {
       .orderBy('created_at', 'desc');
     return mapNullColsToZero(query, true);
   }
+  getCommentCount(name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .count('created_at');
+    return query.then((rows) => {
+      return rows.map(function(row) {
+        return row['count("created_at")'] || "0";
+      })
+    });
+  }
   submitComment(repoFullName, username, content) {
     const rateLimitMs = 60 * 60 * 1000;
     const rateLimitThresh = 3;
@@ -49,12 +59,6 @@ export class Comments {
   }
 }
 export class Entries {
-  getCommentsByRepoName(name) {
-    const query = knex('comments')
-      .where({ repository_name: name });
-
-    return mapNullColsToZero(query, true);
-  }
 
   getForFeed(type, after) {
     const query = knex('entries')

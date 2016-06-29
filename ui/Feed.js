@@ -71,7 +71,7 @@ const FeedEntry = ({ entry, currentUser, onVote }) => (
         <InfoLabel label="Stars" value={entry.repository.stargazers_count} />
         &nbsp;
         <InfoLabel label="Issues" value={entry.repository.open_issues_count} />&nbsp;
-        <a href={"/"+entry.repository.full_name}>Comments</a>&nbsp;&nbsp;&nbsp;
+        <a href={"/"+entry.repository.full_name}>View comments ({entry.commentCount})</a>&nbsp;&nbsp;&nbsp;
         Submitted <TimeAgo date={entry.createdAt} />
         &nbsp;by&nbsp;
         <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>
