@@ -1,5 +1,4 @@
 import { assert } from 'chai';
-import { deepEqual } from 'lodash';
 import { GitHubConnector } from './connector';
 
 let requestQueue = [];
@@ -9,7 +8,6 @@ function mockRequestPromise(requestOptions) {
   assert.notEqual(requestQueue.length, 0);
 
   const nextRequest = requestQueue.shift();
-  
   // Ensure this is the request we expected
   assert.deepEqual(requestOptions, nextRequest.options);
 
@@ -32,20 +30,22 @@ function pushMockRequest({ options, result, error }) {
     },
     resolveWithFullResponse: true,
   };
+  const { uri, ...rest } = options;
 
-  options.uri = 'https://api.github.com' + options.uri;
+  const url = `https://api.github.com${uri}`;
 
   requestQueue.push({
     options: {
       ...defaultOptions,
-      ...options,
+      ...rest,
+      uri: url,
     },
     result,
     error,
   });
 }
 
-GitHubConnector.__mockRequestPromise = mockRequestPromise;
+GitHubConnector.mockRequestPromise = mockRequestPromise;
 
 describe('GitHub connector', () => {
   beforeEach(() => {
@@ -65,7 +65,10 @@ describe('GitHub connector', () => {
 
     pushMockRequest({
       options: { uri: '/endpoint' },
-      result: {headers: {}, body: { id: 1 }},
+      result: {
+        headers: {},
+        body: { id: 1 },
+      },
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -77,19 +80,27 @@ describe('GitHub connector', () => {
     const connector = new GitHubConnector();
 
     pushMockRequest({
-      options: { uri: '/endpoint' },
-      result: { headers: {}, body: {id: 1 }},
+      options: {
+        uri: '/endpoint',
+      },
+      result: {
+        headers: {},
+        body: { id: 1 },
+      },
     });
 
-    return connector.get('/endpoint').then((result) => {
-      assert.deepEqual(result, { id: 1 });
-    }).then(() => {
-      // This get call doesn't actually call the API - note that we only
-      // enqueued the request mock once!
-      return connector.get('/endpoint');
-    }).then((result) => {
-      assert.deepEqual(result, { id: 1 });
-    });
+    return connector.get('/endpoint')
+      .then((result) => {
+        assert.deepEqual(result, { id: 1 });
+      })
+      .then(() => (
+        // This get call doesn't actually call the API - note that we only
+        // enqueued the request mock once!
+        connector.get('/endpoint')
+      ))
+      .then((result) => {
+        assert.deepEqual(result, { id: 1 });
+      });
   });
 
   it('passes through the API token for unauthenticated requests', () => {
@@ -106,7 +117,12 @@ describe('GitHub connector', () => {
           client_secret: 'fake_client_secret',
         },
       },
-      result: {headers : {}, body: {id: 1}},
+      result: {
+        headers: {},
+        body: {
+          id: 1,
+        },
+      },
     });
 
     return connector.get('/endpoint').then((result) => {
@@ -119,28 +135,42 @@ describe('GitHub connector', () => {
     const etag = 'etag';
 
     pushMockRequest({
-      options: { uri: '/endpoint' },
-      result: {headers: {'etag': etag}, body: { id: 1 }},
+      options: {
+        uri: '/endpoint',
+      },
+      result: {
+        headers: {
+          etag,
+        },
+        body: {
+          id: 1,
+        },
+      },
     });
-    
+
     const connector2 = new GitHubConnector();
-    
+
     pushMockRequest({
-      options: { 
+      options: {
         uri: '/endpoint',
         headers: {
           'If-None-Match': etag,
           'user-agent': 'GitHunt',
-        } 
+        },
       },
-      result: {headers: {}, body: { id: 1 }},
+      result: {
+        headers: {},
+        body: {
+          id: 1,
+        },
+      },
     });
 
-    return connector.get('/endpoint').then(() => {
-      return connector2.get('/endpoint');
-    }).then((result) => {
-      assert.deepEqual(result, {id: 1});
-    });
+    return connector.get('/endpoint')
+      .then(() => connector2.get('/endpoint'))
+      .then((result) => {
+        assert.deepEqual(result, { id: 1 });
+      });
   });
 });
 

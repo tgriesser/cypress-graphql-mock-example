@@ -15,8 +15,7 @@ const store = new KnexSessionStore({
 import { schema, resolvers } from './schema';
 import { GitHubConnector } from './github/connector';
 import { Repositories, Users } from './github/models';
-import { Entries } from './sql/models';
-import { Comments } from './sql/models';
+import { Entries, Comments } from './sql/models';
 
 dotenv.config({ silent: true });
 let PORT = 3010;
@@ -99,7 +98,7 @@ app.use('/graphql', apolloServer((req) => {
   };
 }));
 
-app.listen(PORT, () => console.log(
+app.listen(PORT, () => console.log( // eslint-disable-line no-console
   `Server is now running on http://localhost:${PORT}`
 ));
 

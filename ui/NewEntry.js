@@ -1,32 +1,36 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import { browserHistory } from 'react-router';
+import gql from 'graphql-tag';
 
 class NewEntry extends React.Component {
   constructor() {
     super();
 
-    this._submitForm = this._submitForm.bind(this);
+    this.submitForm = this.submitForm.bind(this);
   }
 
-  _submitForm(event) {
+  submitForm(event) {
     event.preventDefault();
+
+    const { mutations } = this.props;
 
     const repositoryName = event.target.repoFullName.value;
 
-    this.props.mutations.submitRepository(repositoryName).then((res) => {
-      if (! res.errors) {
+    return mutations.submitRepository(repositoryName).then((res) => {
+      if (!res.errors) {
         browserHistory.push('/feed/new');
       }
     });
   }
 
   render() {
+    const { submitRepository } = this.props;
     return (
       <div>
         <h1>Submit a repository</h1>
 
-        <form onSubmit={this._submitForm}>
+        <form onSubmit={this.submitForm}>
           <div className="form-group">
             <label htmlFor="exampleInputEmail1">
               Repository name
@@ -41,9 +45,9 @@ class NewEntry extends React.Component {
             />
           </div>
 
-          {this.props.submitRepository.errors && (
+          {submitRepository.errors && (
             <div className="alert alert-danger" role="alert">
-              {this.props.submitRepository.errors[0].message}
+              {submitRepository.errors[0].message}
             </div>
           )}
 
@@ -56,6 +60,11 @@ class NewEntry extends React.Component {
     );
   }
 }
+
+NewEntry.propTypes = {
+  mutations: React.PropTypes.object,
+  submitRepository: React.PropTypes.object,
+};
 
 const NewEntryWithData = connect({
   mapMutationsToProps: () => ({

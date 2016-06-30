@@ -1,5 +1,4 @@
 import { merge } from 'lodash';
-
 import { schema as gitHubSchema, resolvers as gitHubResolvers } from './github/schema';
 import { schema as sqlSchema, resolvers as sqlResolvers } from './sql/schema';
 
@@ -67,37 +66,32 @@ const rootResolvers = {
       }
 
       return Promise.resolve()
-        .then(() => {
-          return context.Repositories.getByFullName(repoFullName)
+        .then(() => (
+          context.Repositories.getByFullName(repoFullName)
             .catch(() => {
               throw new Error(`Couldn't find repository named "${repoFullName}"`);
-            });
-        })
-        .then(() => {
-          return context.Entries.submitRepository(
-            repoFullName,
-            context.user.login
-          )
-        })
-        .then(() => {
-          return context.Entries.getByRepoFullName(repoFullName)
-        });
+            })
+        ))
+        .then(() => (
+          context.Entries.submitRepository(repoFullName, context.user.login)
+        ))
+        .then(() => context.Entries.getByRepoFullName(repoFullName));
     },
     submitComment(_, { repoFullName, commentContent }, context) {
-    	if (!context.user) {
-    		throw new Error('Must be logged in to submit a comment.');
-    	}
-    	return Promise.resolve()
-    		.then(() => {
-          return context.Comments.submitComment(
+      if (!context.user) {
+        throw new Error('Must be logged in to submit a comment.');
+      }
+      return Promise.resolve()
+        .then(() => (
+          context.Comments.submitComment(
             repoFullName,
             context.user.login,
             commentContent
           )
-    		})
-        .then(() => {
-          return context.Entries.getByRepoFullName(repoFullName)
-        });
+        ))
+        .then(() => (
+          context.Entries.getByRepoFullName(repoFullName)
+        ));
     },
 
     vote(_, { repoFullName, type }, context) {

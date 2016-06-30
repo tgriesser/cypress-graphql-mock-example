@@ -6,16 +6,18 @@ function addSelectToEntryQuery(query) {
     .groupBy('entries.id');
 }
 
-function convertNullColsToZero(row) {
-  row.score = row.score || 0;
-  return row;
+function convertNullColsToZero({ score, ...rest }) {
+  return {
+    score: score || 0,
+    ...rest,
+  };
 }
 
 function mapNullColsToZero(query) {
   return query.then((rows) => {
     if (rows.length) {
-        return rows.map(convertNullColsToZero);
-      }
+      return rows.map(convertNullColsToZero);
+    }
     return convertNullColsToZero(rows);
   });
 }
@@ -25,38 +27,35 @@ export class Comments {
     const query = knex('comments')
       .where({ repository_name: name })
       .orderBy('created_at', 'desc');
-    return query.then((rows) => {
-      return rows || [];
-    });
+    return query.then((rows) => (
+      rows || []
+    ));
   }
   getCommentCount(name) {
     const query = knex('comments')
       .where({ repository_name: name })
-      .count('created_at');
-    return query.then((rows) => {
-      return rows.map(function(row) {
-        return row['count("created_at")'] || "0";
-      })
-    });
+      .count();
+    return query.then((rows) => (
+      rows.map((row) => (
+        row['count(*)'] || '0'
+      ))
+    ));
   }
   submitComment(repoFullName, username, content) {
-    const rateLimitMs = 60 * 60 * 1000;
-    const rateLimitThresh = 3;
-    // Rate limiting logic
-    return knex.transaction((trx) => {
-      return trx('comments')
+    return knex.transaction((trx) => (
+      trx('comments')
         .insert({
-          content: content,
+          content,
           created_at: Date.now(),
           repository_name: repoFullName,
-          posted_by: username
-        });
-    });
+          posted_by: username,
+        })
+    ));
   }
 }
 export class Entries {
 
-  getForFeed(type, after) {
+  getForFeed(type) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
 
@@ -74,9 +73,10 @@ export class Entries {
   getByRepoFullName(name) {
     // No need to batch
     const query = knex('entries')
-      .select('entries.*', knex.raw('SUM(votes.vote_value) as score'))
-      .leftJoin('votes', 'entries.id', 'votes.entry_id')
-      .where({ repository_name: name })
+      .modify(addSelectToEntryQuery)
+      .where({
+        repository_name: name,
+      })
       .first();
 
     return mapNullColsToZero(query);
@@ -87,36 +87,36 @@ export class Entries {
 
     return Promise.resolve()
 
-    // First, get the entry_id from repoFullName
-    .then(() => {
-      return knex('entries')
-        .where({ repository_name: repoFullName })
-        .select(['id'])
-        .first()
-        .then(({ id }) => {
-          entry_id = id;
-        });
-    })
-
-    // Remove any previous votes by this person
-    .then(() => {
-      return knex('votes')
-        .where({
-          entry_id,
-          username,
-        })
-        .delete();
-    })
-
-    // Then, insert a vote
-    .then(() => {
-      return knex('votes')
-        .insert({
-          entry_id,
-          username,
-          vote_value: voteValue,
-        });
-    });
+      // First, get the entry_id from repoFullName
+      .then(() => (
+        knex('entries')
+          .where({
+            repository_name: repoFullName,
+          })
+          .select(['id'])
+          .first()
+          .then(({ id }) => {
+            entry_id = id;
+          })
+      ))
+      // Remove any previous votes by this person
+      .then(() => (
+        knex('votes')
+          .where({
+            entry_id,
+            username,
+          })
+          .delete()
+      ))
+      // Then, insert a vote
+      .then(() => (
+        knex('votes')
+          .insert({
+            entry_id,
+            username,
+            vote_value: voteValue,
+          })
+      ));
   }
 
   haveVotedForEntry(repoFullName, username) {
@@ -124,25 +124,30 @@ export class Entries {
 
     return Promise.resolve()
 
-    // First, get the entry_id from repoFullName
-    .then(() => {
-      return knex('entries')
-        .where({ repository_name: repoFullName })
-        .select(['id'])
-        .first()
-        .then(({ id }) => {
-          entry_id = id;
-        });
-    })
+      // First, get the entry_id from repoFullName
+      .then(() => (
+        knex('entries')
+          .where({
+            repository_name: repoFullName,
+          })
+          .select(['id'])
+          .first()
+          .then(({ id }) => {
+            entry_id = id;
+          })
+      ))
 
-    .then(() => {
-      return knex('votes')
-        .where({ entry_id, username })
-        .select(['id', 'vote_value'])
-        .first();
-    })
+      .then(() => (
+        knex('votes')
+          .where({
+            entry_id,
+            username,
+          })
+          .select(['id', 'vote_value'])
+          .first()
+      ))
 
-    .then((vote) => vote || { vote_value: 0 });
+      .then((vote) => vote || { vote_value: 0 });
   }
 
   submitRepository(repoFullName, username) {
@@ -150,8 +155,8 @@ export class Entries {
     const rateLimitThresh = 3;
 
     // Rate limiting logic
-    return knex.transaction((trx) => {
-      return trx('entries')
+    return knex.transaction((trx) => (
+      trx('entries')
         .count()
         .where('posted_by', '=', username)
         .where('created_at', '>', Date.now() - rateLimitMs)
@@ -167,10 +172,10 @@ export class Entries {
                 created_at: Date.now(),
                 updated_at: Date.now(),
                 repository_name: repoFullName,
-                posted_by: username
+                posted_by: username,
               });
           }
-        });
-    });
+        })
+    ));
   }
 }

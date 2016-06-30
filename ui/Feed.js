@@ -3,17 +3,29 @@ import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 import classNames from 'classnames';
+import gql from 'graphql-tag';
 
-const Loading = () => (
-  <div>Loading...</div>
-);
+function Loading() {
+  return (
+    <div>Loading...</div>
+  );
+}
 
-const InfoLabel = ({ label, value }) => (
-  <span className="label label-info">{label}: {value}</span>
-);
+function InfoLabel({ label, value }) {
+  return (
+    <span className="label label-info">{label}: {value}</span>
+  );
+}
 
-const VoteButtons = ({ canVote, score, onVote, vote }) => {
-  const buttonClasses = classNames('btn', 'btn-score', { invisible: ! canVote });
+InfoLabel.propTypes = {
+  label: React.PropTypes.string,
+  value: React.PropTypes.number,
+};
+
+function VoteButtons({ canVote, score, onVote, vote }) {
+  const buttonClasses = classNames('btn', 'btn-score', {
+    invisible: !canVote,
+  });
 
   function submitVote(type) {
     const voteValue = {
@@ -38,62 +50,104 @@ const VoteButtons = ({ canVote, score, onVote, vote }) => {
       &nbsp;
     </span>
   );
+}
+
+VoteButtons.propTypes = {
+  canVote: React.PropTypes.bool,
+  score: React.PropTypes.number,
+  onVote: React.PropTypes.func,
+  vote: React.PropTypes.object,
 };
 
-const FeedEntry = ({ entry, currentUser, onVote }) => (
-  <div className="media">
+
+function FeedEntry({ entry, currentUser, onVote }) {
+  const repoLink = `/${entry.repository.full_name}`;
+  const voteButtons = !!currentUser ? (
     <div className="media-vote">
-      {currentUser &&
-        <VoteButtons
-          canVote={!! currentUser}
-          score={entry.score}
-          vote={entry.vote}
-          onVote={(type) => onVote(entry.repository.full_name, type)}
-        />}
-    </div>
-    <div className="media-left">
-      <a href="#">
-        <img
-          className="media-object"
-          style={{ width: '64px', height: '64px' }}
-          src={entry.repository.owner.avatar_url}
-        />
-      </a>
-    </div>
-    <div className="media-body">
-      <h4 className="media-heading">
-        <a href={entry.repository.html_url}>
-          {entry.repository.full_name}
-        </a>
-      </h4>
-      <p>{emojify(entry.repository.description)}</p>
-      <p>
-        <InfoLabel label="Stars" value={entry.repository.stargazers_count} />
-        &nbsp;
-        <InfoLabel label="Issues" value={entry.repository.open_issues_count} />&nbsp;
-        <a href={"/"+entry.repository.full_name}>View comments ({entry.commentCount})</a>&nbsp;&nbsp;&nbsp;
-        Submitted <TimeAgo date={entry.createdAt} />
-        &nbsp;by&nbsp;
-        <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>
-      </p>
-    </div>
-  </div>
-);
-
-const FeedContent = ({ entries, currentUser, onVote }) => (
-  <div> {
-    entries.map((entry) => (
-      <FeedEntry
-        key={entry.repository.full_name}
-        entry={entry}
-        currentUser={currentUser}
-        onVote={onVote}
+      <VoteButtons
+        canVote={!!currentUser}
+        score={entry.score}
+        vote={entry.vote}
+        onVote={(type) => onVote(entry.repository.full_name, type)}
       />
-    ))
-  } </div>
-);
+    </div>
+  ) : null;
+  return (
+    <div className="media">
+      {voteButtons}
+      <div className="media-left">
+        <a href="#">
+          <img
+            className="media-object"
+            style={{ width: '64px', height: '64px' }}
+            src={entry.repository.owner.avatar_url}
+            role="presentation"
+          />
+        </a>
+      </div>
+      <div className="media-body">
+        <h4 className="media-heading">
+          <a href={entry.repository.html_url}>
+            {entry.repository.full_name}
+          </a>
+        </h4>
+        <p>{entry.repository.description && emojify(entry.repository.description)}</p>
+        <p>
+          <InfoLabel
+            label="Stars"
+            value={entry.repository.stargazers_count}
+          />
+        &nbsp;
+          <InfoLabel
+            label="Issues"
+            value={entry.repository.open_issues_count}
+          />
+        &nbsp;
+          <a href={repoLink}>View comments ({entry.commentCount})</a>
+        &nbsp;&nbsp;&nbsp;
+        Submitted&nbsp;
+          <TimeAgo
+            date={entry.createdAt}
+          />
+        &nbsp;by&nbsp;
+          <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>
+        </p>
+      </div>
+    </div>
+  );
+}
 
-const Feed = ({ data, mutations }) => {
+FeedEntry.propTypes = {
+  onVote: React.PropTypes.func,
+  currentUser: React.PropTypes.object,
+  entry: React.PropTypes.object,
+};
+
+function FeedContent({ entries = [], currentUser, onVote }) {
+  if (entries && entries.length) {
+    return (
+      <div> {
+        entries.map((entry) => (
+          !!entry ? <FeedEntry
+            key={entry.repository.full_name}
+            entry={entry}
+            currentUser={currentUser}
+            onVote={onVote}
+          /> : null
+        ))
+      } </div>
+    );
+  }
+  return <div />;
+}
+
+FeedContent.propTypes = {
+  entries: React.PropTypes.array,
+  currentUser: React.PropTypes.object,
+  onVote: React.PropTypes.func,
+};
+
+function Feed({ data, mutations }) {
   if (data.loading) {
     return <Loading />;
   }
@@ -104,6 +158,11 @@ const Feed = ({ data, mutations }) => {
       onVote={(...args) => mutations.vote(...args)}
     />
   );
+}
+
+Feed.propTypes = {
+  data: React.PropTypes.object,
+  mutations: React.PropTypes.object,
 };
 
 const FeedWithData = connect({
@@ -119,8 +178,8 @@ const FeedWithData = connect({
           }
           feed(type: $type) {
             createdAt
-            score
             commentCount
+            score
             id
             postedBy {
               login
