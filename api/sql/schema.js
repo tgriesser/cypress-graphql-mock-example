@@ -18,7 +18,7 @@ type Entry {
   createdAt: Float! # Actually a date
   score: Int!
   comments: [Comment]! # Should this be paginated?
-  commentCount: String!
+  commentCount: Int!
   id: Int!
   vote: Vote!
 }

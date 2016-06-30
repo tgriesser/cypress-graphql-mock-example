@@ -83,13 +83,10 @@ const rootResolvers = {
           return context.Entries.getByRepoFullName(repoFullName)
         });
     },
-    submitComment(_, { repoFullName , commentContent }, context) {
+    submitComment(_, { repoFullName, commentContent }, context) {
     	if (!context.user) {
     		throw new Error('Must be logged in to submit a comment.');
     	}
-      if (!commentContent) {
-        throw new Error('Comment must have content.');
-      }
     	return Promise.resolve()
     		.then(() => {
           return context.Comments.submitComment(
@@ -122,10 +119,6 @@ const rootResolvers = {
         context.Entries.getByRepoFullName(repoFullName)
       ));
     },
-
-    /*comment() {
-      throw new Error('Not implemented.');
-    },*/
   },
 };
 

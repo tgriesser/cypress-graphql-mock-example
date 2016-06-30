@@ -1,120 +1,87 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
-import { browserHistory } from 'react-router';
 
-var Comment = React.createClass ({
-  propTypes: {
-    username: React.PropTypes.string.isRequired,
-    user_url: React.PropTypes.string.isRequired,
-    content: React.PropTypes.string.isRequired,
-    createdAt: React.PropTypes.number.isRequired
-  },
-  render: function() {
+function Comment({ username, userUrl, content, createdAt }) {
+  return (
+    <div className="comment-box">
+      <b>{content}</b> <br/>
+      Submitted <TimeAgo date={createdAt} /> by <a href={userUrl}>{username}</a>
+    </div>
+  );
+}
+
+function CommentsPage({ data, mutations }) {
+  if (data.loading) {
     return (
-      <div className="comment-box">
-        <b>{ this.props.content }</b><br/>
-        Submitted <TimeAgo date={this.props.createdAt} /> by <a href={this.props.user_url}>{this.props.username}</a>
-      </div>
+      <div>Loading...</div>
     );
   }
-});
-var CommentsPage = React.createClass ({
-  propTypes: {
-    data: React.PropTypes.shape({
-      loading: React.PropTypes.bool.isRequired,
-      errors: React.PropTypes.array,
-      refetch: React.PropTypes.func,
-      currentUser: React.PropTypes.shape({
-        login: React.PropTypes.string
-      }),
-      entry: React.PropTypes.shape({
-        comments: React.PropTypes.arrayOf(
-          React.PropTypes.shape({
-
-
-            postedBy: React.PropTypes.shape({
-              login: React.PropTypes.string.isRequired
-            }),
-            createdAt: React.PropTypes.number,
-            content: React.PropTypes.string.isRequired
-          })
-        )
-      })
-    })
-  },
-  getDefaultProps: function() {
-    return {
-      comments: []
-    };
-  },
-  _submitForm: function(event){
+  const repoName = data.entry.repository.full_name;
+  function submitForm(event) {
     event.preventDefault();
-    const repositoryName = this.props.params.org+"/"+this.props.params.repoName;
+    const repositoryName = data.entry.repository.full_name;
     const commentContent = event.target.newCommentContent.value;
-    this.props.mutations.submitComment(repositoryName, commentContent).then((res) => {
-      if (! res.errors) {
-        document.getElementById('newComment').value='';
-        this.props.data.refetch();
-      }
-    });
-  },
-  render: function(){
-    const {data} = this.props;
-    if (data.loading){
-      return (
-        <div>Loading...</div>
-      );
+    if (! commentContent) {
+      document.getElementById('noCommentContent').className = 'alert alert-danger';
+    } else {
+      mutations.submitComment(repositoryName, commentContent).then((res) => {
+        if (! res.errors) {
+          document.getElementById('newComment').value = '';
+          data.refetch();
+        }
+      });
     }
-    const repoName = data.entry.repository.full_name;
-    return (
-      <div>
-        <div>
-          <h1>Comments for <a href={data.entry.repository.html_url}>{repoName}</a></h1>
-          {data.currentUser && <form onSubmit={this._submitForm}>
-            <div className="form-group">
-
-              <input
-                type="text"
-                className="form-control"
-                id="newComment"
-                name="newCommentContent"
-                placeholder="Write your comment here!"
-              />
-            </div>
-
-            {this.props.submitComment.errors && (
-              <div className="alert alert-danger" role="alert">
-                {this.props.submitComment.errors[0].message}
-              </div>
-            )}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>}
-          {!data.currentUser && <div><em>Log in to comment.</em></div>}
-        </div>
-        <br/>
-        <div>
-          <div> {
-            data.entry.comments.map((comment) => (
-              <Comment
-                key={comment.postedBy.login + comment.content + comment.createdAt + repoName}
-                username={comment.postedBy.login} 
-                content={comment.content} 
-                createdAt={comment.createdAt}
-                user_url={comment.postedBy.html_url}
-              />
-            ))
-          }</div>
-
-        </div>
-      </div>
-    );
   }
-});
 
-const NewCommentWithData = connect({
+  return (
+    <div>
+      <div>
+        <h1>Comments for <a href={data.entry.repository.html_url}>{repoName}</a></h1>
+        {data.currentUser && <form onSubmit={submitForm}>
+          <div className="form-group">
+
+            <input
+              type="text"
+              className="form-control"
+              id="newComment"
+              name="newCommentContent"
+              placeholder="Write your comment here!"
+            />
+          </div>
+
+          {mutations.submitComment.errors && (
+            <div className="alert alert-danger" role="alert">
+              {mutations.submitComment.errors[0].message}
+            </div>
+          )}
+          <div className="alert alert-danger hidden" role="alert" id="noCommentContent">
+            Comment must have content.
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>}
+        {!data.currentUser && <div><em>Log in to comment.</em></div>}
+      </div> <br/>
+      <div>
+        <div> {
+          data.entry.comments.map((comment) => (
+            <Comment
+              key={comment.postedBy.login + comment.content + comment.createdAt + repoName}
+              username={comment.postedBy.login}
+              content={comment.content}
+              createdAt={comment.createdAt}
+              userUrl={comment.postedBy.html_url}
+            />
+          ))
+        }</div>
+
+      </div>
+    </div>
+  );
+}
+const CommentWithData = connect({
   mapQueriesToProps: ({ ownProps }) => ({
     data: {
       query: gql`
@@ -143,7 +110,7 @@ const NewCommentWithData = connect({
         }
       `,
       variables: {
-        repoName: ownProps.params.org+"/"+ownProps.params.repoName,
+        repoName: `${ownProps.params.org}/${ownProps.params.repoName}`,
       },
       forceFetch: true,
     },
@@ -159,11 +126,11 @@ const NewCommentWithData = connect({
       `,
       variables: {
         repoFullName,
-        commentContent
+        commentContent,
       },
     }),
   }),
 })(CommentsPage);
 
-export default NewCommentWithData;
+export default CommentWithData;
 

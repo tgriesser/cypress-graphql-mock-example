@@ -11,18 +11,12 @@ function convertNullColsToZero(row) {
   return row;
 }
 
-function convertNullColstoEmpty(row) {
-  row = row || [];
-  return row;
-}
-
-function mapNullColsToZero(query, makeEmpty=false) {
-
+function mapNullColsToZero(query) {
   return query.then((rows) => {
-    if (rows && rows.length) {
-        return makeEmpty ? rows.map(convertNullColstoEmpty) : rows.map(convertNullColsToZero);
+    if (rows.length) {
+        return rows.map(convertNullColsToZero);
       }
-    return makeEmpty ? convertNullColstoEmpty(rows) : convertNullColsToZero(rows);
+    return convertNullColsToZero(rows);
   });
 }
 
@@ -31,7 +25,9 @@ export class Comments {
     const query = knex('comments')
       .where({ repository_name: name })
       .orderBy('created_at', 'desc');
-    return mapNullColsToZero(query, true);
+    return query.then((rows) => {
+      return rows || [];
+    });
   }
   getCommentCount(name) {
     const query = knex('comments')
@@ -177,12 +173,4 @@ export class Entries {
         });
     });
   }
-
-
 }
-
-/*export class Comments {
-  getAllByEntryId(entryId) {
-    // No need to batch
-  }
-}*/
