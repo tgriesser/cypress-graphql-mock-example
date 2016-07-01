@@ -14,7 +14,8 @@ import NewEntry from './NewEntry';
 import './style.css';
 
 // Globally register gql template literal tag
-registerGqlTag();
+import gql from 'graphql-tag';
+global['gql'] = gql;
 
 // Initialize Analytics
 ReactGA.initialize('UA-74643563-4');
