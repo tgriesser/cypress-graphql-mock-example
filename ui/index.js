@@ -13,12 +13,6 @@ import NewEntry from './NewEntry';
 
 import './style.css';
 
-// Globally register gql template literal tag
-// FIXME: global import is deprecated and thus this trick is only temporary
-// see the docs http://docs.apollostack.com/apollo-client/core.html#gql for more info
-import gql from 'graphql-tag';
-global['gql'] = gql;
-
 // Initialize Analytics
 ReactGA.initialize('UA-74643563-4');
 
