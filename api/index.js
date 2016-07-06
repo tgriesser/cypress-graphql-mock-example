@@ -15,7 +15,7 @@ const store = new KnexSessionStore({
 import { schema, resolvers } from './schema';
 import { GitHubConnector } from './github/connector';
 import { Repositories, Users } from './github/models';
-import { Entries } from './sql/models';
+import { Entries, Comments } from './sql/models';
 
 dotenv.config({ silent: true });
 let PORT = 3010;
@@ -93,6 +93,7 @@ app.use('/graphql', apolloServer((req) => {
       Repositories: new Repositories({ connector: gitHubConnector }),
       Users: new Users({ connector: gitHubConnector }),
       Entries: new Entries(),
+      Comments: new Comments(),
     },
   };
 }));

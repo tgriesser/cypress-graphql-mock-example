@@ -6,9 +6,9 @@ function addSelectToEntryQuery(query) {
     .groupBy('entries.id');
 }
 
-function convertNullColsToZero({ score = 0, ...rest }) {
+function convertNullColsToZero({ score, ...rest }) {
   return {
-    score,
+    score: score || 0,
     ...rest,
   };
 }
@@ -18,12 +18,43 @@ function mapNullColsToZero(query) {
     if (rows.length) {
       return rows.map(convertNullColsToZero);
     }
-
     return convertNullColsToZero(rows);
   });
 }
 
+export class Comments {
+  getCommentsByRepoName(name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .orderBy('created_at', 'desc');
+    return query.then((rows) => (
+      rows || []
+    ));
+  }
+  getCommentCount(name) {
+    const query = knex('comments')
+      .where({ repository_name: name })
+      .count();
+    return query.then((rows) => (
+      rows.map((row) => (
+        row['count(*)'] || '0'
+      ))
+    ));
+  }
+  submitComment(repoFullName, username, content) {
+    return knex.transaction((trx) => (
+      trx('comments')
+        .insert({
+          content,
+          created_at: Date.now(),
+          repository_name: repoFullName,
+          posted_by: username,
+        })
+    ));
+  }
+}
 export class Entries {
+
   getForFeed(type) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
@@ -146,11 +177,5 @@ export class Entries {
           }
         })
     ));
-  }
-}
-
-export class Comments {
-  getAllByEntryId() {
-    // No need to batch
   }
 }

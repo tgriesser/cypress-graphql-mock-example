@@ -61,6 +61,7 @@ VoteButtons.propTypes = {
 
 
 function FeedEntry({ entry, currentUser, onVote }) {
+  const repoLink = `/${entry.repository.full_name}`;
   const voteButtons = !!currentUser ? (
     <div className="media-vote">
       <VoteButtons
@@ -90,23 +91,25 @@ function FeedEntry({ entry, currentUser, onVote }) {
             {entry.repository.full_name}
           </a>
         </h4>
-      <p>{entry.repository.description && emojify(entry.repository.description)}</p>
-      <p>
+        <p>{entry.repository.description && emojify(entry.repository.description)}</p>
+        <p>
           <InfoLabel
             label="Stars"
             value={entry.repository.stargazers_count}
           />
-          &nbsp;
+        &nbsp;
           <InfoLabel
             label="Issues"
             value={entry.repository.open_issues_count}
           />
-          &nbsp;&nbsp;&nbsp;
-          Submitted
+        &nbsp;
+          <a href={repoLink}>View comments ({entry.commentCount})</a>
+        &nbsp;&nbsp;&nbsp;
+        Submitted&nbsp;
           <TimeAgo
             date={entry.createdAt}
           />
-          &nbsp;by&nbsp;
+        &nbsp;by&nbsp;
           <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>
         </p>
       </div>
@@ -175,8 +178,8 @@ const FeedWithData = connect({
           }
           feed(type: $type) {
             createdAt
-            score
             commentCount
+            score
             id
             postedBy {
               login
