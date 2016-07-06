@@ -1,19 +1,8 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
+import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
-import { emojify } from 'node-emoji';
-
-function InfoLabel({ label, value }) {
-  return (
-    <span className="label label-info">{label}: {value}</span>
-  );
-}
-
-InfoLabel.propTypes = {
-  label: React.PropTypes.string,
-  value: React.PropTypes.number,
-};
 
 function Comment({ username, userUrl, content, createdAt }) {
   return (
@@ -67,27 +56,14 @@ class CommentsPage extends React.Component {
       <div>
         <div>
           <h1>Comments for <a href={repo.html_url}>{repo.full_name}</a></h1>
-          <div className="media-body">
-            <p>{data.entry.repository.description && emojify(data.entry.repository.description)}</p>
-            <p>
-              <InfoLabel
-                label="Stars"
-                value={data.entry.repository.stargazers_count}
-              />
-            &nbsp;
-              <InfoLabel
-                label="Issues"
-                value={data.entry.repository.open_issues_count}
-              />
-            &nbsp;&nbsp;&nbsp;
-            Submitted&nbsp;
-              <TimeAgo
-                date={data.entry.createdAt}
-              />
-            &nbsp;by&nbsp;
-              <a href={data.entry.postedBy.html_url}>{data.entry.postedBy.login}</a>
-            </p>
-          </div>
+          <RepoInfo
+            description={repo.description}
+            stargazers_count={repo.stargazers_count}
+            open_issues_count={repo.open_issues_count}
+            created_at={data.entry.createdAt}
+            user_url={data.entry.postedBy.html_url}
+            username={data.entry.postedBy.login}
+          />
           {data.currentUser && <form onSubmit={this.submitForm}>
             <div className="form-group">
 
