@@ -13,6 +13,7 @@ import NewEntry from './NewEntry';
 import CommentsPage from './CommentsPage';
 
 import './style.css';
+
 // Initialize Analytics
 ReactGA.initialize('UA-74643563-4');
 
