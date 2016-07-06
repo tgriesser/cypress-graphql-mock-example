@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
+import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
 
 function Comment({ username, userUrl, content, createdAt }) {
@@ -55,6 +56,14 @@ class CommentsPage extends React.Component {
       <div>
         <div>
           <h1>Comments for <a href={repo.html_url}>{repo.full_name}</a></h1>
+          <RepoInfo
+            description={repo.description}
+            stargazers_count={repo.stargazers_count}
+            open_issues_count={repo.open_issues_count}
+            created_at={data.entry.createdAt}
+            user_url={data.entry.postedBy.html_url}
+            username={data.entry.postedBy.login}
+          />
           {data.currentUser && <form onSubmit={this.submitForm}>
             <div className="form-group">
 
@@ -143,6 +152,11 @@ const CommentWithData = connect({
             html_url
           }
           entry(repoFullName: $repoName) {
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
             comments {
               postedBy {
                 login
@@ -154,6 +168,9 @@ const CommentWithData = connect({
             repository {
               full_name
               html_url
+              description
+              open_issues_count
+              stargazers_count
             }
           }
         }

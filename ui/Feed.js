@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-apollo';
-import TimeAgo from 'react-timeago';
-import { emojify } from 'node-emoji';
+import RepoInfo from './RepoInfo';
 import classNames from 'classnames';
 import gql from 'graphql-tag';
 
@@ -10,17 +9,6 @@ function Loading() {
     <div>Loading...</div>
   );
 }
-
-function InfoLabel({ label, value }) {
-  return (
-    <span className="label label-info">{label}: {value}</span>
-  );
-}
-
-InfoLabel.propTypes = {
-  label: React.PropTypes.string,
-  value: React.PropTypes.number,
-};
 
 function VoteButtons({ canVote, score, onVote, vote }) {
   const buttonClasses = classNames('btn', 'btn-score', {
@@ -91,27 +79,16 @@ function FeedEntry({ entry, currentUser, onVote }) {
             {entry.repository.full_name}
           </a>
         </h4>
-        <p>{entry.repository.description && emojify(entry.repository.description)}</p>
-        <p>
-          <InfoLabel
-            label="Stars"
-            value={entry.repository.stargazers_count}
-          />
-        &nbsp;
-          <InfoLabel
-            label="Issues"
-            value={entry.repository.open_issues_count}
-          />
-        &nbsp;
-          <a href={repoLink}>View comments ({entry.commentCount})</a>
-        &nbsp;&nbsp;&nbsp;
-        Submitted&nbsp;
-          <TimeAgo
-            date={entry.createdAt}
-          />
-        &nbsp;by&nbsp;
-          <a href={entry.postedBy.html_url}>{entry.postedBy.login}</a>
-        </p>
+        <RepoInfo
+          description={entry.repository.description}
+          stargazers_count={entry.repository.stargazers_count}
+          open_issues_count={entry.repository.open_issues_count}
+          created_at={entry.createdAt}
+          user_url={entry.postedBy.html_url}
+          username={entry.postedBy.login}
+          comment_count={entry.commentCount}
+          repo_link={repoLink}
+        />
       </div>
     </div>
   );
