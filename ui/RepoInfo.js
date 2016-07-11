@@ -30,9 +30,9 @@ function RepoInfo({
         {children}
         &nbsp;&nbsp;&nbsp;
         Submitted&nbsp;
-          <TimeAgo
-            date={created_at}
-          />
+        <TimeAgo
+          date={created_at}
+        />
         &nbsp;by&nbsp;
         <a href={user_url}>{username}</a>
       </p>
@@ -47,6 +47,7 @@ RepoInfo.propTypes = {
   created_at: React.PropTypes.number.isRequired,
   user_url: React.PropTypes.string.isRequired,
   username: React.PropTypes.string.isRequired,
+  children: React.PropTypes.node,
 };
 
 function InfoLabel({ label, value }) {

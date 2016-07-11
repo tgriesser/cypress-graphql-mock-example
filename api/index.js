@@ -79,8 +79,8 @@ app.use('/graphql', apolloServer((req) => {
   }
 
   const gitHubConnector = new GitHubConnector({
-    client_id: GITHUB_CLIENT_ID,
-    client_secret: GITHUB_CLIENT_SECRET,
+    clientId: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
   });
 
   return {

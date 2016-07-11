@@ -7,9 +7,9 @@ const eTagCache = {};
 const GITHUB_API_ROOT = 'https://api.github.com';
 
 export class GitHubConnector {
-  constructor({ client_id, client_secret } = {}) {
-    this.client_id = client_id;
-    this.client_secret = client_secret;
+  constructor({ clientId, clientSecret } = {}) {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
 
     // Allow mocking request promise for tests
     this.rp = rp;
@@ -32,10 +32,10 @@ export class GitHubConnector {
       },
     };
 
-    if (this.client_id) {
+    if (this.clientId) {
       options.qs = {
-        client_id: this.client_id,
-        client_secret: this.client_secret,
+        clientId: this.clientId,
+        clientSecret: this.clientSecret,
       };
     }
 
