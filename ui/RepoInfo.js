@@ -2,29 +2,38 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 
-function RepoInfo({ description, stargazers_count, open_issues_count, created_at, user_url,
-  username, comment_count, repo_link }) {
+function RepoInfo({
+  description,
+  stargazers_count,
+  open_issues_count,
+  created_at,
+  user_url,
+  username,
+  children,
+}) {
   return (
     <div>
-      <p>{description && emojify(description)}</p>
+      <p>
+        {description && emojify(description)}
+      </p>
       <p>
         <InfoLabel
           label="Stars"
           value={stargazers_count}
         />
-      &nbsp;
+        &nbsp;
         <InfoLabel
           label="Issues"
           value={open_issues_count}
         />
-      {(comment_count || comment_count === 0) &&
-        (<span>&nbsp;<a href={repo_link}>View comments ({comment_count})</a></span>)}
-      &nbsp;&nbsp;&nbsp;
-      Submitted&nbsp;
-        <TimeAgo
-          date={created_at}
-        />
-      &nbsp;by&nbsp;
+        &nbsp;
+        {children}
+        &nbsp;&nbsp;&nbsp;
+        Submitted&nbsp;
+          <TimeAgo
+            date={created_at}
+          />
+        &nbsp;by&nbsp;
         <a href={user_url}>{username}</a>
       </p>
     </div>
@@ -32,14 +41,12 @@ function RepoInfo({ description, stargazers_count, open_issues_count, created_at
 }
 
 RepoInfo.propTypes = {
-  description: React.PropTypes.string,
-  stargazers_count: React.PropTypes.number,
-  open_issues_count: React.PropTypes.number,
-  created_at: React.PropTypes.number,
-  user_url: React.PropTypes.string,
-  username: React.PropTypes.string,
-  comment_count: React.PropTypes.number,
-  repo_link: React.PropTypes.string,
+  description: React.PropTypes.string.isRequired,
+  stargazers_count: React.PropTypes.number.isRequired,
+  open_issues_count: React.PropTypes.number.isRequired,
+  created_at: React.PropTypes.number.isRequired,
+  user_url: React.PropTypes.string.isRequired,
+  username: React.PropTypes.string.isRequired,
 };
 
 function InfoLabel({ label, value }) {

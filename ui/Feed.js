@@ -3,6 +3,7 @@ import { connect } from 'react-apollo';
 import RepoInfo from './RepoInfo';
 import classNames from 'classnames';
 import gql from 'graphql-tag';
+import { Link } from 'react-router';
 
 function Loading() {
   return (
@@ -86,9 +87,11 @@ function FeedEntry({ entry, currentUser, onVote }) {
           created_at={entry.createdAt}
           user_url={entry.postedBy.html_url}
           username={entry.postedBy.login}
-          comment_count={entry.commentCount}
-          repo_link={repoLink}
-        />
+        >
+          <Link to={repoLink}>
+            View comments ({entry.commentCount})
+          </Link>
+        </RepoInfo>
       </div>
     </div>
   );
