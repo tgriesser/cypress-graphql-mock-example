@@ -3,6 +3,7 @@
 A full-stack Apollo Client and Server example app.
 
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollostack.com/#slack)
+[![Build Status](https://travis-ci.org/apollostack/GitHunt.svg?branch=master)](https://travis-ci.org/apollostack/GitHunt)
 
 Demonstrates:
 
