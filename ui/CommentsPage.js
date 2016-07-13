@@ -127,6 +127,7 @@ CommentsPage.propTypes = {
       login: React.PropTypes.string,
     }),
     entry: React.PropTypes.shape({
+      id: React.PropTypes.number,
       comments: React.PropTypes.arrayOf(
         React.PropTypes.shape({
           postedBy: React.PropTypes.shape({
@@ -214,11 +215,11 @@ const CommentWithData = connect({
           content: commentContent,
         },
       },
-       resultBehaviors: [
+      resultBehaviors: [
         {
           type: 'ARRAY_INSERT',
-          resultPath: [ 'submitComment' ],
-          storePath: [ 'Entry' + repoId, 'comments' ],
+          resultPath: ['submitComment'],
+          storePath: [`Entry ${repoId}`, 'comments'],
           where: 'PREPEND',
         },
       ],
