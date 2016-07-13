@@ -48,7 +48,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "apollo-client": "^0.3.19",
+    "apollo-client": "^0.4.1",
     "apollo-server": "^0.1.1",
     "body-parser": "^1.15.1",
     "classnames": "^2.2.5",
@@ -67,7 +67,7 @@
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
     "react": "^15.0.2",
-    "react-apollo": "^0.3.4",
+    "react-apollo": "^0.3.18",
     "react-dom": "^15.0.2",
     "react-ga": "^2.1.0",
     "react-router": "^2.4.1",

@@ -31,14 +31,20 @@ class CommentsPage extends React.Component {
     this.setState({ noCommentContent: false });
     event.preventDefault();
     const repositoryName = this.props.data.entry.repository.full_name;
+    const repoId = this.props.data.entry.id;
+    const { currentUser } = this.props.data;
     const commentContent = event.target.newCommentContent.value;
     if (!commentContent) {
       this.setState({ noCommentContent: true });
     } else {
-      this.props.mutations.submitComment(repositoryName, commentContent).then((res) => {
+      this.props.mutations.submitComment(
+        repositoryName,
+        repoId,
+        commentContent,
+        currentUser,
+      ).then((res) => {
         if (! res.errors) {
           document.getElementById('newComment').value = '';
-          this.props.data.refetch();
         }
       });
     }
@@ -121,6 +127,7 @@ CommentsPage.propTypes = {
       login: React.PropTypes.string,
     }),
     entry: React.PropTypes.shape({
+      id: React.PropTypes.number,
       comments: React.PropTypes.arrayOf(
         React.PropTypes.shape({
           postedBy: React.PropTypes.shape({
@@ -152,6 +159,7 @@ const CommentWithData = connect({
             html_url
           }
           entry(repoFullName: $repoName) {
+            id
             postedBy {
               login
               html_url
@@ -178,15 +186,19 @@ const CommentWithData = connect({
       variables: {
         repoName: `${ownProps.params.org}/${ownProps.params.repoName}`,
       },
-      forceFetch: true,
     },
   }),
   mapMutationsToProps: () => ({
-    submitComment: (repoFullName, commentContent) => ({
+    submitComment: (repoFullName, repoId, commentContent, currentUser) => ({
       mutation: gql`
         mutation submitComment($repoFullName: String!, $commentContent: String!) {
           submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+            postedBy {
+              login
+              html_url
+            }
             createdAt
+            content
           }
         }
       `,
@@ -194,6 +206,23 @@ const CommentWithData = connect({
         repoFullName,
         commentContent,
       },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        submitComment: {
+          __typename: 'Comment',
+          postedBy: currentUser,
+          createdAt: +new Date,
+          content: commentContent,
+        },
+      },
+      resultBehaviors: [
+        {
+          type: 'ARRAY_INSERT',
+          resultPath: ['submitComment'],
+          storePath: [`Entry ${repoId}`, 'comments'],
+          where: 'PREPEND',
+        },
+      ],
     }),
   }),
 })(CommentsPage);
