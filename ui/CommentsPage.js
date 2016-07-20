@@ -3,6 +3,7 @@ import { connect } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
+import update from 'react-addons-update';
 
 function Comment({ username, userUrl, content, createdAt }) {
   return (
@@ -215,14 +216,18 @@ const CommentWithData = connect({
           content: commentContent,
         },
       },
-      resultBehaviors: [
-        {
-          type: 'ARRAY_INSERT',
-          resultPath: ['submitComment'],
-          storePath: [`Entry ${repoId}`, 'comments'],
-          where: 'PREPEND',
+      updateQueries: {
+        Comment: (prev, { mutationResult }) => {
+          const newComment = mutationResult.data.submitComment;
+          return update(prev, {
+            entry: {
+              comments: {
+                $unshift: [newComment]
+              }
+            }
+          });
         },
-      ],
+      },
     }),
   }),
 })(CommentsPage);
