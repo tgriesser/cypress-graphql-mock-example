@@ -222,9 +222,9 @@ const CommentWithData = connect({
           return update(prev, {
             entry: {
               comments: {
-                $unshift: [newComment]
-              }
-            }
+                $unshift: [newComment],
+              },
+            },
           });
         },
       },
@@ -233,4 +233,3 @@ const CommentWithData = connect({
 })(CommentsPage);
 
 export default CommentWithData;
-
