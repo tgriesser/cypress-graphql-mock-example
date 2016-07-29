@@ -11,9 +11,8 @@ enum FeedType {
 }
 
 type Query {
-  # For the home page, after arg is optional to get a new page of the feed
-  # Pagination TBD - what's the easiest way to have the client handle this?
-  feed(type: FeedType!, after: String): [Entry]
+  # For the home page, the offset arg is optional to get a new page of the feed
+  feed(type: FeedType!, offset: Int): [Entry]
 
   # For the entry page
   entry(repoFullName: String!): Entry
@@ -48,8 +47,8 @@ schema {
 
 const rootResolvers = {
   Query: {
-    feed(_, { type, after }, context) {
-      return context.Entries.getForFeed(type);
+    feed(_, { type, offset }, context) {
+      return context.Entries.getForFeed(type, offset);
     },
     entry(_, { repoFullName }, context) {
       return context.Entries.getByRepoFullName(repoFullName);

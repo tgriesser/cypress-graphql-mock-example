@@ -60,7 +60,7 @@ export class Comments {
 }
 export class Entries {
 
-  getForFeed(type) {
+  getForFeed(type, offset) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
 
@@ -71,6 +71,12 @@ export class Entries {
     } else {
       throw new Error(`Feed type ${type} not implemented.`);
     }
+
+    if (offset > 0) {
+      query.offset(offset);
+    }
+
+    query.limit(3);
 
     return mapNullColsToZero(query);
   }

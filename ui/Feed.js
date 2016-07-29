@@ -103,7 +103,7 @@ FeedEntry.propTypes = {
   entry: React.PropTypes.object,
 };
 
-function FeedContent({ entries = [], currentUser, onVote }) {
+function FeedContent({ entries = [], currentUser, onVote, onLoadMore }) {
   if (entries && entries.length) {
     return (
       <div> {
@@ -115,7 +115,9 @@ function FeedContent({ entries = [], currentUser, onVote }) {
             onVote={onVote}
           /> : null
         ))
-      } </div>
+      }
+      <a onClick={onLoadMore}>Load more</a>
+      </div>
     );
   }
   return <div />;
@@ -125,6 +127,7 @@ FeedContent.propTypes = {
   entries: React.PropTypes.array,
   currentUser: React.PropTypes.object,
   onVote: React.PropTypes.func,
+  onLoadMore: React.PropTypes.func,
 };
 
 function Feed({ data, mutations }) {
@@ -136,6 +139,7 @@ function Feed({ data, mutations }) {
       entries={data.feed}
       currentUser={data.currentUser}
       onVote={(...args) => mutations.vote(...args)}
+      onLoadMore={() => { console.log(data.fetchMore) }}
     />
   );
 }
@@ -149,14 +153,14 @@ const FeedWithData = connect({
   mapQueriesToProps: ({ ownProps }) => ({
     data: {
       query: gql`
-        query Feed($type: FeedType!) {
+        query Feed($type: FeedType!, $offset: Int) {
           # Eventually move this into a no fetch query right on the entry
           # since we literally just need this info to determine whether to
           # show upvote/downvote buttons
           currentUser {
             login
           }
-          feed(type: $type) {
+          feed(type: $type, offset: $offset) {
             createdAt
             commentCount
             score
@@ -189,6 +193,7 @@ const FeedWithData = connect({
           ownProps.params.type &&
           ownProps.params.type.toUpperCase()
         ) || 'TOP',
+        offset: 0,
       },
       forceFetch: true,
     },
