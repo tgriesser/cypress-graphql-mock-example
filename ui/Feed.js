@@ -116,7 +116,7 @@ function FeedContent({ entries = [], currentUser, onVote, onLoadMore }) {
           /> : null
         ))
       }
-      <a onClick={onLoadMore}>Load more</a>
+        <a onClick={onLoadMore}>Load more</a>
       </div>
     );
   }
@@ -146,7 +146,6 @@ class Feed extends React.Component {
           offset: this.offset + itemsPerPage,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          console.log(prev, fetchMoreResult);
           if (!fetchMoreResult.data) { return prev; }
           return Object.assign({}, prev, {
             feed: [...prev.feed, ...fetchMoreResult.data.feed],
@@ -154,7 +153,7 @@ class Feed extends React.Component {
         },
       });
       this.offset += itemsPerPage;
-    }
+    };
 
     return (
       <div>
@@ -164,7 +163,7 @@ class Feed extends React.Component {
           onVote={(...args) => mutations.vote(...args)}
           onLoadMore={fetchMore}
         />
-        {data.loading ? <Loading/> : null}
+        {data.loading ? <Loading /> : null}
       </div>
     );
   }
