@@ -34,8 +34,8 @@ export class GitHubConnector {
 
     if (this.clientId) {
       options.qs = {
-        clientId: this.clientId,
-        clientSecret: this.clientSecret,
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
       };
     }
 
