@@ -34,8 +34,8 @@ export class GitHubConnector {
 
     if (this.clientId) {
       options.qs = {
-        clientId: this.clientId,
-        clientSecret: this.clientSecret,
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
       };
     }
 
@@ -47,7 +47,7 @@ export class GitHubConnector {
       if (cachedRes && cachedRes.eTag) {
         options.headers['If-None-Match'] = cachedRes.eTag;
       }
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         this.rp({
           uri: url,
           ...options,
@@ -61,6 +61,8 @@ export class GitHubConnector {
         }).catch((err) => {
           if (err.statusCode === 304) {
             resolve(cachedRes.result);
+          } else {
+            reject(err);
           }
         });
       });

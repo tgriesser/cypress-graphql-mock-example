@@ -15,7 +15,7 @@ function convertNullColsToZero({ score, ...rest }) {
 
 function mapNullColsToZero(query) {
   return query.then((rows) => {
-    if (rows.length) {
+    if (rows.map) {
       return rows.map(convertNullColsToZero);
     }
     return convertNullColsToZero(rows);
@@ -60,7 +60,7 @@ export class Comments {
 }
 export class Entries {
 
-  getForFeed(type) {
+  getForFeed(type, offset, limit) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
 
@@ -71,6 +71,12 @@ export class Entries {
     } else {
       throw new Error(`Feed type ${type} not implemented.`);
     }
+
+    if (offset > 0) {
+      query.offset(offset);
+    }
+
+    query.limit(limit);
 
     return mapNullColsToZero(query);
   }

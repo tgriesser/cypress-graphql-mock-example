@@ -113,8 +113,8 @@ describe('GitHub connector', () => {
       options: {
         uri: '/endpoint',
         qs: {
-          clientId: 'fake_client_id',
-          clientSecret: 'fake_client_secret',
+          client_id: 'fake_client_id',
+          client_secret: 'fake_client_secret',
         },
       },
       result: {

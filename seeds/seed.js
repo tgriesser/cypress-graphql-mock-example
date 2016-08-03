@@ -13,6 +13,50 @@ const repos = [
     repository_name: 'meteor/meteor',
     posted_by: 'tmeasday',
   },
+  {
+    repository_name: 'twbs/bootstrap',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'd3/d3',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'angular/angular.js',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'facebook/react',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'jquery/jquery',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'airbnb/javascript',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'facebook/react-native',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'torvalds/linux',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'daneden/animate.css',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'electron/electron',
+    posted_by: 'Slava',
+  },
+  {
+    repository_name: 'docker/docker',
+    posted_by: 'Slava',
+  },
 ];
 
 const repoIds = {};
