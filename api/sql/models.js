@@ -15,7 +15,7 @@ function convertNullColsToZero({ score, ...rest }) {
 
 function mapNullColsToZero(query) {
   return query.then((rows) => {
-    if (rows.length) {
+    if (rows.map) {
       return rows.map(convertNullColsToZero);
     }
     return convertNullColsToZero(rows);
@@ -60,7 +60,7 @@ export class Comments {
 }
 export class Entries {
 
-  getForFeed(type, offset) {
+  getForFeed(type, offset, limit) {
     const query = knex('entries')
       .modify(addSelectToEntryQuery);
 
@@ -76,7 +76,7 @@ export class Entries {
       query.offset(offset);
     }
 
-    query.limit(3);
+    query.limit(limit);
 
     return mapNullColsToZero(query);
   }

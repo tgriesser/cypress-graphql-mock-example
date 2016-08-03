@@ -12,7 +12,7 @@ enum FeedType {
 
 type Query {
   # For the home page, the offset arg is optional to get a new page of the feed
-  feed(type: FeedType!, offset: Int): [Entry]
+  feed(type: FeedType!, offset: Int, limit: Int): [Entry]
 
   # For the entry page
   entry(repoFullName: String!): Entry
@@ -47,8 +47,12 @@ schema {
 
 const rootResolvers = {
   Query: {
-    feed(_, { type, offset }, context) {
-      return context.Entries.getForFeed(type, offset);
+    feed(_, { type, offset, limit }, context) {
+      if (limit < 1 || limit > 10) {
+        limit = 10;
+      }
+
+      return context.Entries.getForFeed(type, offset, limit);
     },
     entry(_, { repoFullName }, context) {
       return context.Entries.getByRepoFullName(repoFullName);
