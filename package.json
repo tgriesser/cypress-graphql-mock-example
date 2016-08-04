@@ -10,7 +10,8 @@
     "lint": "eslint api ui",
     "test": "mocha --compilers js:babel-core/register --reporter spec --full-trace 'api/**/*.test.js' && npm run lint",
     "seed": "knex seed:run",
-    "migrate": "knex migrate:latest"
+    "migrate": "knex migrate:latest",
+    "build": "webpack -p --progress --config ./webpack.production.config.js"
   },
   "repository": {
     "type": "git",

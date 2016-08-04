@@ -44,6 +44,8 @@ app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(express.static('dist'));
+
 app.get('/login/github',
   passport.authenticate('github'));
 
