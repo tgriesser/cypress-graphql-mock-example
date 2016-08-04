@@ -51,19 +51,17 @@ VoteButtons.propTypes = {
 
 function FeedEntry({ entry, currentUser, onVote }) {
   const repoLink = `/${entry.repository.full_name}`;
-  const voteButtons = !!currentUser ? (
-    <div className="media-vote">
-      <VoteButtons
-        canVote={!!currentUser}
-        score={entry.score}
-        vote={entry.vote}
-        onVote={(type) => onVote(entry.repository.full_name, type)}
-      />
-    </div>
-  ) : null;
+
   return (
     <div className="media">
-      {voteButtons}
+      <div className="media-vote">
+        <VoteButtons
+          canVote={!!currentUser}
+          score={entry.score}
+          vote={entry.vote}
+          onVote={(type) => onVote(entry.repository.full_name, type)}
+        />
+      </div>
       <div className="media-left">
         <a href="#">
           <img
