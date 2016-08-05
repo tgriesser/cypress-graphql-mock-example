@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { browserHistory } from 'react-router';
 import gql from 'graphql-tag';
 
@@ -13,19 +13,21 @@ class NewEntry extends React.Component {
   submitForm(event) {
     event.preventDefault();
 
-    const { mutations } = this.props;
+    const { submitRepository } = this.props;
 
     const repositoryName = event.target.repoFullName.value;
 
     return mutations.submitRepository(repositoryName).then((res) => {
       if (!res.errors) {
         browserHistory.push('/feed/new');
+      } else {
+        this.setState({ errors });
       }
     });
   }
 
   render() {
-    const { submitRepository } = this.props;
+    const { errors } = this.state;
     return (
       <div>
         <h1>Submit a repository</h1>
@@ -45,9 +47,9 @@ class NewEntry extends React.Component {
             />
           </div>
 
-          {submitRepository.errors && (
+          {errors && (
             <div className="alert alert-danger" role="alert">
-              {submitRepository.errors[0].message}
+              {errors[0].message}
             </div>
           )}
 
@@ -62,25 +64,17 @@ class NewEntry extends React.Component {
 }
 
 NewEntry.propTypes = {
-  mutations: React.PropTypes.object,
-  submitRepository: React.PropTypes.object,
+  submitRepository: React.PropTypes.func.isRequired,
 };
 
-const NewEntryWithData = connect({
-  mapMutationsToProps: () => ({
-    submitRepository: (repoFullName) => ({
-      mutation: gql`
-        mutation submitRepository($repoFullName: String!) {
-          submitRepository(repoFullName: $repoFullName) {
-            createdAt
-          }
-        }
-      `,
-      variables: {
-        repoFullName,
-      },
-    }),
-  }),
-})(NewEntry);
+const SUBMIT_RESPOSITORY_MUTATION = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
+  }
+`;
+
+const NewEntryWithData = graphql(SUBMIT_RESPOSITORY_MUTATION)(NewEntry);
 
 export default NewEntryWithData;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';
 
@@ -25,18 +25,18 @@ NavbarLink.propTypes = {
 };
 
 
-function Profile({ data }) {
-  if (data.loading) {
+function Profile({ CurrentUserForLayout: { loading, currentUser }}) {
+  if (loading) {
     return (
       <p className="navbar-text navbar-right">
         Loading...
       </p>
     );
-  } else if (data.currentUser) {
+  } else if (currentUser) {
     return (
       <span>
         <p className="navbar-text navbar-right">
-          {data.currentUser.login}
+          {currentUser.login}
           &nbsp;
           <a href="/logout">Log out</a>
         </p>
@@ -63,23 +63,29 @@ function Profile({ data }) {
 }
 
 Profile.propTypes = {
-  data: React.PropTypes.object,
+  CurrentUserForLayout: React.PropTypes.shape({
+    loading: React.PropTypes.bool.isRequired,
+    currentUser: React.PropTypes.object,
+  }),
 };
 
-const ProfileWithData = connect({
-  mapQueriesToProps: () => ({
-    data: {
-      query: gql`
-        query CurrentUserForLayout {
-          currentUser {
-            login
-            avatar_url
-          }
-        }
-      `,
-    },
-  }),
-})(Profile);
+const PROFILE_QUERY = gql`
+  query CurrentUserForLayout {
+    currentUser {
+      login
+      avatar_url
+    }
+  }
+`;
+
+const ProfileWithData = graphql(
+  PROFILE_QUERY,
+  null,
+  ({ loading, currentUser }) => ({
+    loading,
+    currentUser: currentUser,
+  })
+)(Profile);
 
 function Layout({ children, params, location }) {
   return (
