@@ -131,7 +131,6 @@ FeedContent.propTypes = {
   onLoadMore: React.PropTypes.func,
 };
 
-const ITEMS_PER_PAGE = 10;
 class Feed extends React.Component {
   constructor() {
     super();
@@ -142,29 +141,13 @@ class Feed extends React.Component {
     const { vote } = this.props;
     const { loading, currentUser, feed, fetchMore } = this.props.Feed;
 
-    const onLoadMore = () => {
-      fetchMore({
-        variables: {
-          offset: this.offset + ITEMS_PER_PAGE,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          console.log(prev, fetchMoreResult)
-          if (!fetchMoreResult.data) { return prev; }
-          return Object.assign({}, prev, {
-            feed: [...prev.feed, ...fetchMoreResult.data.feed],
-          });
-        },
-      });
-      this.offset += ITEMS_PER_PAGE;
-    };
-
     return (
       <div>
         <FeedContent
           entries={feed || []}
           currentUser={currentUser}
           onVote={vote}
-          onLoadMore={onLoadMore}
+          onLoadMore={fetchMore}
         />
         {loading ? <Loading /> : null}
       </div>
@@ -218,6 +201,7 @@ const FEED_QUERY = gql`
   }
 `;
 
+const ITEMS_PER_PAGE = 3;
 const FeedWithData = graphql(
   FEED_QUERY,
   props => ({
@@ -232,11 +216,23 @@ const FeedWithData = graphql(
     },
     forceFetch: true,
   }),
-  ({ loading, feed, currentUser, fetchMore }) => ({
+  ({ loading, feed, currentUser, fetchMore, variables }) => ({
     loading,
     feed,
     currentUser,
-    fetchMore,
+    fetchMore() {
+      return fetchMore({
+        variables: {
+          offset: variables.offset + ITEMS_PER_PAGE,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult.data) { return prev; }
+          return Object.assign({}, prev, {
+            feed: [...prev.feed, ...fetchMoreResult.data.feed],
+          });
+        },
+      });
+    },
   })
 )(Feed);
 
