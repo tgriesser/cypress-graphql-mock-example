@@ -87,7 +87,7 @@ Review the new item, up vote it and visit the repo via the link.
 
 #### Apollo Server
 
-The server will run on port 3010, but the Webpack dev server proxies it to 3000. You can access the server's GraphiQL UI at <http://localhost:3000/graphql>.
+The server will run on port 3010, but the Webpack dev server proxies it to 3000. You can access the server's GraphiQL UI at <http://localhost:3000/graphiql>.
 
 ![GitHunt App](screenshots/GitHunt-GraphQL.png)
 
