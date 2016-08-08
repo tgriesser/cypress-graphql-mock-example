@@ -25,7 +25,7 @@ NavbarLink.propTypes = {
 };
 
 
-function Profile({ CurrentUserForLayout: { loading, currentUser }}) {
+function Profile({ loading, currentUser }) {
   if (loading) {
     return (
       <p className="navbar-text navbar-right">
@@ -63,10 +63,8 @@ function Profile({ CurrentUserForLayout: { loading, currentUser }}) {
 }
 
 Profile.propTypes = {
-  CurrentUserForLayout: React.PropTypes.shape({
-    loading: React.PropTypes.bool.isRequired,
-    currentUser: React.PropTypes.object,
-  }),
+  loading: React.PropTypes.bool.isRequired,
+  currentUser: React.PropTypes.object,
 };
 
 const PROFILE_QUERY = gql`

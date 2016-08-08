@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 class NewEntry extends React.Component {
   constructor() {
     super();
+    this.state = {};
 
     this.submitForm = this.submitForm.bind(this);
   }
@@ -15,13 +16,13 @@ class NewEntry extends React.Component {
 
     const { submitRepository } = this.props;
 
-    const repositoryName = event.target.repoFullName.value;
+    const repoFullName = event.target.repoFullName.value;
 
-    return mutations.submitRepository(repositoryName).then((res) => {
+    return submitRepository({ repoFullName }).then((res) => {
       if (!res.errors) {
         browserHistory.push('/feed/new');
       } else {
-        this.setState({ errors });
+        this.setState({ errors: res.errors });
       }
     });
   }

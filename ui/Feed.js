@@ -138,8 +138,7 @@ class Feed extends React.Component {
   }
 
   render() {
-    const { vote } = this.props;
-    const { loading, currentUser, feed, fetchMore } = this.props.Feed;
+    const { vote, loading, currentUser, feed, fetchMore } = this.props;
 
     return (
       <div>
@@ -156,12 +155,10 @@ class Feed extends React.Component {
 }
 
 Feed.propTypes = {
-  Feed: React.PropTypes.shape({
-    loading: React.PropTypes.bool.isRequired,
-    currentUser: React.PropTypes.object,
-    feed: React.PropTypes.array,
-    fetchMore: React.PropTypes.func,
-  }),
+  loading: React.PropTypes.bool.isRequired,
+  currentUser: React.PropTypes.object,
+  feed: React.PropTypes.array,
+  fetchMore: React.PropTypes.func,
   vote: React.PropTypes.func.isRequired,
 };
 

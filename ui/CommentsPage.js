@@ -29,21 +29,22 @@ class CommentsPage extends React.Component {
     this.submitForm = this.submitForm.bind(this);
   }
   submitForm(event) {
+    const { entry, currentUser } = this.props;
+
     this.setState({ noCommentContent: false });
     event.preventDefault();
-    const repositoryName = this.props.data.entry.repository.full_name;
-    const repoId = this.props.data.entry.id;
-    const { currentUser } = this.props.data;
+    const repoFullName = entry.repository.full_name;
+    const repoId = entry.id;
     const commentContent = event.target.newCommentContent.value;
     if (!commentContent) {
       this.setState({ noCommentContent: true });
     } else {
-      this.props.submitComment(
-        repositoryName,
+      this.props.submitComment({
+        repoFullName,
         repoId,
         commentContent,
         currentUser,
-      ).then((res) => {
+      }).then((res) => {
         if (! res.errors) {
           document.getElementById('newComment').value = '';
         } else {
@@ -53,7 +54,7 @@ class CommentsPage extends React.Component {
     }
   }
   render() {
-    const { loading, createUser, entry } = this.props;
+    const { loading, currentUser, entry } = this.props;
     const { errors, noCommentContent } = this.state;
     if (loading) {
       return (
@@ -122,26 +123,24 @@ class CommentsPage extends React.Component {
 }
 
 CommentsPage.propTypes = {
-  Comment: React.PropTypes.shape({
-    loading: React.PropTypes.bool.isRequired,
-    currentUser: React.PropTypes.shape({
-      login: React.PropTypes.string,
-    }),
-    entry: React.PropTypes.shape({
-      id: React.PropTypes.number,
-      comments: React.PropTypes.arrayOf(
-        React.PropTypes.shape({
-          postedBy: React.PropTypes.shape({
-            login: React.PropTypes.string.isRequired,
-          }),
-          createdAt: React.PropTypes.number,
-          content: React.PropTypes.string.isRequired,
-        })
-      ),
-      repository: React.PropTypes.shape({
-        full_name: React.PropTypes.string,
-        html_url: React.PropTypes.string,
-      }),
+  loading: React.PropTypes.bool.isRequired,
+  currentUser: React.PropTypes.shape({
+    login: React.PropTypes.string,
+  }),
+  entry: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    comments: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        postedBy: React.PropTypes.shape({
+          login: React.PropTypes.string.isRequired,
+        }),
+        createdAt: React.PropTypes.number,
+        content: React.PropTypes.string.isRequired,
+      })
+    ),
+    repository: React.PropTypes.shape({
+      full_name: React.PropTypes.string,
+      html_url: React.PropTypes.string,
     }),
   }),
   submitComment: React.PropTypes.func.isRequired,
@@ -184,18 +183,15 @@ const COMMENT_QUERY = gql`
 `;
 
 
-const CommentWithData = graphql(
+const CommentsPageWithData = graphql(
   COMMENT_QUERY,
   props => ({
     variables: {
       repoName: `${props.params.org}/${props.params.repoName}`,
     },
   }),
-  result => ({
-    currentUser: result.data.currentUser,
-    entry: result.data.entry,
-  })
-)(Comment);
+  ({ loading, currentUser, entry }) => ({ loading, currentUser, entry }),
+)(CommentsPage);
 
 const SUBMIT_COMMENT_MUTATION = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
@@ -210,46 +206,31 @@ const SUBMIT_COMMENT_MUTATION = gql`
   }
 `;
 
-const CommentWithDataAndMutations = graphql(SUBMIT_COMMENT_MUTATION)
+const CommentsPageWithDataAndMutations = graphql(
+  SUBMIT_COMMENT_MUTATION,
+  () => ({
+    // optimisticResponse: {
+    //   __typename: 'Mutation',
+    //   submitComment: {
+    //     __typename: 'Comment',
+    //     postedBy: currentUser,
+    //     createdAt: +new Date,
+    //     content: commentContent,
+    //   },
+    // },
+    updateQueries: {
+      Comment: (prev, { mutationResult }) => {
+        const newComment = mutationResult.data.submitComment;
+        return update(prev, {
+          entry: {
+            comments: {
+              $unshift: [newComment],
+            },
+          },
+        });
+      },
+    },
+  })
+)(CommentsPageWithData);
 
-//
-// const CommentWithData = connect({
-//   mapQueriesToProps: ({ ownProps }) => ({
-//     data: {
-//       query: ,
-//       ,
-//     },
-//   }),
-//   mapMutationsToProps: () => ({
-//     submitComment: (repoFullName, repoId, commentContent, currentUser) => ({
-//       mutation: ,
-//       variables: {
-//         repoFullName,
-//         commentContent,
-//       },
-//       optimisticResponse: {
-//         __typename: 'Mutation',
-//         submitComment: {
-//           __typename: 'Comment',
-//           postedBy: currentUser,
-//           createdAt: +new Date,
-//           content: commentContent,
-//         },
-//       },
-//       updateQueries: {
-//         Comment: (prev, { mutationResult }) => {
-//           const newComment = mutationResult.data.submitComment;
-//           return update(prev, {
-//             entry: {
-//               comments: {
-//                 $unshift: [newComment],
-//               },
-//             },
-//           });
-//         },
-//       },
-//     }),
-//   }),
-// })(CommentsPage);
-
-export default CommentWithDataAndMutations;
+export default CommentsPageWithDataAndMutations;
