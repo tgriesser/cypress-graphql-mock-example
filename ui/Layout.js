@@ -79,10 +79,7 @@ const PROFILE_QUERY = gql`
 const ProfileWithData = graphql(
   PROFILE_QUERY,
   null,
-  ({ loading, currentUser }) => ({
-    loading,
-    currentUser: currentUser,
-  })
+  ({ loading, currentUser }) => ({ loading, currentUser })
 )(Profile);
 
 function Layout({ children, params, location }) {

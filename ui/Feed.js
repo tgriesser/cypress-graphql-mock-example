@@ -61,7 +61,7 @@ function FeedEntry({ entry, currentUser, onVote }) {
           vote={entry.vote}
           onVote={(type) => onVote({
             repoFullName: entry.repository.full_name,
-            type
+            type,
           })}
         />
       </div>
