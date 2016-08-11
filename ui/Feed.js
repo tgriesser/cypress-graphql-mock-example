@@ -199,39 +199,42 @@ const FEED_QUERY = gql`
 `;
 
 const ITEMS_PER_PAGE = 3;
-const FeedWithData = graphql(
-  FEED_QUERY,
-  props => ({
-    variables: {
-      type: (
-        props.params &&
-        props.params.type &&
-        props.params.type.toUpperCase()
-      ) || 'TOP',
-      offset: 0,
-      limit: ITEMS_PER_PAGE,
-    },
-    forceFetch: true,
-  }),
-  ({ loading, feed, currentUser, fetchMore, variables }) => ({
-    loading,
-    feed,
-    currentUser,
-    fetchMore() {
-      return fetchMore({
-        variables: {
-          offset: variables.offset + ITEMS_PER_PAGE,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult.data) { return prev; }
-          return Object.assign({}, prev, {
-            feed: [...prev.feed, ...fetchMoreResult.data.feed],
-          });
-        },
-      });
-    },
-  })
-)(Feed);
+const FeedWithData = graphql(FEED_QUERY, {
+  mapPropsToOptions(props) {
+    return {
+      variables: {
+        type: (
+          props.params &&
+          props.params.type &&
+          props.params.type.toUpperCase()
+        ) || 'TOP',
+        offset: 0,
+        limit: ITEMS_PER_PAGE,
+      },
+      forceFetch: true,
+    };
+  },
+  mapResultToProps({ loading, feed, currentUser, fetchMore, variables }) {
+    return {
+      loading,
+      feed,
+      currentUser,
+      fetchMore() {
+        return fetchMore({
+          variables: {
+            offset: variables.offset + ITEMS_PER_PAGE,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.data) { return prev; }
+            return Object.assign({}, prev, {
+              feed: [...prev.feed, ...fetchMoreResult.data.feed],
+            });
+          },
+        });
+      },
+    };
+  },
+})(Feed);
 
 const VOTE_MUTATION = gql`
   mutation vote($repoFullName: String!, $type: VoteType!) {

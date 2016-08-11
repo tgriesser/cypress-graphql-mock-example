@@ -29,19 +29,17 @@ class CommentsPage extends React.Component {
     this.submitForm = this.submitForm.bind(this);
   }
   submitForm(event) {
-    const { entry, currentUser } = this.props;
+    const { entry, currentUser, submit } = this.props;
 
     this.setState({ noCommentContent: false });
     event.preventDefault();
     const repoFullName = entry.repository.full_name;
-    const repoId = entry.id;
     const commentContent = event.target.newCommentContent.value;
     if (!commentContent) {
       this.setState({ noCommentContent: true });
     } else {
-      this.props.submitComment({
+      submit({
         repoFullName,
-        repoId,
         commentContent,
         currentUser,
       }).then((res) => {
@@ -143,8 +141,54 @@ CommentsPage.propTypes = {
       html_url: React.PropTypes.string,
     }),
   }),
-  submitComment: React.PropTypes.func.isRequired,
+  submit: React.PropTypes.func.isRequired,
 };
+
+const SUBMIT_COMMENT_MUTATION = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+
+const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
+  mapResultsToProps({ submitComment }) {
+    return {
+      submit({ repoFullName, commentContent, currentUser }) {
+        return submitComment({
+          variables: { repoFullName, commentContent },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            submitComment: {
+              __typename: 'Comment',
+              postedBy: currentUser,
+              createdAt: +new Date,
+              content: commentContent,
+            },
+          },
+          updateQueries: {
+            Comment: (prev, { mutationResult }) => {
+              const newComment = mutationResult.data.submitComment;
+              return update(prev, {
+                entry: {
+                  comments: {
+                    $unshift: [newComment],
+                  },
+                },
+              });
+            },
+          },
+        });
+      },
+    };
+  },
+})(CommentsPage);
 
 
 const COMMENT_QUERY = gql`
@@ -183,54 +227,15 @@ const COMMENT_QUERY = gql`
 `;
 
 
-const CommentsPageWithData = graphql(
-  COMMENT_QUERY,
-  props => ({
-    variables: {
-      repoName: `${props.params.org}/${props.params.repoName}`,
-    },
-  }),
-  ({ loading, currentUser, entry }) => ({ loading, currentUser, entry }),
-)(CommentsPage);
-
-const SUBMIT_COMMENT_MUTATION = gql`
-  mutation submitComment($repoFullName: String!, $commentContent: String!) {
-    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      content
-    }
-  }
-`;
-
-const CommentsPageWithDataAndMutations = graphql(
-  SUBMIT_COMMENT_MUTATION,
-  () => ({
-    // optimisticResponse: {
-    //   __typename: 'Mutation',
-    //   submitComment: {
-    //     __typename: 'Comment',
-    //     postedBy: currentUser,
-    //     createdAt: +new Date,
-    //     content: commentContent,
-    //   },
-    // },
-    updateQueries: {
-      Comment: (prev, { mutationResult }) => {
-        const newComment = mutationResult.data.submitComment;
-        return update(prev, {
-          entry: {
-            comments: {
-              $unshift: [newComment],
-            },
-          },
-        });
-      },
-    },
-  })
-)(CommentsPageWithData);
+const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
+  mapPropsToOptions({ params }) {
+    return {
+      variables: { repoName: `${params.org}/${params.repoName}` },
+    };
+  },
+  mapResultToProps({ loading, currentUser, entry }) {
+    return { loading, currentUser, entry };
+  },
+})(CommentsPageWithMutations);
 
 export default CommentsPageWithDataAndMutations;

@@ -18,7 +18,7 @@ class NewEntry extends React.Component {
 
     const repoFullName = event.target.repoFullName.value;
 
-    return submitRepository({ repoFullName }).then((res) => {
+    return submitRepository({ variables: { repoFullName } }).then((res) => {
       if (!res.errors) {
         browserHistory.push('/feed/new');
       } else {

@@ -76,11 +76,11 @@ const PROFILE_QUERY = gql`
   }
 `;
 
-const ProfileWithData = graphql(
-  PROFILE_QUERY,
-  null,
-  ({ loading, currentUser }) => ({ loading, currentUser })
-)(Profile);
+const ProfileWithData = graphql(PROFILE_QUERY, {
+  mapResultToProps({ loading, currentUser }) {
+    return { loading, currentUser };
+  },
+})(Profile);
 
 function Layout({ children, params, location }) {
   return (
