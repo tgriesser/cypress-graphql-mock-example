@@ -200,7 +200,7 @@ const FEED_QUERY = gql`
 
 const ITEMS_PER_PAGE = 3;
 const FeedWithData = graphql(FEED_QUERY, {
-  mapPropsToOptions(props) {
+  options(props) {
     return {
       variables: {
         type: (
@@ -214,7 +214,7 @@ const FeedWithData = graphql(FEED_QUERY, {
       forceFetch: true,
     };
   },
-  mapResultToProps({ loading, feed, currentUser, fetchMore, variables }) {
+  props({ loading, feed, currentUser, fetchMore, variables }) {
     return {
       loading,
       feed,

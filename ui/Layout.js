@@ -77,7 +77,7 @@ const PROFILE_QUERY = gql`
 `;
 
 const ProfileWithData = graphql(PROFILE_QUERY, {
-  mapResultToProps({ loading, currentUser }) {
+  props({ loading, currentUser }) {
     return { loading, currentUser };
   },
 })(Profile);

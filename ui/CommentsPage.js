@@ -158,16 +158,16 @@ const SUBMIT_COMMENT_MUTATION = gql`
 `;
 
 const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
-  mapResultsToProps({ submitComment }) {
+  props({ ownProps, submitComment }) {
     return {
-      submit({ repoFullName, commentContent, currentUser }) {
+      submit({ repoFullName, commentContent }) {
         return submitComment({
           variables: { repoFullName, commentContent },
           optimisticResponse: {
             __typename: 'Mutation',
             submitComment: {
               __typename: 'Comment',
-              postedBy: currentUser,
+              postedBy: ownProps.currentUser,
               createdAt: +new Date,
               content: commentContent,
             },
@@ -228,12 +228,12 @@ const COMMENT_QUERY = gql`
 
 
 const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
-  mapPropsToOptions({ params }) {
+  options({ params }) {
     return {
       variables: { repoName: `${params.org}/${params.repoName}` },
     };
   },
-  mapResultToProps({ loading, currentUser, entry }) {
+  props({ loading, currentUser, entry }) {
     return { loading, currentUser, entry };
   },
 })(CommentsPageWithMutations);
