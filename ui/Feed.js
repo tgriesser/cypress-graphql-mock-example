@@ -214,7 +214,7 @@ const FeedWithData = graphql(FEED_QUERY, {
       forceFetch: true,
     };
   },
-  props({ loading, feed, currentUser, fetchMore, variables }) {
+  props({ data: { loading, feed, currentUser, fetchMore, variables } }) {
     return {
       loading,
       feed,
@@ -248,6 +248,8 @@ const VOTE_MUTATION = gql`
   }
 `;
 
-const FeedWithDataAndMutations = graphql(VOTE_MUTATION)(FeedWithData);
+const FeedWithDataAndMutations = graphql(VOTE_MUTATION, {
+  name: 'vote',
+})(FeedWithData);
 
 export default FeedWithDataAndMutations;

@@ -14,11 +14,11 @@ class NewEntry extends React.Component {
   submitForm(event) {
     event.preventDefault();
 
-    const { submitRepository } = this.props;
+    const { submit } = this.props;
 
     const repoFullName = event.target.repoFullName.value;
 
-    return submitRepository({ variables: { repoFullName } }).then((res) => {
+    return submit(repoFullName).then((res) => {
       if (!res.errors) {
         browserHistory.push('/feed/new');
       } else {
@@ -65,7 +65,7 @@ class NewEntry extends React.Component {
 }
 
 NewEntry.propTypes = {
-  submitRepository: React.PropTypes.func.isRequired,
+  submit: React.PropTypes.func.isRequired,
 };
 
 const SUBMIT_RESPOSITORY_MUTATION = gql`
@@ -76,6 +76,14 @@ const SUBMIT_RESPOSITORY_MUTATION = gql`
   }
 `;
 
-const NewEntryWithData = graphql(SUBMIT_RESPOSITORY_MUTATION)(NewEntry);
+const NewEntryWithData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
+  props({ mutate }) {
+    return {
+      submit(repoFullName) {
+        return mutate({ variables: { repoFullName } });
+      },
+    };
+  },
+})(NewEntry);
 
 export default NewEntryWithData;
