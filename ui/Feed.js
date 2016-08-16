@@ -198,7 +198,7 @@ const FEED_QUERY = gql`
   }
 `;
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 10;
 const FeedWithData = graphql(FEED_QUERY, {
   options(props) {
     return {
@@ -222,7 +222,7 @@ const FeedWithData = graphql(FEED_QUERY, {
       fetchMore() {
         return fetchMore({
           variables: {
-            offset: variables.offset + ITEMS_PER_PAGE,
+            offset: feed.length,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.data) { return prev; }
