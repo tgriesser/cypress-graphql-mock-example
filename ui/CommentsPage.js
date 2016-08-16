@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import TimeAgo from 'react-timeago';
 import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
@@ -29,36 +29,37 @@ class CommentsPage extends React.Component {
     this.submitForm = this.submitForm.bind(this);
   }
   submitForm(event) {
+    const { entry, currentUser, submit } = this.props;
+
     this.setState({ noCommentContent: false });
     event.preventDefault();
-    const repositoryName = this.props.data.entry.repository.full_name;
-    const repoId = this.props.data.entry.id;
-    const { currentUser } = this.props.data;
+    const repoFullName = entry.repository.full_name;
     const commentContent = event.target.newCommentContent.value;
     if (!commentContent) {
       this.setState({ noCommentContent: true });
     } else {
-      this.props.mutations.submitComment(
-        repositoryName,
-        repoId,
+      submit({
+        repoFullName,
         commentContent,
         currentUser,
-      ).then((res) => {
+      }).then((res) => {
         if (! res.errors) {
           document.getElementById('newComment').value = '';
+        } else {
+          this.setState({ errors: res.errors });
         }
       });
     }
   }
   render() {
-    const { data } = this.props;
-    if (data.loading) {
+    const { loading, currentUser, entry } = this.props;
+    const { errors, noCommentContent } = this.state;
+    if (loading) {
       return (
         <div>Loading...</div>
       );
     }
-    const repo = data.entry.repository;
-    const { submitComment } = this.props.mutations;
+    const repo = entry.repository;
     return (
       <div>
         <div>
@@ -67,11 +68,11 @@ class CommentsPage extends React.Component {
             description={repo.description}
             stargazers_count={repo.stargazers_count}
             open_issues_count={repo.open_issues_count}
-            created_at={data.entry.createdAt}
-            user_url={data.entry.postedBy.html_url}
-            username={data.entry.postedBy.login}
+            created_at={entry.createdAt}
+            user_url={entry.postedBy.html_url}
+            username={entry.postedBy.login}
           />
-          {data.currentUser && <form onSubmit={this.submitForm}>
+          {currentUser && <form onSubmit={this.submitForm}>
             <div className="form-group">
 
               <input
@@ -83,12 +84,12 @@ class CommentsPage extends React.Component {
               />
             </div>
 
-            {submitComment.errors && (
+            {errors && (
               <div className="alert alert-danger" role="alert">
-                {submitComment.errors[0].message}
+                {errors[0].message}
               </div>
             )}
-            {this.state.noCommentContent && (
+            {noCommentContent && (
               <div className="alert alert-danger" role="alert">
                 Comment must have content.
               </div>
@@ -97,12 +98,12 @@ class CommentsPage extends React.Component {
               Submit
             </button>
           </form>}
-          {!data.currentUser && <div><em>Log in to comment.</em></div>}
+          {!currentUser && <div><em>Log in to comment.</em></div>}
         </div>
         <br />
         <div>
           <div> {
-            data.entry.comments.map((comment) => (
+            entry.comments.map((comment) => (
               <Comment
                 key={comment.postedBy.login + comment.content + comment.createdAt + repo.full_name}
                 username={comment.postedBy.login}
@@ -120,116 +121,121 @@ class CommentsPage extends React.Component {
 }
 
 CommentsPage.propTypes = {
-  data: React.PropTypes.shape({
-    loading: React.PropTypes.bool.isRequired,
-    errors: React.PropTypes.array,
-    refetch: React.PropTypes.func,
-    currentUser: React.PropTypes.shape({
-      login: React.PropTypes.string,
-    }),
-    entry: React.PropTypes.shape({
-      id: React.PropTypes.number,
-      comments: React.PropTypes.arrayOf(
-        React.PropTypes.shape({
-          postedBy: React.PropTypes.shape({
-            login: React.PropTypes.string.isRequired,
-          }),
-          createdAt: React.PropTypes.number,
-          content: React.PropTypes.string.isRequired,
-        })
-      ),
-      repository: React.PropTypes.shape({
-        full_name: React.PropTypes.string,
-        html_url: React.PropTypes.string,
-      }),
+  loading: React.PropTypes.bool.isRequired,
+  currentUser: React.PropTypes.shape({
+    login: React.PropTypes.string,
+  }),
+  entry: React.PropTypes.shape({
+    id: React.PropTypes.number,
+    comments: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        postedBy: React.PropTypes.shape({
+          login: React.PropTypes.string.isRequired,
+        }),
+        createdAt: React.PropTypes.number,
+        content: React.PropTypes.string.isRequired,
+      })
+    ),
+    repository: React.PropTypes.shape({
+      full_name: React.PropTypes.string,
+      html_url: React.PropTypes.string,
     }),
   }),
-  mutations: React.PropTypes.object,
+  submit: React.PropTypes.func.isRequired,
 };
 
-const CommentWithData = connect({
-  mapQueriesToProps: ({ ownProps }) => ({
-    data: {
-      query: gql`
-        query Comment($repoName: String!) {
-          # Eventually move this into a no fetch query right on the entry
-          # since we literally just need this info to determine whether to
-          # show upvote/downvote buttons
-          currentUser {
-            login
-            html_url
-          }
-          entry(repoFullName: $repoName) {
-            id
-            postedBy {
-              login
-              html_url
-            }
-            createdAt
-            comments {
-              postedBy {
-                login
-                html_url
-              }
-              createdAt
-              content
-            }
-            repository {
-              full_name
-              html_url
-              description
-              open_issues_count
-              stargazers_count
-            }
-          }
-        }
-      `,
-      variables: {
-        repoName: `${ownProps.params.org}/${ownProps.params.repoName}`,
-      },
-    },
-  }),
-  mapMutationsToProps: () => ({
-    submitComment: (repoFullName, repoId, commentContent, currentUser) => ({
-      mutation: gql`
-        mutation submitComment($repoFullName: String!, $commentContent: String!) {
-          submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-            postedBy {
-              login
-              html_url
-            }
-            createdAt
-            content
-          }
-        }
-      `,
-      variables: {
-        repoFullName,
-        commentContent,
-      },
-      optimisticResponse: {
-        __typename: 'Mutation',
-        submitComment: {
-          __typename: 'Comment',
-          postedBy: currentUser,
-          createdAt: +new Date,
-          content: commentContent,
-        },
-      },
-      updateQueries: {
-        Comment: (prev, { mutationResult }) => {
-          const newComment = mutationResult.data.submitComment;
-          return update(prev, {
-            entry: {
-              comments: {
-                $unshift: [newComment],
-              },
+const SUBMIT_COMMENT_MUTATION = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+
+const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
+  props({ ownProps, mutate }) {
+    return {
+      submit({ repoFullName, commentContent }) {
+        return mutate({
+          variables: { repoFullName, commentContent },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            submitComment: {
+              __typename: 'Comment',
+              postedBy: ownProps.currentUser,
+              createdAt: +new Date,
+              content: commentContent,
             },
-          });
-        },
+          },
+          updateQueries: {
+            Comment: (prev, { mutationResult }) => {
+              const newComment = mutationResult.data.submitComment;
+              return update(prev, {
+                entry: {
+                  comments: {
+                    $unshift: [newComment],
+                  },
+                },
+              });
+            },
+          },
+        });
       },
-    }),
-  }),
+    };
+  },
 })(CommentsPage);
 
-export default CommentWithData;
+
+const COMMENT_QUERY = gql`
+  query Comment($repoName: String!) {
+    # Eventually move this into a no fetch query right on the entry
+    # since we literally just need this info to determine whether to
+    # show upvote/downvote buttons
+    currentUser {
+      login
+      html_url
+    }
+    entry(repoFullName: $repoName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments {
+        postedBy {
+          login
+          html_url
+        }
+        createdAt
+        content
+      }
+      repository {
+        full_name
+        html_url
+        description
+        open_issues_count
+        stargazers_count
+      }
+    }
+  }
+`;
+
+
+const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
+  options({ params }) {
+    return {
+      variables: { repoName: `${params.org}/${params.repoName}` },
+    };
+  },
+  props({ data: { loading, currentUser, entry } }) {
+    return { loading, currentUser, entry };
+  },
+})(CommentsPageWithMutations);
+
+export default CommentsPageWithDataAndMutations;

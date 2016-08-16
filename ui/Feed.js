@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import RepoInfo from './RepoInfo';
 import classNames from 'classnames';
 import gql from 'graphql-tag';
@@ -59,7 +59,10 @@ function FeedEntry({ entry, currentUser, onVote }) {
           canVote={!!currentUser}
           score={entry.score}
           vote={entry.vote}
-          onVote={(type) => onVote(entry.repository.full_name, type)}
+          onVote={(type) => onVote({
+            repoFullName: entry.repository.full_name,
+            type,
+          })}
         />
       </div>
       <div className="media-left">
@@ -128,7 +131,6 @@ FeedContent.propTypes = {
   onLoadMore: React.PropTypes.func,
 };
 
-const itemsPerPage = 10;
 class Feed extends React.Component {
   constructor() {
     super();
@@ -136,112 +138,118 @@ class Feed extends React.Component {
   }
 
   render() {
-    const { data, mutations } = this.props;
-
-    const fetchMore = () => {
-      data.fetchMore({
-        variables: {
-          offset: this.offset + itemsPerPage,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult.data) { return prev; }
-          return Object.assign({}, prev, {
-            feed: [...prev.feed, ...fetchMoreResult.data.feed],
-          });
-        },
-      });
-      this.offset += itemsPerPage;
-    };
+    const { vote, loading, currentUser, feed, fetchMore } = this.props;
 
     return (
       <div>
         <FeedContent
-          entries={data.feed || []}
-          currentUser={data.currentUser}
-          onVote={(...args) => mutations.vote(...args)}
+          entries={feed || []}
+          currentUser={currentUser}
+          onVote={vote}
           onLoadMore={fetchMore}
         />
-        {data.loading ? <Loading /> : null}
+        {loading ? <Loading /> : null}
       </div>
     );
   }
 }
 
 Feed.propTypes = {
-  data: React.PropTypes.object,
-  mutations: React.PropTypes.object,
+  loading: React.PropTypes.bool.isRequired,
+  currentUser: React.PropTypes.object,
+  feed: React.PropTypes.array,
+  fetchMore: React.PropTypes.func,
+  vote: React.PropTypes.func.isRequired,
 };
 
-const FeedWithData = connect({
-  mapQueriesToProps: ({ ownProps }) => ({
-    data: {
-      query: gql`
-        query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-          # Eventually move this into a no fetch query right on the entry
-          # since we literally just need this info to determine whether to
-          # show upvote/downvote buttons
-          currentUser {
-            login
-          }
-          feed(type: $type, offset: $offset, limit: $limit) {
-            createdAt
-            commentCount
-            score
-            id
-            postedBy {
-              login
-              html_url
-            }
-            vote {
-              vote_value
-            }
-            repository {
-              name
-              full_name
-              description
-              html_url
-              stargazers_count
-              open_issues_count
-              created_at
-              owner {
-                avatar_url
-              }
-            }
-          }
+const FEED_QUERY = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    # Eventually move this into a no fetch query right on the entry
+    # since we literally just need this info to determine whether to
+    # show upvote/downvote buttons
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      createdAt
+      commentCount
+      score
+      id
+      postedBy {
+        login
+        html_url
+      }
+      vote {
+        vote_value
+      }
+      repository {
+        name
+        full_name
+        description
+        html_url
+        stargazers_count
+        open_issues_count
+        created_at
+        owner {
+          avatar_url
         }
-      `,
+      }
+    }
+  }
+`;
+
+const ITEMS_PER_PAGE = 3;
+const FeedWithData = graphql(FEED_QUERY, {
+  options(props) {
+    return {
       variables: {
         type: (
-          ownProps.params &&
-          ownProps.params.type &&
-          ownProps.params.type.toUpperCase()
+          props.params &&
+          props.params.type &&
+          props.params.type.toUpperCase()
         ) || 'TOP',
         offset: 0,
-        limit: itemsPerPage,
+        limit: ITEMS_PER_PAGE,
       },
       forceFetch: true,
-    },
-  }),
-
-  mapMutationsToProps: () => ({
-    vote: (repoFullName, type) => ({
-      mutation: gql`
-        mutation vote($repoFullName: String!, $type: VoteType!) {
-          vote(repoFullName: $repoFullName, type: $type) {
-            score
-            id
-            vote {
-              vote_value
-            }
-          }
-        }
-      `,
-      variables: {
-        repoFullName,
-        type,
+    };
+  },
+  props({ data: { loading, feed, currentUser, fetchMore, variables } }) {
+    return {
+      loading,
+      feed,
+      currentUser,
+      fetchMore() {
+        return fetchMore({
+          variables: {
+            offset: variables.offset + ITEMS_PER_PAGE,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.data) { return prev; }
+            return Object.assign({}, prev, {
+              feed: [...prev.feed, ...fetchMoreResult.data.feed],
+            });
+          },
+        });
       },
-    }),
-  }),
+    };
+  },
 })(Feed);
 
-export default FeedWithData;
+const VOTE_MUTATION = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
+`;
+
+const FeedWithDataAndMutations = graphql(VOTE_MUTATION, {
+  name: 'vote',
+})(FeedWithData);
+
+export default FeedWithDataAndMutations;
