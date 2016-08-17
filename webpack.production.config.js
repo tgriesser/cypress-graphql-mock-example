@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   devtool: 'cheap-module-source-map',
-  entry: './ui/index.js',
+  entry: './ui/client.js',
   output: {
     path: 'api/dist/',
     publicPath: '/',

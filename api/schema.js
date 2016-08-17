@@ -56,7 +56,7 @@ const rootResolvers = {
       return context.Entries.getByRepoFullName(repoFullName);
     },
     currentUser(_, __, context) {
-      return context.user;
+      return context.user || null;
     },
   },
   Mutation: {
