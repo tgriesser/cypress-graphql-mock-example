@@ -116,12 +116,12 @@ There are three views:
 Does it demonstrate all of the required features above?
 
 - [x] Routes and data loading? Yes, it has multiple pages which require different data.
-- [x] SSR/hydration? Yes, the front page should load fast.
+- [ ] SSR/hydration? The front page should load fast.
 - [x] Merging data? Yes, this will merge upvote and comment data from a local database with repository information from GitHub.
 - [x] Auth and basic security? Yes, it will have GitHub login, and security so that people can only post comments when logged in, and everyone can only vote once per repo.
 - [x] Mutations: Submitting a new repo, voting, and commenting.
 - [x] Dev tools: Yes
-- [x] Reactivity: we can reactively update the vote count on the repository page via a websocket or poll.
+- [ ] Reactivity: we can reactively update the vote count on the repository page via a websocket or poll.
 
 ## Technology choices
 
