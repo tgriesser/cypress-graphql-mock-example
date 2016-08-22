@@ -1,16 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Router, browserHistory } from 'react-router';
 import ApolloClient, { createNetworkInterface, addTypename } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 const ReactGA = require('react-ga');
 // Polyfill fetch
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 
-import Feed from './Feed';
-import Layout from './Layout';
-import NewEntry from './NewEntry';
-import CommentsPage from './CommentsPage';
+import routes from './routes.js';
 
 import './style.css';
 
@@ -34,31 +31,14 @@ const client = new ApolloClient({
     return null;
   },
   shouldBatch: true,
+  initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
+  ssrForceFetchDelay: 100,
 });
 
 render((
   <ApolloProvider client={client}>
     <Router history={browserHistory} onUpdate={logPageView}>
-      <Route
-        path="/"
-        component={Layout}
-      >
-        <IndexRoute
-          component={Feed}
-        />
-        <Route
-          path="feed/:type"
-          component={Feed}
-        />
-        <Route
-          path="submit"
-          component={NewEntry}
-        />
-        <Route
-          path="/:org/:repoName"
-          component={CommentsPage}
-        />
-      </Route>
+      {routes}
     </Router>
   </ApolloProvider>
-), document.getElementById('root'));
+), document.getElementById('content'));

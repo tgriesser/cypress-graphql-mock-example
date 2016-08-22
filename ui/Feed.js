@@ -214,7 +214,7 @@ const FeedWithData = graphql(FEED_QUERY, {
       forceFetch: true,
     };
   },
-  props({ data: { loading, feed, currentUser, fetchMore, variables } }) {
+  props({ data: { loading, feed, currentUser, fetchMore } }) {
     return {
       loading,
       feed,

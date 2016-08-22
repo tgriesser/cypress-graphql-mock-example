@@ -108,7 +108,7 @@ app.use('/graphiql', graphiqlExpress({
 }));
 
 app.listen(PORT, () => console.log( // eslint-disable-line no-console
-  `Server is now running on http://localhost:${PORT}`
+  `API Server is now running on http://localhost:${PORT}`
 ));
 
 const gitHubStrategyOptions = {
