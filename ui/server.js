@@ -5,7 +5,6 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { getDataFromTree } from 'react-apollo/server';
 import { match, RouterContext } from 'react-router';
-import dotenv from 'dotenv';
 import path from 'path';
 import 'isomorphic-fetch';
 import proxy from 'http-proxy-middleware';
@@ -13,7 +12,6 @@ import proxy from 'http-proxy-middleware';
 import routes from './routes';
 import Html from './Html';
 
-dotenv.config({ silent: true });
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;
 const apiUrl = `${apiHost}/graphql`;

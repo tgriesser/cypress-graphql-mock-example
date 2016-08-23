@@ -207,7 +207,7 @@ See the code in this commit: https://github.com/apollostack/GitHunt/commit/5f5ad
 
 Now, I have a mocked version of my schema going, after some syntax errors like writing `Number` instead of `Int` in my sketch above. The default mocking just uses `"Hello world!"` for every string so it's not that exciting, but at least it means the server is running properly and the schema is being loaded!
 
-![Basic graphiql!](screenshots/default-mock.png)
+![Basic graphiql!](../screenshots/default-mock.png)
 
 Now there's a decision to make - should we write a mocked backend and then implement the UI, or wire up the actual backend right now?
 
@@ -253,7 +253,7 @@ Let's implement a simple model layer over our connector - this is going to be th
 
 Alright, we've got the GitHub API going!
 
-![GitHub API!](screenshots/github-api.png)
+![GitHub API!](../screenshots/github-api.png)
 
 Next stop is implementing the SQL connector/models, so that we can actually insert some entries into our database.
 
@@ -331,11 +331,11 @@ I learned about the `concurrently` NPM module from the Angular 2 getting started
 
 OK, after fiddling around with a bunch of stuff we now have a basic UI, and no surprises yet!
 
-![Basic UI screenshot](screenshots/first-ui.png)
+![Basic UI screenshot](../screenshots/first-ui.png)
 
 It's a scientific fact that everything is more exciting with images!
 
-![UI screenshot with avatars](screenshots/avatars.png)
+![UI screenshot with avatars](../screenshots/avatars.png)
 
 ### Day 6: Implement GitHub login
 
@@ -394,7 +394,7 @@ Hopefully we can optimize all of this stuff later; for now I'm just going to bui
 
 OK, I implemented the first mutation. The code is absolutely horrible, but it works!
 
-![First mutation](screenshots/first-mutation.png)
+![First mutation](../screenshots/first-mutation.png)
 
 Now let's integrate it into the UI. Fortunately we can start by just copying that into our JS code.
 
@@ -404,11 +404,11 @@ Now let's integrate it into the UI. Fortunately we can start by just copying tha
 
 > NOTE: It's hard to identify network or GraphQL errors when using react-apollo. It's not that hard to look into the network tab, but I get something like this:
 
-![Useless stack trace](screenshots/error-stack.png)
+![Useless stack trace](../screenshots/error-stack.png)
 
 > When what I really want is this:
 
-![Useful error from network tab](screenshots/useful-error.png)
+![Useful error from network tab](../screenshots/useful-error.png)
 
 Alright, let's add some routing to our app. As we mentioned before, we want at least three different routes:
 
