@@ -9,6 +9,8 @@ Please submit a pull request if you see anything that can be improved!
 
 ## Running the app
 
+### 0. This repository is only the React frontend. Run the [GitHunt API](https://github.com/apollostack/GitHunt-API) first. (This is temporary, until we have a permanently hosted demo server.)
+
 ### 1. Install Node/npm
 
 Make sure you have Node.js installed (the app has been tested with Node `4.4.5` and `5.3.0`)
