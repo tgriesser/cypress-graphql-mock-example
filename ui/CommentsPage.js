@@ -239,3 +239,4 @@ const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
 })(CommentsPageWithMutations);
 
 export default CommentsPageWithDataAndMutations;
+export { COMMENT_QUERY };
