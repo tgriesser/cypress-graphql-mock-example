@@ -3,7 +3,7 @@
 An example of a client-side app built with React and Apollo Client.
 
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollostack.com/#slack)
-[![Build Status](https://travis-ci.org/apollostack/GitHunt.svg?branch=master)](https://travis-ci.org/apollostack/GitHunt)
+[![Build Status](https://travis-ci.org/apollostack/GitHunt-React.svg?branch=master)](https://travis-ci.org/apollostack/GitHunt-React)
 
 Please submit a pull request if you see anything that can be improved!
 
