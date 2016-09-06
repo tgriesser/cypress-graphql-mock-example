@@ -18,7 +18,7 @@ Make sure you have Node.js installed (the app has been tested with Node `4.4.5` 
 ### 2. Clone and install dependencies
 
 ```
-git clone https://github.com/apollostack/GitHunt.git
+git clone https://github.com/apollostack/GitHunt-React.git
 cd GitHunt
 npm install
 ```
