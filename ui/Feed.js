@@ -262,6 +262,15 @@ const VOTE_MUTATION = gql`
 
 const FeedWithDataAndMutations = graphql(VOTE_MUTATION, {
   name: 'vote',
+  props({ownProps, vote}) {
+    return {
+      vote({repoFullName, type}) {
+        return vote({
+          variables: { repoFullName, type },
+        })
+      }
+    };
+  },
 })(FeedWithData);
 
 export default FeedWithDataAndMutations;
