@@ -202,7 +202,6 @@ const FEED_QUERY = gql`
         html_url
         stargazers_count
         open_issues_count
-        created_at
         owner {
           avatar_url
         }
