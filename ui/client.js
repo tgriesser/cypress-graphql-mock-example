@@ -11,6 +11,24 @@ import routes from './routes.js';
 
 import './style.css';
 
+import { Client } from 'subscriptions-transport-ws';
+import addGraphQLSubscriptions from './subscriptions';
+
+const wsClient = new Client('ws://localhost:8080');
+
+const networkInterface = createNetworkInterface({
+  uri: '/graphql',
+  opts: {
+    credentials: 'same-origin',
+  },
+  transportBatching: true,
+});
+
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient,
+);
+
 // Initialize Analytics
 ReactGA.initialize('UA-74643563-4');
 
@@ -20,13 +38,7 @@ function logPageView() {
 }
 
 const client = new ApolloClient({
-  networkInterface: createNetworkInterface({
-    uri: '/graphql',
-    opts: {
-      credentials: 'same-origin',
-    },
-    transportBatching: true
-  }),
+  networkInterface: networkInterfaceWithSubscriptions,
   queryTransformer: addTypename,
   dataIdFromObject: (result) => {
     if (result.id && result.__typename) { // eslint-disable-line no-underscore-dangle

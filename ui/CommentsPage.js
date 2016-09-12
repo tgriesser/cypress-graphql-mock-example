@@ -1,9 +1,25 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
+import ApolloClient from 'apollo-client';
 import TimeAgo from 'react-timeago';
 import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
+
+// helper function checks for duplicate comments, which we receive because we
+// get subscription updates for our own comments as well.
+// TODO it's pretty inefficient to scan all the comments every time.
+// maybe only scan the first 10, or up to a certain timestamp
+function isDuplicateComment(newComment, existingComments) {
+  let duplicateComment = false;
+  existingComments.forEach(comment => {
+    if (newComment.id !== null && newComment.id === comment.id) {
+      duplicateComment = true;
+    }
+  });
+  return duplicateComment;
+}
+
 
 function Comment({ username, userUrl, content, createdAt }) {
   return (
@@ -27,7 +43,10 @@ class CommentsPage extends React.Component {
     super(props);
     this.state = { noCommentContent: false };
     this.submitForm = this.submitForm.bind(this);
+    this.subscriptionObserver = null;
+    this.subscriptionRepoName = null;
   }
+
   submitForm(event) {
     const { entry, currentUser, submit } = this.props;
 
@@ -51,6 +70,73 @@ class CommentsPage extends React.Component {
       });
     }
   }
+
+  subscribe(repoName, updateCommentsQuery) {
+    const SUBSCRIPTION_QUERY = gql`
+      subscription onCommentAdded($repoFullName: String!){
+        commentAdded(repoFullName: $repoFullName){
+          id
+          postedBy {
+            login
+            html_url
+          }
+          createdAt
+          content
+        }
+      }
+    `;
+    this.subscriptionRepoName = repoName;
+    this.subscriptionObserver = this.props.client.subscribe({
+      query: SUBSCRIPTION_QUERY,
+      variables: { repoFullName: repoName },
+    }).subscribe({
+      next(data) {
+        const newComment = data.commentAdded;
+        updateCommentsQuery((previousResult) => {
+          // if it's our own mutation, we might get the subscription result
+          // after the mutation result.
+          if (isDuplicateComment(newComment, previousResult.entry.comments)) {
+            return previousResult;
+          }
+          // update returns a new "immutable" list with the new comment
+          // added to the front.
+          return update(
+            previousResult,
+            {
+              entry: {
+                comments: {
+                  $unshift: [newComment],
+                },
+              },
+            }
+          );
+        });
+      },
+      error(err) { console.error('err', err); },
+    });
+  }
+
+  componentDidMount() {
+    if (this.props.loading === false){
+      this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.subscriptionRepoName !== nextProps.entry.repository.full_name) {
+      if (this.subscriptionObserver) {
+        this.subscriptionObserver.unsubscribe();
+      }
+      this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptionObserver) {
+      this.subscriptionObserver.unsubscribe();
+    }
+  }
+
   render() {
     const { loading, currentUser, entry } = this.props;
     const { errors, noCommentContent } = this.state;
@@ -60,6 +146,7 @@ class CommentsPage extends React.Component {
       );
     }
     const repo = entry.repository;
+
     return (
       <div>
         <div>
@@ -142,11 +229,14 @@ CommentsPage.propTypes = {
     }),
   }),
   submit: React.PropTypes.func.isRequired,
+  updateCommentsQuery: React.PropTypes.func,
+  client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 
 const SUBMIT_COMMENT_MUTATION = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
     submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      id
       postedBy {
         login
         html_url
@@ -167,6 +257,7 @@ const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
             __typename: 'Mutation',
             submitComment: {
               __typename: 'Comment',
+              id: null,
               postedBy: ownProps.currentUser,
               createdAt: +new Date,
               content: commentContent,
@@ -175,6 +266,9 @@ const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
           updateQueries: {
             Comment: (prev, { mutationResult }) => {
               const newComment = mutationResult.data.submitComment;
+              if (isDuplicateComment(newComment, prev.entry.comments)) {
+                return prev;
+              }
               return update(prev, {
                 entry: {
                   comments: {
@@ -208,6 +302,7 @@ const COMMENT_QUERY = gql`
       }
       createdAt
       comments {
+        id
         postedBy {
           login
           html_url
@@ -233,10 +328,12 @@ const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
       variables: { repoName: `${params.org}/${params.repoName}` },
     };
   },
-  props({ data: { loading, currentUser, entry } }) {
-    return { loading, currentUser, entry };
+  props({ data: { loading, currentUser, entry, updateQuery } }) {
+    return { loading, currentUser, entry, updateCommentsQuery: updateQuery };
   },
 })(CommentsPageWithMutations);
 
-export default CommentsPageWithDataAndMutations;
+const CommentsPageWithDataAndMutationsAndApollo = withApollo(CommentsPageWithDataAndMutations);
+
+export default CommentsPageWithDataAndMutationsAndApollo;
 export { COMMENT_QUERY };
