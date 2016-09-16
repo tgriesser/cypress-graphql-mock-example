@@ -11,13 +11,7 @@ import update from 'react-addons-update';
 // TODO it's pretty inefficient to scan all the comments every time.
 // maybe only scan the first 10, or up to a certain timestamp
 function isDuplicateComment(newComment, existingComments) {
-  let duplicateComment = false;
-  existingComments.forEach(comment => {
-    if (newComment.id !== null && newComment.id === comment.id) {
-      duplicateComment = true;
-    }
-  });
-  return duplicateComment;
+  return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
 }
 
 
