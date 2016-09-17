@@ -6,7 +6,6 @@
   "extends": "airbnb",
   "parser": "babel-eslint",
   "globals": {
-    "gql": true,
     "ga": true
   },
   "rules": {
