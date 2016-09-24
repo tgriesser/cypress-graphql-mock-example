@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, withApollo } from 'react-apollo';
-import ApolloClient from 'apollo-client';
+import ApolloClient, { createFragment } from 'apollo-client';
 import RepoInfo from './RepoInfo';
 import classNames from 'classnames';
 import gql from 'graphql-tag';
@@ -51,6 +51,14 @@ VoteButtons.propTypes = {
   vote: React.PropTypes.object,
 };
 
+VoteButtons.fragment = createFragment(gql`
+  fragment voteInfo on Entry{
+    score
+    vote {
+      vote_value
+    }
+  }
+`)
 
 const FeedEntry = ({ entry, currentUser, onVote, client }) => {
   const repoLink = `/${entry.repository.full_name}`;
@@ -186,15 +194,12 @@ const FEED_QUERY = gql`
     feed(type: $type, offset: $offset, limit: $limit) {
       createdAt
       commentCount
-      score
       id
       postedBy {
         login
         html_url
       }
-      vote {
-        vote_value
-      }
+      ...voteInfo
       repository {
         name
         full_name
@@ -209,11 +214,13 @@ const FEED_QUERY = gql`
     }
   }
 `;
-
 const ITEMS_PER_PAGE = 10;
 const FeedWithData = graphql(FEED_QUERY, {
   options(props) {
     return {
+      fragments:[
+        VoteButtons.fragment
+      ],
       variables: {
         type: (
           props.params &&
