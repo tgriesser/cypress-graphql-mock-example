@@ -1,7 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
-import ApolloClient, { createNetworkInterface, addTypename } from 'apollo-client';
+import { createNetworkInterface } from 'apollo-client';
+import createApolloClient from './create-apollo-client';
 import { ApolloProvider } from 'react-apollo';
 const ReactGA = require('react-ga');
 // Polyfill fetch
@@ -37,16 +38,8 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
-const client = new ApolloClient({
+const client = createApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
-  queryTransformer: addTypename,
-  dataIdFromObject: (result) => {
-    if (result.id && result.__typename) { // eslint-disable-line no-underscore-dangle
-      return result.__typename + result.id; // eslint-disable-line no-underscore-dangle
-    }
-    return null;
-  },
-  shouldBatch: true,
   initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
   ssrForceFetchDelay: 100,
 });

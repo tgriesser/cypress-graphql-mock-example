@@ -1,7 +1,8 @@
 import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { createNetworkInterface } from 'apollo-client';
+import createApolloClient from './create-apollo-client'
 import { ApolloProvider } from 'react-apollo';
 import { getDataFromTree } from 'react-apollo/server';
 import { match, RouterContext } from 'react-router';
@@ -33,7 +34,7 @@ app.use((req, res) => {
       console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
       res.status(500);
     } else if (renderProps) {
-      const client = new ApolloClient({
+      const client = createApolloClient({
         ssrMode: true,
         networkInterface: createNetworkInterface(apiUrl, {
           credentials: 'same-origin',
