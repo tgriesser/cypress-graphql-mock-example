@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
-import Feed from './Feed';
+import FeedPage from './FeedPage';
 import Layout from './Layout';
-import NewEntry from './NewEntry';
+import NewEntryPage from './NewEntryPage';
 import CommentsPage from './CommentsPage';
 
 export default (
@@ -12,15 +12,15 @@ export default (
     component={Layout}
   >
     <IndexRoute
-      component={Feed}
+      component={FeedPage}
     />
     <Route
       path="feed/:type"
-      component={Feed}
+      component={FeedPage}
     />
     <Route
       path="submit"
-      component={NewEntry}
+      component={NewEntryPage}
     />
     <Route
       path="/:org/:repoName"

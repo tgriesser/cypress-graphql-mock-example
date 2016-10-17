@@ -2,7 +2,6 @@ import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { createNetworkInterface } from 'apollo-client';
-import createApolloClient from './create-apollo-client'
 import { ApolloProvider } from 'react-apollo';
 import { getDataFromTree } from 'react-apollo/server';
 import { match, RouterContext } from 'react-router';
@@ -11,7 +10,8 @@ import 'isomorphic-fetch';
 import proxy from 'http-proxy-middleware';
 
 import routes from './routes';
-import Html from './Html';
+import Html from './routes/Html';
+import createApolloClient from './helpers/create-apollo-client'
 
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;

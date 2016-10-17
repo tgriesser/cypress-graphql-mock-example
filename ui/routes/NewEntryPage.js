@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 import { browserHistory } from 'react-router';
 import gql from 'graphql-tag';
 
-class NewEntry extends React.Component {
+export class NewEntryPage extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -64,7 +64,7 @@ class NewEntry extends React.Component {
   }
 }
 
-NewEntry.propTypes = {
+NewEntryPage.propTypes = {
   submit: React.PropTypes.func.isRequired,
 };
 
@@ -76,7 +76,7 @@ const SUBMIT_RESPOSITORY_MUTATION = gql`
   }
 `;
 
-const NewEntryWithData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
+const withData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
   props({ mutate }) {
     return {
       submit(repoFullName) {
@@ -84,6 +84,6 @@ const NewEntryWithData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
       },
     };
   },
-})(NewEntry);
+});
 
-export default NewEntryWithData;
+export default withData(NewEntryPage);

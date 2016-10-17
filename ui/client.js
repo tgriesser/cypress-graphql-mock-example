@@ -2,18 +2,17 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
 import { createNetworkInterface } from 'apollo-client';
-import createApolloClient from './create-apollo-client';
 import { ApolloProvider } from 'react-apollo';
+import { Client } from 'subscriptions-transport-ws';
 const ReactGA = require('react-ga');
 // Polyfill fetch
 import 'isomorphic-fetch';
 
-import routes from './routes.js';
+import './style/index.css';
 
-import './style.css';
-
-import { Client } from 'subscriptions-transport-ws';
-import addGraphQLSubscriptions from './subscriptions';
+import routes from './routes';
+import createApolloClient from './helpers/create-apollo-client';
+import addGraphQLSubscriptions from './helpers/subscriptions';
 
 const wsClient = new Client('ws://localhost:8080');
 

@@ -2,7 +2,9 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 
-function RepoInfo({
+import InfoLabel from './InfoLabel';
+
+export default function RepoInfo({
   description,
   stargazers_count,
   open_issues_count,
@@ -49,16 +51,3 @@ RepoInfo.propTypes = {
   username: React.PropTypes.string.isRequired,
   children: React.PropTypes.node,
 };
-
-function InfoLabel({ label, value }) {
-  return (
-    <span className="label label-info">{label}: {value}</span>
-  );
-}
-
-InfoLabel.propTypes = {
-  label: React.PropTypes.string,
-  value: React.PropTypes.number,
-};
-
-export default RepoInfo;

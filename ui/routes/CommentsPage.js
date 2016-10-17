@@ -1,10 +1,11 @@
 import React from 'react';
 import { graphql, withApollo } from 'react-apollo';
 import ApolloClient from 'apollo-client';
-import TimeAgo from 'react-timeago';
-import RepoInfo from './RepoInfo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
+
+import RepoInfo from '../components/RepoInfo';
+import Comment from '../components/Comment';
 
 // helper function checks for duplicate comments, which we receive because we
 // get subscription updates for our own comments as well.
@@ -14,25 +15,7 @@ function isDuplicateComment(newComment, existingComments) {
   return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
 }
 
-
-function Comment({ username, userUrl, content, createdAt }) {
-  return (
-    <div className="comment-box">
-      <b>{content}</b>
-      <br />
-      Submitted <TimeAgo date={createdAt} /> by <a href={userUrl}>{username}</a>
-    </div>
-  );
-}
-
-Comment.propTypes = {
-  username: React.PropTypes.string,
-  userUrl: React.PropTypes.string,
-  content: React.PropTypes.string,
-  createdAt: React.PropTypes.number,
-};
-
-class CommentsPage extends React.Component {
+export class CommentsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { noCommentContent: false };
@@ -201,6 +184,7 @@ class CommentsPage extends React.Component {
   }
 }
 
+
 CommentsPage.propTypes = {
   loading: React.PropTypes.bool.isRequired,
   currentUser: React.PropTypes.shape({
@@ -241,7 +225,7 @@ const SUBMIT_COMMENT_MUTATION = gql`
   }
 `;
 
-const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
+const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
   props({ ownProps, mutate }) {
     return {
       submit({ repoFullName, commentContent }) {
@@ -276,10 +260,9 @@ const CommentsPageWithMutations = graphql(SUBMIT_COMMENT_MUTATION, {
       },
     };
   },
-})(CommentsPage);
+});
 
-
-const COMMENT_QUERY = gql`
+export const COMMENT_QUERY = gql`
   query Comment($repoName: String!) {
     # Eventually move this into a no fetch query right on the entry
     # since we literally just need this info to determine whether to
@@ -316,7 +299,7 @@ const COMMENT_QUERY = gql`
 `;
 
 
-const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
+const withData = graphql(COMMENT_QUERY, {
   options({ params }) {
     return {
       variables: { repoName: `${params.org}/${params.repoName}` },
@@ -325,9 +308,6 @@ const CommentsPageWithDataAndMutations = graphql(COMMENT_QUERY, {
   props({ data: { loading, currentUser, entry, updateQuery } }) {
     return { loading, currentUser, entry, updateCommentsQuery: updateQuery };
   },
-})(CommentsPageWithMutations);
+});
 
-const CommentsPageWithDataAndMutationsAndApollo = withApollo(CommentsPageWithDataAndMutations);
-
-export default CommentsPageWithDataAndMutationsAndApollo;
-export { COMMENT_QUERY };
+export default withApollo(withData(withMutations(CommentsPage)));
