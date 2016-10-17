@@ -8,7 +8,8 @@
     "start-app-server": "nodemon ui/server.js --watch ui --exec babel-node",
     "start": "concurrently \"npm run start-app-client\" \"npm run start-app-server\"",
     "lint": "eslint ui",
-    "build": "webpack -p --progress --config ./webpack.production.config.js"
+    "build": "webpack -p --progress --config ./webpack.production.config.js",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -61,5 +62,19 @@
     "react-timeago": "^3.0.0",
     "redux": "^3.5.2",
     "subscriptions-transport-ws": "^0.2.3"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "browser": true,
+      "mocha": true
+    },
+    "extends": "airbnb",
+    "globals": {
+      "ga": true
+    },
+    "rules": {
+      "camelcase": 0
+    }
   }
 }
