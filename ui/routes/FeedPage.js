@@ -74,9 +74,7 @@ const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options(props) {
     return {
-      fragments: [
-        VoteButtons.fragment,
-      ],
+      fragments: VoteButtons.fragment,
       variables: {
         type: (
           props.params &&
