@@ -1,13 +1,12 @@
 import React from 'react';
-import { graphql, withApollo } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { COMMENT_QUERY } from './CommentsPage';
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
 import VoteButtons from '../components/VoteButtons';
 
-export class FeedPage extends React.Component {
+class FeedPage extends React.Component {
   constructor() {
     super();
     this.offset = 0;
@@ -20,7 +19,7 @@ export class FeedPage extends React.Component {
       <div>
         <Feed
           entries={feed || []}
-          currentUser={currentUser}
+          loggedIn={!!currentUser}
           onVote={vote}
           onLoadMore={fetchMore}
         />
@@ -32,8 +31,10 @@ export class FeedPage extends React.Component {
 
 FeedPage.propTypes = {
   loading: React.PropTypes.bool.isRequired,
-  currentUser: React.PropTypes.object,
-  feed: React.PropTypes.array,
+  currentUser: React.PropTypes.shape({
+    login: React.PropTypes.string.isRequired,
+  }),
+  feed: Feed.propTypes.entries,
   fetchMore: React.PropTypes.func,
   vote: React.PropTypes.func.isRequired,
 };
@@ -73,8 +74,8 @@ const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options(props) {
     return {
-      fragments:[
-        VoteButtons.fragment
+      fragments: [
+        VoteButtons.fragment,
       ],
       variables: {
         type: (
@@ -123,13 +124,13 @@ const VOTE_MUTATION = gql`
 `;
 
 const withMutations = graphql(VOTE_MUTATION, {
-  props({mutate}) {
+  props({ mutate }) {
     return {
-      vote({repoFullName, type}) {
+      vote({ repoFullName, type }) {
         return mutate({
           variables: { repoFullName, type },
-        })
-      }
+        });
+      },
     };
   },
 });

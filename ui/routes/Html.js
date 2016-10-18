@@ -1,3 +1,5 @@
+/* eslint-disable react/no-danger */
+
 import React, { PropTypes } from 'react';
 
 // XXX: production setup?
@@ -6,7 +8,7 @@ const scriptUrl = `http://localhost:${basePort + 20}/bundle.js`;
 
 function Html({ content, state }) {
   return (
-    <html>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +35,7 @@ function Html({ content, state }) {
 
 Html.propTypes = {
   content: PropTypes.string.isRequired,
-  state: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 

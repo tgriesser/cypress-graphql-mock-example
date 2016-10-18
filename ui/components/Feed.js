@@ -1,20 +1,20 @@
 import React from 'react';
 import FeedEntry from './FeedEntry';
 
-export default function Feed({ entries = [], currentUser, onVote, onLoadMore }) {
+export default function Feed({ entries = [], loggedIn, onVote, onLoadMore }) {
   if (entries && entries.length) {
     return (
       <div> {
-        entries.map((entry) => (
-          !!entry ? <FeedEntry
+        entries.map(entry => (
+          entry ? <FeedEntry
             key={entry.repository.full_name}
             entry={entry}
-            currentUser={currentUser}
+            loggedIn={loggedIn}
             onVote={onVote}
           /> : null
         ))
       }
-        <a onClick={onLoadMore}>Load more</a>
+        <button onClick={onLoadMore}>Load more</button>
       </div>
     );
   }
@@ -22,8 +22,8 @@ export default function Feed({ entries = [], currentUser, onVote, onLoadMore }) 
 }
 
 Feed.propTypes = {
-  entries: React.PropTypes.array,
-  currentUser: React.PropTypes.object,
-  onVote: React.PropTypes.func,
-  onLoadMore: React.PropTypes.func,
+  entries: React.PropTypes.arrayOf(FeedEntry.WrappedComponent.propTypes.entry),
+  loggedIn: React.PropTypes.bool.isRequired,
+  onVote: React.PropTypes.func.isRequired,
+  onLoadMore: React.PropTypes.func.isRequired,
 };

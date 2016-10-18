@@ -74,7 +74,9 @@
       "ga": true
     },
     "rules": {
-      "camelcase": 0
+      "camelcase": 0,
+      "react/jsx-filename-extension": 0,
+      "react/no-unused-prop-types": [2, { "skipShapeProps": true }]
     }
   }
 }

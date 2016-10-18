@@ -9,7 +9,7 @@ export default function addGraphQLSubscriptions(networkInterface, wsClient) {
         variables: request.variables,
       }, handler);
     },
-    unsubscribe(id: number) {
+    unsubscribe(id) {
       wsClient.unsubscribe(id);
     },
   });

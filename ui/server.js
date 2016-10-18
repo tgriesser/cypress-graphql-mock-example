@@ -11,7 +11,7 @@ import proxy from 'http-proxy-middleware';
 
 import routes from './routes';
 import Html from './routes/Html';
-import createApolloClient from './helpers/create-apollo-client'
+import createApolloClient from './helpers/create-apollo-client';
 
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;
@@ -50,7 +50,7 @@ app.use((req, res) => {
         </ApolloProvider>
       );
 
-      getDataFromTree(component).then(context => {
+      getDataFromTree(component).then((context) => {
         const content = ReactDOM.renderToString(component);
         res.status(200);
 

@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 import { browserHistory } from 'react-router';
 import gql from 'graphql-tag';
 
-export class NewEntryPage extends React.Component {
+class NewEntryPage extends React.Component {
   constructor() {
     super();
     this.state = {};

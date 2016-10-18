@@ -22,12 +22,12 @@ export default function VoteButtons({ canVote, score, onVote, vote }) {
       <button
         className={classNames(buttonClasses, { active: vote.vote_value === 1 })}
         onClick={() => submitVote('UP')}
-      ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></button>
+      ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true" /></button>
       <div className="vote-score">{score}</div>
       <button
         className={classNames(buttonClasses, { active: vote.vote_value === -1 })}
         onClick={() => submitVote('DOWN')}
-      ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></button>
+      ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true" /></button>
       &nbsp;
     </span>
   );
@@ -37,7 +37,9 @@ VoteButtons.propTypes = {
   canVote: React.PropTypes.bool,
   score: React.PropTypes.number,
   onVote: React.PropTypes.func,
-  vote: React.PropTypes.object,
+  vote: React.PropTypes.shape({
+    vote_value: React.PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 VoteButtons.fragment = createFragment(gql`
@@ -47,4 +49,4 @@ VoteButtons.fragment = createFragment(gql`
       vote_value
     }
   }
-`)
+`);

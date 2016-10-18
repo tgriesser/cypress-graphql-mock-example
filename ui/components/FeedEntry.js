@@ -1,15 +1,15 @@
 import React from 'react';
 import ApolloClient from 'apollo-client';
 import { withApollo } from 'react-apollo';
-import { Link } from 'react-router'
+import { Link } from 'react-router';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
 import { COMMENT_QUERY } from '../routes/CommentsPage';
 
-export const FeedEntry = ({ entry, currentUser, onVote, client }) => {
+const FeedEntry = ({ entry, loggedIn, onVote, client }) => {
   const repoLink = `/${entry.repository.full_name}`;
-  const prefetchComments = (repoFullName) => () => {
+  const prefetchComments = repoFullName => () => {
     client.query({
       query: COMMENT_QUERY,
       variables: { repoName: repoFullName },
@@ -20,24 +20,24 @@ export const FeedEntry = ({ entry, currentUser, onVote, client }) => {
     <div className="media">
       <div className="media-vote">
         <VoteButtons
-          canVote={!!currentUser}
+          canVote={loggedIn}
           score={entry.score}
           vote={entry.vote}
-          onVote={(type) => onVote({
+          onVote={type => onVote({
             repoFullName: entry.repository.full_name,
             type,
           })}
         />
       </div>
       <div className="media-left">
-        <a href="#">
+        <button>
           <img
             className="media-object"
             style={{ width: '64px', height: '64px' }}
             src={entry.repository.owner.avatar_url}
             role="presentation"
           />
-        </a>
+        </button>
       </div>
       <div className="media-body">
         <h4 className="media-heading">
@@ -65,8 +65,16 @@ export const FeedEntry = ({ entry, currentUser, onVote, client }) => {
 
 FeedEntry.propTypes = {
   onVote: React.PropTypes.func,
-  currentUser: React.PropTypes.object,
-  entry: React.PropTypes.object,
+  loggedIn: React.PropTypes.bool.isRequired,
+  entry: React.PropTypes.shape({
+    repository: React.PropTypes.shape({
+      full_name: React.PropTypes.string.isRequired,
+    }).isRequired,
+    score: React.PropTypes.number.isRequired,
+    vote: React.PropTypes.shape({
+      vote_value: React.PropTypes.number.isRequired,
+    }).isRequired,
+  }),
   client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 

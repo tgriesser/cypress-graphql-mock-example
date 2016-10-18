@@ -4,7 +4,7 @@ import { Router, browserHistory } from 'react-router';
 import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { Client } from 'subscriptions-transport-ws';
-const ReactGA = require('react-ga');
+import * as ReactGA from 'react-ga';
 // Polyfill fetch
 import 'isomorphic-fetch';
 

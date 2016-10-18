@@ -15,13 +15,34 @@ function isDuplicateComment(newComment, existingComments) {
   return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
 }
 
-export class CommentsPage extends React.Component {
+class CommentsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { noCommentContent: false };
     this.submitForm = this.submitForm.bind(this);
     this.subscriptionObserver = null;
     this.subscriptionRepoName = null;
+  }
+
+  componentDidMount() {
+    if (this.props.loading === false) {
+      this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.subscriptionRepoName !== nextProps.entry.repository.full_name) {
+      if (this.subscriptionObserver) {
+        this.subscriptionObserver.unsubscribe();
+      }
+      this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptionObserver) {
+      this.subscriptionObserver.unsubscribe();
+    }
   }
 
   submitForm(event) {
@@ -39,7 +60,7 @@ export class CommentsPage extends React.Component {
         commentContent,
         currentUser,
       }).then((res) => {
-        if (! res.errors) {
+        if (!res.errors) {
           document.getElementById('newComment').value = '';
         } else {
           this.setState({ errors: res.errors });
@@ -89,29 +110,8 @@ export class CommentsPage extends React.Component {
           );
         });
       },
-      error(err) { console.error('err', err); },
+      error(err) { console.error('err', err); }, // eslint-disable-line no-console
     });
-  }
-
-  componentDidMount() {
-    if (this.props.loading === false){
-      this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.subscriptionRepoName !== nextProps.entry.repository.full_name) {
-      if (this.subscriptionObserver) {
-        this.subscriptionObserver.unsubscribe();
-      }
-      this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.subscriptionObserver) {
-      this.subscriptionObserver.unsubscribe();
-    }
   }
 
   render() {
@@ -167,7 +167,7 @@ export class CommentsPage extends React.Component {
         <br />
         <div>
           <div> {
-            entry.comments.map((comment) => (
+            entry.comments.map(comment => (
               <Comment
                 key={comment.postedBy.login + comment.content + comment.createdAt + repo.full_name}
                 username={comment.postedBy.login}
@@ -237,7 +237,7 @@ const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
               __typename: 'Comment',
               id: null,
               postedBy: ownProps.currentUser,
-              createdAt: +new Date,
+              createdAt: +new Date(),
               content: commentContent,
             },
           },
