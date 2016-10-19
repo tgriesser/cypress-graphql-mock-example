@@ -55,7 +55,10 @@ app.use((req, res) => {
         const content = ReactDOM.renderToString(component);
         res.status(200);
 
-        const html = <Html content={content} state={context.store.getState()} />;
+        const html = (<Html
+          content={content}
+          state={{ data: context.store.getState().apollo.data }}
+        />);
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
         res.end();
       }).catch(e => console.error('RENDERING ERROR:', e)); // eslint-disable-line no-console
