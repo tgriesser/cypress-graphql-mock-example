@@ -77,13 +77,11 @@ const SUBMIT_RESPOSITORY_MUTATION = gql`
 `;
 
 const withData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
-  props({ mutate }) {
-    return {
-      submit(repoFullName) {
-        return mutate({ variables: { repoFullName } });
-      },
-    };
-  },
+  props: ({ mutate }) => ({
+    submit: repoFullName => mutate({
+      variables: { repoFullName },
+    }),
+  }),
 });
 
 export default withData(NewEntryPage);
