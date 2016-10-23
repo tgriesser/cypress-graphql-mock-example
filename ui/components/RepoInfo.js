@@ -27,7 +27,7 @@ const RepoInfo = ({
       value={open_issues_count}
     />
     &nbsp;
-      {children}
+    {children}
     &nbsp;&nbsp;&nbsp;
       Submitted&nbsp;
     <TimeAgo
