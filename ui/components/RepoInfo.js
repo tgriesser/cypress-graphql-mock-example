@@ -4,7 +4,7 @@ import { emojify } from 'node-emoji';
 
 import InfoLabel from './InfoLabel';
 
-export default function RepoInfo({
+const RepoInfo = ({
   description,
   stargazers_count,
   open_issues_count,
@@ -12,35 +12,31 @@ export default function RepoInfo({
   user_url,
   username,
   children,
-}) {
-  return (
-    <div>
-      <p>
-        {description && emojify(description)}
-      </p>
-      <p>
-        <InfoLabel
-          label="Stars"
-          value={stargazers_count}
-        />
-        &nbsp;
-        <InfoLabel
-          label="Issues"
-          value={open_issues_count}
-        />
-        &nbsp;
-        {children}
-        &nbsp;&nbsp;&nbsp;
-        Submitted&nbsp;
-        <TimeAgo
-          date={created_at}
-        />
-        &nbsp;by&nbsp;
-        <a href={user_url}>{username}</a>
-      </p>
-    </div>
-  );
-}
+}) => <div>
+  <p>
+    {description && emojify(description)}
+  </p>
+  <p>
+    <InfoLabel
+      label="Stars"
+      value={stargazers_count}
+    />
+    &nbsp;
+    <InfoLabel
+      label="Issues"
+      value={open_issues_count}
+    />
+    &nbsp;
+      {children}
+    &nbsp;&nbsp;&nbsp;
+      Submitted&nbsp;
+    <TimeAgo
+      date={created_at}
+    />
+    &nbsp;by&nbsp;
+    <a href={user_url}>{username}</a>
+  </p>
+</div>;
 
 RepoInfo.propTypes = {
   description: React.PropTypes.string.isRequired,
@@ -51,3 +47,5 @@ RepoInfo.propTypes = {
   username: React.PropTypes.string.isRequired,
   children: React.PropTypes.node,
 };
+
+export default RepoInfo;
