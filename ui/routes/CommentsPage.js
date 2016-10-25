@@ -1,6 +1,5 @@
 import React from 'react';
-import { graphql, withApollo } from 'react-apollo';
-import ApolloClient from 'apollo-client';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
 
@@ -15,33 +14,55 @@ function isDuplicateComment(newComment, existingComments) {
   return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
 }
 
+const SUBSCRIPTION_QUERY = gql`
+  subscription onCommentAdded($repoFullName: String!){
+    commentAdded(repoFullName: $repoFullName){
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+
 class CommentsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { noCommentContent: false };
     this.submitForm = this.submitForm.bind(this);
-    this.subscriptionObserver = null;
-    this.subscriptionRepoName = null;
-  }
 
-  componentDidMount() {
-    if (this.props.loading === false) {
-      this.subscribe(this.props.entry.repository.full_name, this.props.updateCommentsQuery);
-    }
+    // keep track of subscription handle to not subscribe twice.
+    // we don't need to unsubscribe on unmount, because the subscription
+    // gets stopped when the query stops.
+    this.subscription = null;
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.subscriptionRepoName !== nextProps.entry.repository.full_name) {
-      if (this.subscriptionObserver) {
-        this.subscriptionObserver.unsubscribe();
-      }
-      this.subscribe(nextProps.entry.repository.full_name, nextProps.updateCommentsQuery);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.subscriptionObserver) {
-      this.subscriptionObserver.unsubscribe();
+    // we don't resubscribe on changed props, because it never happens in our app
+    if (!this.subscription && !nextProps.loading) {
+      this.subscription = this.props.subscribeToMore({
+        document: SUBSCRIPTION_QUERY,
+        variables: { repoFullName: nextProps.entry.repository.full_name },
+        updateQuery: (previousResult, { subscriptionData }) => {
+          const newComment = subscriptionData.data.commentAdded;
+          // if it's our own mutation, we might get the subscription result
+          // after the mutation result.
+          if (isDuplicateComment(newComment, previousResult.entry.comments)) {
+            return previousResult;
+          }
+          const newResult = update(previousResult, {
+            entry: {
+              comments: {
+                $unshift: [newComment],
+              },
+            },
+          });
+          return newResult;
+        },
+      });
     }
   }
 
@@ -67,51 +88,6 @@ class CommentsPage extends React.Component {
         }
       });
     }
-  }
-
-  subscribe(repoName, updateCommentsQuery) {
-    const SUBSCRIPTION_QUERY = gql`
-      subscription onCommentAdded($repoFullName: String!){
-        commentAdded(repoFullName: $repoFullName){
-          id
-          postedBy {
-            login
-            html_url
-          }
-          createdAt
-          content
-        }
-      }
-    `;
-    this.subscriptionRepoName = repoName;
-    this.subscriptionObserver = this.props.client.subscribe({
-      query: SUBSCRIPTION_QUERY,
-      variables: { repoFullName: repoName },
-    }).subscribe({
-      next(data) {
-        const newComment = data.commentAdded;
-        updateCommentsQuery((previousResult) => {
-          // if it's our own mutation, we might get the subscription result
-          // after the mutation result.
-          if (isDuplicateComment(newComment, previousResult.entry.comments)) {
-            return previousResult;
-          }
-          // update returns a new "immutable" list with the new comment
-          // added to the front.
-          return update(
-            previousResult,
-            {
-              entry: {
-                comments: {
-                  $unshift: [newComment],
-                },
-              },
-            }
-          );
-        });
-      },
-      error(err) { console.error('err', err); }, // eslint-disable-line no-console
-    });
   }
 
   render() {
@@ -207,8 +183,7 @@ CommentsPage.propTypes = {
     }),
   }),
   submit: React.PropTypes.func.isRequired,
-  updateCommentsQuery: React.PropTypes.func,
-  client: React.PropTypes.instanceOf(ApolloClient).isRequired,
+  subscribeToMore: React.PropTypes.func.isRequired,
 };
 
 const SUBMIT_COMMENT_MUTATION = gql`
@@ -298,16 +273,15 @@ export const COMMENT_QUERY = gql`
   }
 `;
 
-
 const withData = graphql(COMMENT_QUERY, {
   options({ params }) {
     return {
       variables: { repoName: `${params.org}/${params.repoName}` },
     };
   },
-  props({ data: { loading, currentUser, entry, updateQuery } }) {
-    return { loading, currentUser, entry, updateCommentsQuery: updateQuery };
+  props({ data: { loading, currentUser, entry, subscribeToMore } }) {
+    return { loading, currentUser, entry, subscribeToMore };
   },
 });
 
-export default withApollo(withData(withMutations(CommentsPage)));
+export default withData(withMutations(CommentsPage));
