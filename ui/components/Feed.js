@@ -22,7 +22,7 @@ export default function Feed({ entries = [], loggedIn, onVote, onLoadMore }) {
 }
 
 Feed.propTypes = {
-  entries: React.PropTypes.arrayOf(FeedEntry.WrappedComponent.propTypes.entry),
+  entries: React.PropTypes.arrayOf(FeedEntry.fragments.entry.propType),
   loggedIn: React.PropTypes.bool.isRequired,
   onVote: React.PropTypes.func.isRequired,
   onLoadMore: React.PropTypes.func.isRequired,

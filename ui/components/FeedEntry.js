@@ -2,13 +2,31 @@ import React from 'react';
 import ApolloClient from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
+import gql from 'graphql-tag';
+import Fragment from 'graphql-fragments';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
 import { COMMENT_QUERY } from '../routes/CommentsPage';
 
-const FeedEntry = ({ entry, loggedIn, onVote, client }) => {
-  const repoLink = `/${entry.repository.full_name}`;
+const FeedEntry = ({
+  loggedIn,
+  onVote,
+  entry,
+  client,
+}) => {
+  const {
+    commentCount,
+    repository: {
+      full_name,
+      html_url,
+      owner: {
+        avatar_url,
+      },
+    },
+  } = entry;
+
+  const repoLink = `/${full_name}`;
   const prefetchComments = repoFullName => () => {
     client.query({
       query: COMMENT_QUERY,
@@ -21,10 +39,9 @@ const FeedEntry = ({ entry, loggedIn, onVote, client }) => {
       <div className="media-vote">
         <VoteButtons
           canVote={loggedIn}
-          score={entry.score}
-          vote={entry.vote}
+          entry={VoteButtons.fragments.entry.filter(entry)}
           onVote={type => onVote({
-            repoFullName: entry.repository.full_name,
+            repoFullName: full_name,
             type,
           })}
         />
@@ -34,27 +51,18 @@ const FeedEntry = ({ entry, loggedIn, onVote, client }) => {
           <img
             className="media-object"
             style={{ width: '64px', height: '64px' }}
-            src={entry.repository.owner.avatar_url}
+            src={avatar_url}
             role="presentation"
           />
         </button>
       </div>
       <div className="media-body">
         <h4 className="media-heading">
-          <a href={entry.repository.html_url}>
-            {entry.repository.full_name}
-          </a>
+          <a href={html_url}>{full_name}</a>
         </h4>
-        <RepoInfo
-          description={entry.repository.description}
-          stargazers_count={entry.repository.stargazers_count}
-          open_issues_count={entry.repository.open_issues_count}
-          created_at={entry.createdAt}
-          user_url={entry.postedBy.html_url}
-          username={entry.postedBy.login}
-        >
+        <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} >
           <Link to={repoLink} onMouseOver={prefetchComments(entry.repository.full_name)}>
-            View comments ({entry.commentCount})
+            View comments ({commentCount})
           </Link>
         </RepoInfo>
       </div>
@@ -62,19 +70,27 @@ const FeedEntry = ({ entry, loggedIn, onVote, client }) => {
   );
 };
 
+FeedEntry.fragments = {
+  entry: new Fragment(gql`
+    fragment FeedEntry on Entry {
+      commentCount
+      repository {
+        full_name
+        html_url
+        owner {
+          avatar_url
+        }
+      }
+      ...VoteButtons
+      ...RepoInfo
+    }
+  `, VoteButtons.fragments.entry, RepoInfo.fragments.entry),
+};
 
 FeedEntry.propTypes = {
-  onVote: React.PropTypes.func,
   loggedIn: React.PropTypes.bool.isRequired,
-  entry: React.PropTypes.shape({
-    repository: React.PropTypes.shape({
-      full_name: React.PropTypes.string.isRequired,
-    }).isRequired,
-    score: React.PropTypes.number.isRequired,
-    vote: React.PropTypes.shape({
-      vote_value: React.PropTypes.number.isRequired,
-    }).isRequired,
-  }),
+  onVote: React.PropTypes.func.isRequired,
+  entry: FeedEntry.fragments.entry.propType,
   client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 

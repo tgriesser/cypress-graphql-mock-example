@@ -1,9 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import { createFragment } from 'apollo-client';
 import gql from 'graphql-tag';
 
-export default function VoteButtons({ canVote, score, onVote, vote }) {
+import Fragment from 'graphql-fragments';
+
+export default function VoteButtons({ canVote, onVote, entry: { score, vote } }) {
   const buttonClasses = classNames('btn', 'btn-score', {
     invisible: !canVote,
   });
@@ -33,20 +34,19 @@ export default function VoteButtons({ canVote, score, onVote, vote }) {
   );
 }
 
-VoteButtons.propTypes = {
-  canVote: React.PropTypes.bool,
-  score: React.PropTypes.number,
-  onVote: React.PropTypes.func,
-  vote: React.PropTypes.shape({
-    vote_value: React.PropTypes.number.isRequired,
-  }).isRequired,
+VoteButtons.fragments = {
+  entry: new Fragment(gql`
+    fragment VoteButtons on Entry {
+      score
+      vote {
+        vote_value
+      }
+    }
+  `),
 };
 
-VoteButtons.fragment = createFragment(gql`
-  fragment voteInfo on Entry{
-    score
-    vote {
-      vote_value
-    }
-  }
-`);
+VoteButtons.propTypes = {
+  canVote: React.PropTypes.bool.isRequired,
+  onVote: React.PropTypes.func.isRequired,
+  entry: VoteButtons.fragments.entry.propType,
+};

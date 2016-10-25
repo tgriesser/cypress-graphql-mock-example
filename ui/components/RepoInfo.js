@@ -1,16 +1,25 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
+import gql from 'graphql-tag';
+
+import Fragment from 'graphql-fragments';
 
 import InfoLabel from './InfoLabel';
 
 export default function RepoInfo({
-  description,
-  stargazers_count,
-  open_issues_count,
-  created_at,
-  user_url,
-  username,
+  entry: {
+    createdAt,
+    repository: {
+      description,
+      stargazers_count,
+      open_issues_count,
+    },
+    postedBy: {
+      html_url,
+      login,
+    },
+  },
   children,
 }) {
   return (
@@ -33,21 +42,33 @@ export default function RepoInfo({
         &nbsp;&nbsp;&nbsp;
         Submitted&nbsp;
         <TimeAgo
-          date={created_at}
+          date={createdAt}
         />
         &nbsp;by&nbsp;
-        <a href={user_url}>{username}</a>
+        <a href={html_url}>{login}</a>
       </p>
     </div>
   );
 }
 
+RepoInfo.fragments = {
+  entry: new Fragment(gql`
+    fragment RepoInfo on Entry {
+      createdAt
+      repository {
+        description
+        stargazers_count
+        open_issues_count
+      }
+      postedBy {
+         html_url
+         login
+      }
+    }
+  `),
+};
+
 RepoInfo.propTypes = {
-  description: React.PropTypes.string.isRequired,
-  stargazers_count: React.PropTypes.number.isRequired,
-  open_issues_count: React.PropTypes.number.isRequired,
-  created_at: React.PropTypes.number.isRequired,
-  user_url: React.PropTypes.string.isRequired,
-  username: React.PropTypes.string.isRequired,
+  entry: RepoInfo.fragments.entry.propType,
   children: React.PropTypes.node,
 };

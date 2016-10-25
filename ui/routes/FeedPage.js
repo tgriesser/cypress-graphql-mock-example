@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
-import VoteButtons from '../components/VoteButtons';
+import FeedEntry from '../components/FeedEntry';
 
 class FeedPage extends React.Component {
   constructor() {
@@ -48,25 +48,7 @@ const FEED_QUERY = gql`
       login
     }
     feed(type: $type, offset: $offset, limit: $limit) {
-      createdAt
-      commentCount
-      id
-      postedBy {
-        login
-        html_url
-      }
-      ...voteInfo
-      repository {
-        name
-        full_name
-        description
-        html_url
-        stargazers_count
-        open_issues_count
-        owner {
-          avatar_url
-        }
-      }
+      ...FeedEntry
     }
   }
 `;
@@ -74,7 +56,7 @@ const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options(props) {
     return {
-      fragments: VoteButtons.fragment,
+      fragments: FeedEntry.fragments.entry.fragments(),
       variables: {
         type: (
           props.params &&

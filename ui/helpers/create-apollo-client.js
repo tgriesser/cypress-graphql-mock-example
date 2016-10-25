@@ -8,5 +8,5 @@ export default options => new ApolloClient(Object.assign({}, {
     }
     return null;
   },
-  shouldBatch: true,
+  // shouldBatch: true,
 }, options));
