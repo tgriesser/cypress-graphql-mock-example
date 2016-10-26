@@ -41,7 +41,7 @@ function Profile({ loading, currentUser }) {
 }
 
 Profile.propTypes = {
-  loading: React.PropTypes.bool.isRequired,
+  loading: React.PropTypes.bool,
   currentUser: React.PropTypes.shape({
     login: React.PropTypes.string.isRequired,
   }),
@@ -57,6 +57,7 @@ const PROFILE_QUERY = gql`
 `;
 
 export default graphql(PROFILE_QUERY, {
+  options: { forceFetch: true },
   props({ data: { loading, currentUser } }) {
     return { loading, currentUser };
   },
