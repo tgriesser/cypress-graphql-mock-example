@@ -7,7 +7,7 @@ import Fragment from 'graphql-fragments';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
-import { COMMENT_QUERY } from '../routes/CommentsPage';
+import CommentsPage, { COMMENT_QUERY } from '../routes/CommentsPage';
 
 const FeedEntry = ({
   loggedIn,
@@ -31,6 +31,7 @@ const FeedEntry = ({
     client.query({
       query: COMMENT_QUERY,
       variables: { repoName: repoFullName },
+      fragments: CommentsPage.fragments.comment.fragments(),
     });
   };
 

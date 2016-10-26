@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
+import Fragment from 'graphql-fragments';
 
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
@@ -104,14 +105,7 @@ class CommentsPage extends React.Component {
       <div>
         <div>
           <h1>Comments for <a href={repo.html_url}>{repo.full_name}</a></h1>
-          <RepoInfo
-            description={repo.description}
-            stargazers_count={repo.stargazers_count}
-            open_issues_count={repo.open_issues_count}
-            created_at={entry.createdAt}
-            user_url={entry.postedBy.html_url}
-            username={entry.postedBy.login}
-          />
+          <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} />
           {currentUser && <form onSubmit={this.submitForm}>
             <div className="form-group">
 
@@ -160,6 +154,19 @@ class CommentsPage extends React.Component {
   }
 }
 
+CommentsPage.fragments = {
+  comment: new Fragment(gql`
+    fragment CommentsPageComment on Comment {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  `),
+};
 
 CommentsPage.propTypes = {
   loading: React.PropTypes.bool.isRequired,
@@ -183,24 +190,19 @@ CommentsPage.propTypes = {
     }),
   }),
   submit: React.PropTypes.func.isRequired,
-  subscribeToMore: React.PropTypes.func.isRequired,
+  subscribeToMore: React.PropTypes.func,
 };
 
 const SUBMIT_COMMENT_MUTATION = gql`
   mutation submitComment($repoFullName: String!, $commentContent: String!) {
     submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      content
+      ...CommentsPageComment
     }
   }
 `;
 
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
+  options: { fragments: CommentsPage.fragments.comment.fragments() },
   props({ ownProps, mutate }) {
     return {
       submit({ repoFullName, commentContent }) {
@@ -254,13 +256,7 @@ export const COMMENT_QUERY = gql`
       }
       createdAt
       comments {
-        id
-        postedBy {
-          login
-          html_url
-        }
-        createdAt
-        content
+        ...CommentsPageComment
       }
       repository {
         full_name
@@ -276,6 +272,7 @@ export const COMMENT_QUERY = gql`
 const withData = graphql(COMMENT_QUERY, {
   options({ params }) {
     return {
+      fragments: CommentsPage.fragments.comment.fragments(),
       variables: { repoName: `${params.org}/${params.repoName}` },
     };
   },
