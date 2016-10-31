@@ -60,7 +60,7 @@
     "react-apollo": "0.5.16",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.0",
-    "react-router": "^2.4.1",
+    "react-router": "^3.0.0",
     "react-timeago": "^3.0.0",
     "redux": "^3.5.2",
     "subscriptions-transport-ws": "^0.3.0"
