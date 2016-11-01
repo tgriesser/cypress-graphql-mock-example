@@ -203,40 +203,37 @@ const SUBMIT_COMMENT_MUTATION = gql`
 
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
   options: { fragments: CommentsPage.fragments.comment.fragments() },
-  props({ ownProps, mutate }) {
-    return {
-      submit({ repoFullName, commentContent }) {
-        return mutate({
-          variables: { repoFullName, commentContent },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            submitComment: {
-              __typename: 'Comment',
-              id: null,
-              postedBy: ownProps.currentUser,
-              createdAt: +new Date(),
-              content: commentContent,
-            },
+  props: ({ ownProps, mutate }) => ({
+    submit: ({ repoFullName, commentContent }) =>
+      mutate({
+        variables: { repoFullName, commentContent },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          submitComment: {
+            __typename: 'Comment',
+            id: null,
+            postedBy: ownProps.currentUser,
+            createdAt: +new Date(),
+            content: commentContent,
           },
-          updateQueries: {
-            Comment: (prev, { mutationResult }) => {
-              const newComment = mutationResult.data.submitComment;
-              if (isDuplicateComment(newComment, prev.entry.comments)) {
-                return prev;
-              }
-              return update(prev, {
-                entry: {
-                  comments: {
-                    $unshift: [newComment],
-                  },
+        },
+        updateQueries: {
+          Comment: (prev, { mutationResult }) => {
+            const newComment = mutationResult.data.submitComment;
+            if (isDuplicateComment(newComment, prev.entry.comments)) {
+              return prev;
+            }
+            return update(prev, {
+              entry: {
+                comments: {
+                  $unshift: [newComment],
                 },
-              });
-            },
+              },
+            });
           },
-        });
-      },
-    };
-  },
+        },
+      }),
+  }),
 });
 
 export const COMMENT_QUERY = gql`
@@ -270,15 +267,13 @@ export const COMMENT_QUERY = gql`
 `;
 
 const withData = graphql(COMMENT_QUERY, {
-  options({ params }) {
-    return {
-      fragments: CommentsPage.fragments.comment.fragments(),
-      variables: { repoName: `${params.org}/${params.repoName}` },
-    };
-  },
-  props({ data: { loading, currentUser, entry, subscribeToMore } }) {
-    return { loading, currentUser, entry, subscribeToMore };
-  },
+  options: ({ params }) => ({
+    fragments: CommentsPage.fragments.comment.fragments(),
+    variables: { repoName: `${params.org}/${params.repoName}` },
+  }),
+  props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({
+    loading, currentUser, entry, subscribeToMore,
+  }),
 });
 
 export default withData(withMutations(CommentsPage));
