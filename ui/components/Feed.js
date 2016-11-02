@@ -1,7 +1,7 @@
 import React from 'react';
 import FeedEntry from './FeedEntry';
 
-export default function Feed({ entries = [], loggedIn, onVote, onLoadMore }) {
+const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
     return (
       <div> {
@@ -19,7 +19,7 @@ export default function Feed({ entries = [], loggedIn, onVote, onLoadMore }) {
     );
   }
   return <div />;
-}
+};
 
 Feed.propTypes = {
   entries: React.PropTypes.arrayOf(FeedEntry.fragments.entry.propType),
@@ -27,3 +27,5 @@ Feed.propTypes = {
   onVote: React.PropTypes.func.isRequired,
   onLoadMore: React.PropTypes.func.isRequired,
 };
+
+export default Feed;

@@ -58,7 +58,7 @@ const PROFILE_QUERY = gql`
 
 export default graphql(PROFILE_QUERY, {
   options: { forceFetch: true },
-  props({ data: { loading, currentUser } }) {
-    return { loading, currentUser };
-  },
+  props: ({ data: { loading, currentUser } }) => ({
+    loading, currentUser,
+  }),
 })(Profile);
