@@ -19,6 +19,11 @@ const Layout = ({ children, params, location }) => (
             active={location.pathname === '/' || params.type === 'top'}
           />
           <NavbarLink
+            title="Hot"
+            href="/feed/hot"
+            active={params.type === 'hot'}
+          />
+          <NavbarLink
             title="New"
             href="/feed/new"
             active={params.type === 'new'}
