@@ -38,10 +38,13 @@ app.use((req, res) => {
         ssrMode: true,
         networkInterface: createNetworkInterface({
           uri: apiUrl,
-          credentials: 'same-origin',
-          // transfer request headers to networkInterface so that they're accessible to proxy server
-          // Addresses this issue: https://github.com/matthew-andrews/isomorphic-fetch/issues/83
-          headers: req.headers,
+          opts: {
+            credentials: 'same-origin',
+            // transfer request headers to networkInterface so that they're
+            // accessible to proxy server
+            // Addresses this issue: https://github.com/matthew-andrews/isomorphic-fetch/issues/83
+            headers: req.headers,
+          },
         }),
       });
 

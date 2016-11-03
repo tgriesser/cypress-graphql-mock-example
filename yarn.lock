@@ -107,9 +107,9 @@ anymatch@^1.3.0:
     arrify "^1.0.0"
     micromatch "^2.1.5"
 
-apollo-client@0.5.0-preview.3:
-  version "0.5.0-preview.3"
-  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-0.5.0-preview.3.tgz#a4510a02147045b0aa23de78e5ac5842141f1694"
+apollo-client@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-0.5.0.tgz#b9ec43a8e621461ff24c9fddba21446d8e1d5aa3"
   dependencies:
     es6-promise "^4.0.3"
     graphql-anywhere "^0.2.4"
@@ -1145,10 +1145,6 @@ change-case@3.0.x:
     upper-case "^1.1.1"
     upper-case-first "^1.1.0"
 
-change-emitter@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/change-emitter/-/change-emitter-0.1.2.tgz#6b88ca4d5d864e516f913421b11899a860aee8db"
-
 chokidar@^1.0.0, chokidar@^1.4.3:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.6.1.tgz#2f4447ab5e96e50fb3d789fd90d4c72e0e4c70c2"
@@ -1535,10 +1531,6 @@ decamelize@^1.0.0, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-deep-equal@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
-
 deep-extend@~0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.1.tgz#efe4113d08085f4e6f9687759810f807469e2253"
@@ -1853,10 +1845,11 @@ eslint-plugin-react@^6.2.0:
     doctrine "^1.2.2"
     jsx-ast-utils "^1.3.1"
 
-eslint@^3.4.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.8.0.tgz#4fbbf6833d66654860c23a099c47a0f086de34b7"
+eslint@^3.8.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.9.1.tgz#5a8597706fc6048bc6061ac754d4a211d28f4f5b"
   dependencies:
+    babel-code-frame "^6.16.0"
     chalk "^1.1.3"
     concat-stream "^1.4.6"
     debug "^2.1.1"
@@ -1884,7 +1877,7 @@ eslint@^3.4.0:
     pluralize "^1.2.1"
     progress "^1.1.8"
     require-uncached "^1.0.2"
-    shelljs "^0.6.0"
+    shelljs "^0.7.5"
     strip-bom "^3.0.0"
     strip-json-comments "~1.0.1"
     table "^3.7.8"
@@ -2039,7 +2032,7 @@ faye-websocket@~0.11.0:
   dependencies:
     websocket-driver ">=0.5.1"
 
-fbjs@^0.8.1, fbjs@^0.8.4:
+fbjs@^0.8.4:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.5.tgz#f69ba8a876096cb1b9bffe4d7c1e71c19d39d008"
   dependencies:
@@ -2245,7 +2238,7 @@ glob@^5.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.3, glob@^7.0.5:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -2326,9 +2319,9 @@ graphql-fragments:
   dependencies:
     graphql-anywhere "^0.2.4"
 
-graphql-subscriptions@^0.1.3:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.1.5.tgz#603422c0a7ea3818b630751d1c9798bfa1a820ee"
+graphql-subscriptions@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.2.1.tgz#9c46fdee043b2a51b7aaa61f8645c25410d806e4"
   dependencies:
     es6-promise "^3.2.1"
     graphql "^0.7.0"
@@ -2402,20 +2395,20 @@ header-case@^1.0.0:
     no-case "^2.2.0"
     upper-case "^1.1.3"
 
-history@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/history/-/history-2.1.2.tgz#4aa2de897a0e4867e4539843be6ecdb2986bfdec"
+history@^3.0.0:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/history/-/history-3.2.1.tgz#71c7497f4e6090363d19a6713bb52a1bfcdd99aa"
   dependencies:
-    deep-equal "^1.0.0"
-    invariant "^2.0.0"
-    query-string "^3.0.0"
-    warning "^2.0.0"
+    invariant "^2.2.1"
+    loose-envify "^1.2.0"
+    query-string "^4.2.2"
+    warning "^3.0.0"
 
 hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@^1.0.0, hoist-non-react-statics@^1.2.0:
+hoist-non-react-statics@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
@@ -2596,7 +2589,11 @@ interpret@^0.6.4:
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-0.6.6.tgz#fecd7a18e7ce5ca6abfb953e1f86213a49f1625b"
 
-invariant@^2.0.0, invariant@^2.2.0, invariant@^2.2.1:
+interpret@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.1.tgz#d579fb7f693b858004947af39fa0db49f795602c"
+
+invariant@^2.2.0, invariant@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.1.tgz#b097010547668c7e337028ebe816ebe36c8a8d54"
   dependencies:
@@ -3373,10 +3370,6 @@ node-pre-gyp@^0.6.29:
     tar "~2.2.0"
     tar-pack "~3.1.0"
 
-node-static@0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/node-static/-/node-static-0.5.9.tgz#2f5bf30949e1735958266c269413aebce8cbe899"
-
 node-uuid@~1.4.7:
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
@@ -3991,13 +3984,7 @@ qs@6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.2.0.tgz#3b7848c03c2dece69a9522b0fae8c4126d745f3b"
 
-query-string@^3.0.0:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/query-string/-/query-string-3.0.3.tgz#ae2e14b4d05071d4e9b9eb4873c35b0dcd42e638"
-  dependencies:
-    strict-uri-encode "^1.0.0"
-
-query-string@^4.1.0:
+query-string@^4.1.0, query-string@^4.2.2:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-4.2.3.tgz#9f27273d207a25a8ee4c7b8c74dcd45d556db822"
   dependencies:
@@ -4040,9 +4027,9 @@ react-addons-update@^15.2.1:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.3.2.tgz#b6385c4db1e5df371825e0615b04360ed94430fe"
 
-react-apollo@0.5.13:
-  version "0.5.13"
-  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-0.5.13.tgz#5156323fd969ec0477e1e28e94ddb76b8ee4531a"
+react-apollo@0.5.16:
+  version "0.5.16"
+  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-0.5.16.tgz#8363f4f4269c7025b7922546a34de9a4f57c94df"
   dependencies:
     hoist-non-react-statics "^1.2.0"
     invariant "^2.2.1"
@@ -4051,7 +4038,6 @@ react-apollo@0.5.13:
     lodash.isobject "^3.0.2"
     lodash.pick "^4.4.0"
     object-assign "^4.0.1"
-    recompose "^0.20.2"
 
 react-dom@^15.1.0:
   version "15.3.2"
@@ -4063,11 +4049,11 @@ react-ga@^2.1.0:
   dependencies:
     object-assign "^4.0.1"
 
-react-router@^2.4.1:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-2.8.1.tgz#73e9491f6ceb316d0f779829081863e378ee4ed7"
+react-router@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-3.0.0.tgz#3f313e4dbaf57048c48dd0a8c3cac24d93667dff"
   dependencies:
-    history "^2.1.2"
+    history "^3.0.0"
     hoist-non-react-statics "^1.2.0"
     invariant "^2.2.1"
     loose-envify "^1.2.0"
@@ -4165,14 +4151,11 @@ readline2@^1.0.1:
     is-fullwidth-code-point "^1.0.0"
     mute-stream "0.0.5"
 
-recompose@^0.20.2:
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.20.2.tgz#113d6ac7e29ca664cfffec16b681ddddf15250bc"
+rechoir@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/rechoir/-/rechoir-0.6.2.tgz#85204b54dba82d5742e28c96756ef43af50e3384"
   dependencies:
-    change-emitter "^0.1.2"
-    fbjs "^0.8.1"
-    hoist-non-react-statics "^1.0.0"
-    symbol-observable "^0.2.4"
+    resolve "^1.1.6"
 
 redent@^1.0.0:
   version "1.0.0"
@@ -4461,9 +4444,13 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-shelljs@^0.6.0:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.6.1.tgz#ec6211bed1920442088fe0f70b2837232ed2c8a8"
+shelljs@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.5.tgz#2eef7a50a21e1ccf37da00df767ec69e30ad0675"
+  dependencies:
+    glob "^7.0.0"
+    interpret "^1.0.0"
+    rechoir "^0.6.2"
 
 signal-exit@^3.0.0:
   version "3.0.1"
@@ -4673,17 +4660,14 @@ style-loader@^0.13.1:
   dependencies:
     loader-utils "^0.2.7"
 
-subscriptions-transport-ws@^0.2.3:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.2.6.tgz#433861167c25ef9a2b8697e9403afa2a77656cb3"
+subscriptions-transport-ws@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.3.0.tgz#bcf7dec388f5dd8ab9eab67c1d953c651bdd723a"
   dependencies:
-    "@types/node" "^6.0.38"
     backo2 "^1.0.2"
-    es6-promise "^3.2.1"
-    graphql-subscriptions "^0.1.3"
+    graphql-subscriptions "^0.2.0"
     lodash.isobject "^3.0.2"
     lodash.isstring "^4.0.1"
-    node-static "0.5.9"
     websocket "^1.0.23"
 
 supports-color@^0.2.0:
@@ -4718,10 +4702,6 @@ swap-case@^1.1.0:
   dependencies:
     lower-case "^1.1.1"
     upper-case "^1.1.1"
-
-symbol-observable@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-0.2.4.tgz#95a83db26186d6af7e7a18dbd9760a2f86d08f40"
 
 symbol-observable@^1.0.2:
   version "1.0.4"
@@ -5007,12 +4987,6 @@ vm-browserify@0.0.4:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
-
-warning@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
-  dependencies:
-    loose-envify "^1.0.0"
 
 warning@^3.0.0:
   version "3.0.0"
