@@ -51,11 +51,11 @@ const FEED_QUERY = gql`
       ...FeedEntry
     }
   }
+  ${FeedEntry.fragments.entry}
 `;
 const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options: props => ({
-    fragments: FeedEntry.fragments.entry.fragments(),
     variables: {
       type: (
         props.params &&
