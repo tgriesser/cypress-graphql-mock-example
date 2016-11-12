@@ -74,6 +74,7 @@ const FeedEntry = ({
 FeedEntry.fragments = {
   entry: new Fragment(gql`
     fragment FeedEntry on Entry {
+      id
       commentCount
       repository {
         full_name
