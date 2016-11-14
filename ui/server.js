@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-import { getDataFromTree } from 'react-apollo/server';
+import { renderToStringWithData } from 'react-apollo/server';
 import { match, RouterContext } from 'react-router';
 import path from 'path';
 import 'isomorphic-fetch';
@@ -54,13 +54,12 @@ app.use((req, res) => {
         </ApolloProvider>
       );
 
-      getDataFromTree(component).then((context) => {
-        const content = ReactDOM.renderToString(component);
+      renderToStringWithData(component).then((content) => {
         res.status(200);
 
         const html = (<Html
           content={content}
-          state={{ apollo: { data: context.store.getState().apollo.data } }}
+          state={{ apollo: { data: client.store.getState().apollo.data } }}
         />);
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
         res.end();
