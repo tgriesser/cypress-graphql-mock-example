@@ -32,7 +32,10 @@ const SUBSCRIPTION_QUERY = gql`
 class CommentsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { noCommentContent: false };
+    this.state = {
+      errors: false,
+      canSubmit: true,
+    };
     this.submitForm = this.submitForm.bind(this);
 
     // keep track of subscription handle to not subscribe twice.
@@ -68,22 +71,24 @@ class CommentsPage extends React.Component {
   }
 
   submitForm(event) {
+    event.preventDefault();
     const { entry, currentUser, submit } = this.props;
 
-    this.setState({ noCommentContent: false });
-    event.preventDefault();
     const repoFullName = entry.repository.full_name;
-    const commentContent = event.target.newCommentContent.value;
-    if (!commentContent) {
-      this.setState({ noCommentContent: true });
-    } else {
+    const commentContent = this.newCommentInput.value;
+
+    if (commentContent) {
+      this.setState({ canSubmit: false });
+
       submit({
         repoFullName,
         commentContent,
         currentUser,
       }).then((res) => {
+        this.setState({ canSubmit: true });
+
         if (!res.errors) {
-          document.getElementById('newComment').value = '';
+          this.newCommentInput.value = '';
         } else {
           this.setState({ errors: res.errors });
         }
@@ -93,27 +98,26 @@ class CommentsPage extends React.Component {
 
   render() {
     const { loading, currentUser, entry } = this.props;
-    const { errors, noCommentContent } = this.state;
+    const { errors, canSubmit } = this.state;
+
     if (loading) {
-      return (
-        <div>Loading...</div>
-      );
+      return <div>Loading...</div>;
     }
-    const repo = entry.repository;
+
+    const repository = entry.repository;
 
     return (
       <div>
         <div>
-          <h1>Comments for <a href={repo.html_url}>{repo.full_name}</a></h1>
+          <h1>Comments for <a href={repository.html_url}>{repository.full_name}</a></h1>
           <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} />
-          {currentUser && <form onSubmit={this.submitForm}>
+          {currentUser ? <form onSubmit={this.submitForm}>
             <div className="form-group">
 
               <input
                 type="text"
                 className="form-control"
-                id="newComment"
-                name="newCommentContent"
+                ref={input => (this.newCommentInput = input)}
                 placeholder="Write your comment here!"
               />
             </div>
@@ -123,31 +127,25 @@ class CommentsPage extends React.Component {
                 {errors[0].message}
               </div>
             )}
-            {noCommentContent && (
-              <div className="alert alert-danger" role="alert">
-                Comment must have content.
-              </div>
-            )}
-            <button type="submit" className="btn btn-primary">
+
+            <button type="submit" disabled={!canSubmit} className="btn btn-primary">
               Submit
             </button>
-          </form>}
-          {!currentUser && <div><em>Log in to comment.</em></div>}
+          </form> : <div><em>Log in to comment.</em></div>}
         </div>
         <br />
         <div>
-          <div> {
-            entry.comments.map(comment => (
+          <div>
+            {entry.comments.map(comment => (
               <Comment
-                key={comment.postedBy.login + comment.content + comment.createdAt + repo.full_name}
+                key={comment.postedBy.login + comment.createdAt + repository.full_name}
                 username={comment.postedBy.login}
                 content={comment.content}
                 createdAt={comment.createdAt}
                 userUrl={comment.postedBy.html_url}
               />
-            ))
-          }</div>
-
+            ))}
+          </div>
         </div>
       </div>
     );
