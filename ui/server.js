@@ -55,11 +55,12 @@ app.use((req, res) => {
       );
 
       renderToStringWithData(component).then((content) => {
+        const data = client.store.getState().apollo.data;
         res.status(200);
 
         const html = (<Html
           content={content}
-          state={{ apollo: { data: client.store.getState().apollo.data } }}
+          state={{ apollo: { data } }}
         />);
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
         res.end();

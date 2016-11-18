@@ -40,6 +40,7 @@ function logPageView() {
 const client = createApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
+  ssrForceFetchDelay: 100,
 });
 
 render((

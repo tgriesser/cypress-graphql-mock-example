@@ -2,8 +2,7 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
 import gql from 'graphql-tag';
-
-import Fragment from 'graphql-fragments';
+import { propType } from 'graphql-anywhere';
 
 import InfoLabel from './InfoLabel';
 
@@ -50,7 +49,7 @@ const RepoInfo = ({
 );
 
 RepoInfo.fragments = {
-  entry: new Fragment(gql`
+  entry: gql`
     fragment RepoInfo on Entry {
       createdAt
       repository {
@@ -63,11 +62,11 @@ RepoInfo.fragments = {
          login
       }
     }
-  `),
+  `,
 };
 
 RepoInfo.propTypes = {
-  entry: RepoInfo.fragments.entry.propType,
+  entry: propType(RepoInfo.fragments.entry).isRequired,
   children: React.PropTypes.node,
 };
 
