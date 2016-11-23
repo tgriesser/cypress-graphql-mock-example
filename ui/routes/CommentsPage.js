@@ -2,7 +2,8 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
-import Fragment from 'graphql-fragments';
+import { filter } from 'graphql-anywhere';
+import { getFragmentDefinitions } from 'apollo-client';
 
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
@@ -110,7 +111,7 @@ class CommentsPage extends React.Component {
       <div>
         <div>
           <h1>Comments for <a href={repository.html_url}>{repository.full_name}</a></h1>
-          <RepoInfo entry={RepoInfo.fragments.entry.filter(entry)} />
+          <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} />
           {currentUser ? <form onSubmit={this.submitForm}>
             <div className="form-group">
 
@@ -153,7 +154,7 @@ class CommentsPage extends React.Component {
 }
 
 CommentsPage.fragments = {
-  comment: new Fragment(gql`
+  comment: gql`
     fragment CommentsPageComment on Comment {
       id
       postedBy {
@@ -163,7 +164,7 @@ CommentsPage.fragments = {
       createdAt
       content
     }
-  `),
+  `,
 };
 
 CommentsPage.propTypes = {
@@ -200,7 +201,7 @@ const SUBMIT_COMMENT_MUTATION = gql`
 `;
 
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
-  options: { fragments: CommentsPage.fragments.comment.fragments() },
+  options: { fragments: getFragmentDefinitions(CommentsPage.fragments.comment) },
   props: ({ ownProps, mutate }) => ({
     submit: ({ repoFullName, commentContent }) =>
       mutate({
@@ -266,7 +267,7 @@ export const COMMENT_QUERY = gql`
 
 const withData = graphql(COMMENT_QUERY, {
   options: ({ params }) => ({
-    fragments: CommentsPage.fragments.comment.fragments(),
+    fragments: getFragmentDefinitions(CommentsPage.fragments.comment),
     variables: { repoName: `${params.org}/${params.repoName}` },
   }),
   props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({

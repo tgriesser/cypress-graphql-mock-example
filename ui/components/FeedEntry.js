@@ -1,5 +1,5 @@
 import React from 'react';
-import ApolloClient from 'apollo-client';
+import ApolloClient, { getFragmentDefinitions } from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';
@@ -31,7 +31,7 @@ const FeedEntry = ({
     client.query({
       query: COMMENT_QUERY,
       variables: { repoName: repoFullName },
-      fragments: CommentsPage.fragments.comment.fragments(),
+      fragments: getFragmentDefinitions(CommentsPage.fragments.comment),
     });
   };
 
