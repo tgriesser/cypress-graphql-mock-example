@@ -3,7 +3,6 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
 import { filter } from 'graphql-anywhere';
-import { getFragmentDefinitions } from 'apollo-client';
 
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
@@ -198,10 +197,10 @@ const SUBMIT_COMMENT_MUTATION = gql`
       ...CommentsPageComment
     }
   }
+  ${CommentsPage.fragments.comment}
 `;
 
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
-  options: { fragments: getFragmentDefinitions(CommentsPage.fragments.comment) },
   props: ({ ownProps, mutate }) => ({
     submit: ({ repoFullName, commentContent }) =>
       mutate({
@@ -263,11 +262,11 @@ export const COMMENT_QUERY = gql`
       }
     }
   }
+  ${CommentsPage.fragments.comment}
 `;
 
 const withData = graphql(COMMENT_QUERY, {
   options: ({ params }) => ({
-    fragments: getFragmentDefinitions(CommentsPage.fragments.comment),
     variables: { repoName: `${params.org}/${params.repoName}` },
   }),
   props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({

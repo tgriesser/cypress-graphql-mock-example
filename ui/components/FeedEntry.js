@@ -1,5 +1,5 @@
 import React from 'react';
-import ApolloClient, { getFragmentDefinitions } from 'apollo-client';
+import ApolloClient from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';
@@ -7,7 +7,7 @@ import { filter, propType } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
-import CommentsPage, { COMMENT_QUERY } from '../routes/CommentsPage';
+import { COMMENT_QUERY } from '../routes/CommentsPage';
 
 const FeedEntry = ({
   loggedIn,
@@ -31,7 +31,6 @@ const FeedEntry = ({
     client.query({
       query: COMMENT_QUERY,
       variables: { repoName: repoFullName },
-      fragments: getFragmentDefinitions(CommentsPage.fragments.comment),
     });
   };
 
