@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
-import { renderToStringWithData } from 'react-apollo/server';
+import { renderToStringWithData } from 'react-apollo';
 import { match, RouterContext } from 'react-router';
 import path from 'path';
 import 'isomorphic-fetch';
