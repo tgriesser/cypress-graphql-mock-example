@@ -43,9 +43,6 @@ const client = createApolloClient({
   ssrForceFetchDelay: 100,
 });
 
-// Enable Apollo dev tools
-window.__APOLLO_CLIENT__ = client;
-
 render((
   <ApolloProvider client={client}>
     <Router history={browserHistory} onUpdate={logPageView}>
