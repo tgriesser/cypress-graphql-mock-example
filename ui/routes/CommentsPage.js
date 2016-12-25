@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import { filter } from 'graphql-anywhere';
 
 import RepoInfo from '../components/RepoInfo';
