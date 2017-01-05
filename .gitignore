@@ -3,3 +3,5 @@ node_modules
 dev.sqlite3
 .env
 .idea/
+
+./extracted_queries.json

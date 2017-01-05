@@ -4,6 +4,7 @@
   "description": "Example app for Apollo",
   "main": "index.js",
   "scripts": {
+    "extractgql": "extractgql ui --add_typename",
     "start-app-client": "webpack-dev-server -d --hot --inline --no-info --port 3020",
     "start-app-server": "nodemon server_bundle.js",
     "start": "concurrently \"npm run start-app-client\" \"npm run start-app-server\"",
@@ -50,6 +51,7 @@
     "express": "^4.14.0",
     "graphql-anywhere": "^2.0.0",
     "graphql-tag": "^1.2.1",
+    "extractgql": "^0.1.10",
     "http-proxy-middleware": "^0.17.1",
     "immutability-helper": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
