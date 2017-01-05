@@ -1,7 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import { browserHistory } from 'react-router';
-import gql from 'graphql-tag';
 
 import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
 

@@ -1,10 +1,8 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
-import FeedEntry from '../components/FeedEntry';
 
 import FEED_QUERY from '../graphql/FeedQuery.graphql';
 import VOTE_MUTATION from '../graphql/Vote.graphql';
