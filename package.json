@@ -48,7 +48,7 @@
     "apollo-client": "^0.6.0",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
-    "graphql-anywhere": "^1.0.0",
+    "graphql-anywhere": "^2.0.0",
     "graphql-tag": "^1.1.2",
     "http-proxy-middleware": "^0.17.1",
     "immutability-helper": "^2.0.0",
