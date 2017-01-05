@@ -1,4 +1,3 @@
-
 query CurrentUserForLayout {
   currentUser {
     login

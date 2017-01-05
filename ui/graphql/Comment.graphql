@@ -1,3 +1,5 @@
+#import "./CommentsPageComment.graphql"
+
 query Comment($repoName: String!) {
   currentUser {
     login
@@ -21,14 +23,4 @@ query Comment($repoName: String!) {
       stargazers_count
     }
   }
-}
-
-fragment CommentsPageComment on Comment {
-  id
-  postedBy {
-    login
-    html_url
-  }
-  createdAt
-  content
 }
