@@ -3,6 +3,8 @@ import { graphql } from 'react-apollo';
 import { browserHistory } from 'react-router';
 import gql from 'graphql-tag';
 
+import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
+
 class NewEntryPage extends React.Component {
   constructor() {
     super();
@@ -68,15 +70,7 @@ NewEntryPage.propTypes = {
   submit: React.PropTypes.func.isRequired,
 };
 
-const SUBMIT_RESPOSITORY_MUTATION = gql`
-  mutation submitRepository($repoFullName: String!) {
-    submitRepository(repoFullName: $repoFullName) {
-      createdAt
-    }
-  }
-`;
-
-const withData = graphql(SUBMIT_RESPOSITORY_MUTATION, {
+const withData = graphql(SUBMIT_REPOSITORY_MUTATION, {
   props: ({ mutate }) => ({
     submit: repoFullName => mutate({
       variables: { repoFullName },

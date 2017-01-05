@@ -6,7 +6,8 @@ import Feed from '../components/Feed';
 import Loading from '../components/Loading';
 import FeedEntry from '../components/FeedEntry';
 
-import FEED_QUERY from '../graphql/Feed.graphql';
+import FEED_QUERY from '../graphql/FeedQuery.graphql';
+import VOTE_MUTATION from '../graphql/Vote.graphql';
 
 class FeedPage extends React.Component {
   constructor() {
@@ -72,18 +73,6 @@ const withData = graphql(FEED_QUERY, {
     }),
   }),
 });
-
-const VOTE_MUTATION = gql`
-  mutation vote($repoFullName: String!, $type: VoteType!) {
-    vote(repoFullName: $repoFullName, type: $type) {
-      score
-      id
-      vote {
-        vote_value
-      }
-    }
-  }
-`;
 
 const withMutations = graphql(VOTE_MUTATION, {
   props: ({ mutate }) => ({
