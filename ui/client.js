@@ -39,9 +39,6 @@ const standardNetworkInterface = createNetworkInterface({
 
 let networkInterface = config.persistedQueries ? persistedQueryNI : standardNetworkInterface;
 
-console.log('Persisted queries option: ');
-console.log(config.persistedQueries);
-
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
