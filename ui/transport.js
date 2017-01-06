@@ -22,6 +22,6 @@ export default function getNetworkInterface(apiUrl = '/graphql') {
     },
     transportBatching: true,
   });
-
+  
   return (config.persistedQueries ? persistedQueryNI : standardNetworkInterface);
 }
