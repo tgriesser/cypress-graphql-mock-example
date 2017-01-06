@@ -35,7 +35,7 @@ app.use((req, res) => {
     } else if (renderProps) {
       const client = createApolloClient({
         ssrMode: true,
-        networkInterface: getNetworkInterface(apiUrl),
+        networkInterface: getNetworkInterface(apiUrl, req.headers),
       });
 
       const component = (
