@@ -1,6 +1,5 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import update from 'immutability-helper';
 import { filter } from 'graphql-anywhere';
 
@@ -141,20 +140,6 @@ class CommentsPage extends React.Component {
     );
   }
 }
-
-CommentsPage.fragments = {
-  comment: gql`
-    fragment CommentsPageComment on Comment {
-      id
-      postedBy {
-        login
-        html_url
-      }
-      createdAt
-      content
-    }
-  `,
-};
 
 CommentsPage.propTypes = {
   loading: React.PropTypes.bool.isRequired,
