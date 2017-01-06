@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
-import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { Client } from 'subscriptions-transport-ws';
 import * as ReactGA from 'react-ga';
+
 // Polyfill fetch
 import 'isomorphic-fetch';
 
@@ -13,34 +13,12 @@ import './style/index.css';
 import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
-
-import { PersistedQueryNetworkInterface } from 'extractgql/lib/browser';
-import queryMap from '../extracted_queries.json';
-
-import config from './config';
+import getNetworkInterface from './transport';
 
 const wsClient = new Client('ws://localhost:8080');
 
-const persistedQueryNI = new PersistedQueryNetworkInterface({
-  queryMap,
-  uri: '/graphql',
-  opts: {
-    credentials: 'same-origin',
-  },
-});
-
-const standardNetworkInterface = createNetworkInterface({
-  uri: '/graphql',
-  opts: {
-    credentials: 'same-origin',
-  },
-  transportBatching: true,
-});
-
-let networkInterface = config.persistedQueries ? persistedQueryNI : standardNetworkInterface;
-
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
-  networkInterface,
+  getNetworkInterface(),
   wsClient,
 );
 

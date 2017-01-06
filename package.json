@@ -38,7 +38,7 @@
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^2.2.1",
-    "eslint-plugin-react": "^6.2.0",
+    "eslint-plugin-react": "^6.2.0", 
     "html-webpack-plugin": "^2.22.0",
     "nodemon": "^1.9.2",
     "style-loader": "^0.13.1",

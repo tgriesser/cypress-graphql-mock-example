@@ -1,21 +1,16 @@
 import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { match, RouterContext } from 'react-router';
 import path from 'path';
 import 'isomorphic-fetch';
 import proxy from 'http-proxy-middleware';
-import { PersistedQueryNetworkInterface } from 'extractgql/lib/browser';
 
 import routes from './routes';
 import Html from './routes/Html';
 import createApolloClient from './helpers/create-apollo-client';
-
-import queryMap from '../extracted_queries.json';
-
-import config from './config';
+import getNetworkInterface from './transport';
 
 const basePort = process.env.PORT || 3000;
 const apiHost = `http://localhost:${basePort + 10}`;
@@ -38,30 +33,9 @@ app.use((req, res) => {
       console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
       res.status(500);
     } else if (renderProps) {
-      const standardNetworkInterface = createNetworkInterface({
-        uri: apiUrl,
-        opts: {
-          credentials: 'same-origin',
-          // transfer request headers to networkInterface so that they're
-          // accessible to proxy server
-          // Addresses this issue: https://github.com/matthew-andrews/isomorphic-fetch/issues/83
-          headers: req.headers,
-        },
-      });
-
-      const persistedQueryNI = new PersistedQueryNetworkInterface({
-        queryMap,
-        uri: apiUrl,
-        opts: {
-          credentials: 'same-origin',
-          headers: req.headers,
-        },
-      });
-
-      const networkInterface = config.persistedQueries ? persistedQueryNI : standardNetworkInterface;
       const client = createApolloClient({
         ssrMode: true,
-        networkInterface,
+        networkInterface: getNetworkInterface(apiUrl),
       });
 
       const component = (
