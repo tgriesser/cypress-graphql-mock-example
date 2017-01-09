@@ -1,5 +1,4 @@
 import { PersistedQueryNetworkInterface } from 'extractgql/lib/browser';
-import { createNetworkInterface } from 'apollo-client';
 import queryMap from '../extracted_queries.json';
 import config from './config';
 
