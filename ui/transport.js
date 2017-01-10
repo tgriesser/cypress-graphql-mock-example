@@ -13,6 +13,6 @@ export default function getNetworkInterface(apiUrl = '/graphql', headers = {}) {
       credentials: 'same-origin',
       headers,
     },
-    production: config.persistedQueries,
+    enablePersistedQueries: config.persistedQueries,
   });
 }
