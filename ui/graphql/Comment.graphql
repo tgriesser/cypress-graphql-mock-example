@@ -1,0 +1,26 @@
+#import "./CommentsPageComment.graphql"
+
+query Comment($repoName: String!) {
+  currentUser {
+    login
+    html_url
+  }
+  entry(repoFullName: $repoName) {
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    comments {
+      ...CommentsPageComment
+    }
+    repository {
+      full_name
+      html_url
+      description
+      open_issues_count
+      stargazers_count
+    }
+  }
+}

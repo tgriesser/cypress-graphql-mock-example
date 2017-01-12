@@ -1,10 +1,11 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
-import FeedEntry from '../components/FeedEntry';
+
+import FEED_QUERY from '../graphql/FeedQuery.graphql';
+import VOTE_MUTATION from '../graphql/Vote.graphql';
 
 class FeedPage extends React.Component {
   constructor() {
@@ -39,20 +40,6 @@ FeedPage.propTypes = {
   vote: React.PropTypes.func.isRequired,
 };
 
-const FEED_QUERY = gql`
-  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-    # Eventually move this into a no fetch query right on the entry
-    # since we literally just need this info to determine whether to
-    # show upvote/downvote buttons
-    currentUser {
-      login
-    }
-    feed(type: $type, offset: $offset, limit: $limit) {
-      ...FeedEntry
-    }
-  }
-  ${FeedEntry.fragments.entry}
-`;
 const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
   options: props => ({
@@ -84,18 +71,6 @@ const withData = graphql(FEED_QUERY, {
     }),
   }),
 });
-
-const VOTE_MUTATION = gql`
-  mutation vote($repoFullName: String!, $type: VoteType!) {
-    vote(repoFullName: $repoFullName, type: $type) {
-      score
-      id
-      vote {
-        vote_value
-      }
-    }
-  }
-`;
 
 const withMutations = graphql(VOTE_MUTATION, {
   props: ({ mutate }) => ({
