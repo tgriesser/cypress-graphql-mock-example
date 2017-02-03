@@ -64,7 +64,7 @@
     "react-router": "^3.0.0",
     "react-timeago": "^3.0.0",
     "redux": "^3.5.2",
-    "subscriptions-transport-ws": "^0.3.0"
+    "subscriptions-transport-ws": "^0.4.0"
   },
   "eslintConfig": {
     "env": {
