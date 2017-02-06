@@ -1,4 +1,4 @@
-import { PersistedQueryNetworkInterface } from 'persistgraphql/lib/browser';
+import { PersistedQueryNetworkInterface } from 'persistgraphql';
 import queryMap from '../extracted_queries.json';
 import config from './config';
 
