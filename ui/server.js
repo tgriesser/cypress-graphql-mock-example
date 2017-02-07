@@ -14,6 +14,8 @@ import Html from './routes/Html';
 import createApolloClient from './helpers/create-apollo-client';
 import getNetworkInterface from './transport';
 
+console.log(process.env)
+
 let PORT = 3000;
 if (process.env.PORT) {
   PORT = parseInt(process.env.PORT, 10);
