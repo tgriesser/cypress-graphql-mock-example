@@ -14,7 +14,11 @@ import Html from './routes/Html';
 import createApolloClient from './helpers/create-apollo-client';
 import getNetworkInterface from './transport';
 
-const PORT = process.env.PORT || 3000;
+let PORT = 3000;
+if (process.env.PORT) {
+  PORT = parseInt(process.env.PORT, 10);
+}
+
 const API_HOST = process.env.NODE_ENV !== 'production' ? 'http://localhost:3010' : 'http://api.githunt.com';
 
 const app = new Express();
