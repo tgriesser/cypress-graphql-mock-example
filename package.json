@@ -4,13 +4,13 @@
   "description": "Example app for Apollo",
   "main": "index.js",
   "scripts": {
-    "persistgraphql": "persistgraphql ui --add_typename",
-    "start-app-client": "webpack-dev-server -d --hot --inline --no-info --port 3020",
-    "start-app-server": "webpack --progress && nodemon server_bundle.js",
-    "start": "concurrently \"npm run start-app-client\" \"npm run start-app-server\"",
+    "start": "node build/server/bundle.js",
+    "build": "NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
+    "postinstall": "npm run build",
+    "dev": "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
     "lint": "eslint ui",
-    "build": "webpack -p --progress --config ./webpack.production.config.js",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "persistgraphql": "persistgraphql ui --add_typename"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,6 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^2.2.1",
     "eslint-plugin-react": "^6.2.0",
-    "html-webpack-plugin": "^2.22.0",
     "nodemon": "^1.9.2",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",

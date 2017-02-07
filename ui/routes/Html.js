@@ -2,10 +2,6 @@
 
 import React, { PropTypes } from 'react';
 
-// XXX: production setup?
-const basePort = process.env.PORT || 3000;
-const scriptUrl = `http://localhost:${basePort + 20}/bundle.js`;
-
 const Html = ({ content, state }) => (
   <html lang="en">
     <head>
@@ -26,7 +22,7 @@ const Html = ({ content, state }) => (
         dangerouslySetInnerHTML={{ __html: `window.__APOLLO_STATE__=${JSON.stringify(state)};` }}
         charSet="UTF-8"
       />
-      <script src={scriptUrl} charSet="UTF-8" />
+      <script src="/static/bundle.js" charSet="UTF-8"/>
     </body>
   </html>
 );
