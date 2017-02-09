@@ -22,7 +22,7 @@ const Html = ({ content, state }) => (
         dangerouslySetInnerHTML={{ __html: `window.__APOLLO_STATE__=${JSON.stringify(state)};` }}
         charSet="UTF-8"
       />
-      <script src="/static/bundle.js" charSet="UTF-8"/>
+      <script src="/static/bundle.js" charSet="UTF-8" />
     </body>
   </html>
 );

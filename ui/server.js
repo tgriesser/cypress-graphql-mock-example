@@ -7,7 +7,6 @@ import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { match, RouterContext } from 'react-router';
 import path from 'path';
 import proxy from 'http-proxy-middleware';
-import send from 'send';
 
 import routes from './routes';
 import Html from './routes/Html';
@@ -29,14 +28,13 @@ app.use('/graphiql', apiProxy);
 app.use('/login', apiProxy);
 app.use('/logout', apiProxy);
 
-// In production we want to serve our JavaScripts from a file on the file
-// system.
 if (process.env.NODE_ENV === 'production') {
+  // In production we want to serve our JavaScripts from a file on the file
+  // system.
   app.use('/static', Express.static(path.join(process.cwd(), 'build/client')));
-}
-// Otherwise we want to proxy the webpack development server.
-else {
-  app.use('/static', proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static' : '' } }));
+} else {
+  // Otherwise we want to proxy the webpack development server.
+  app.use('/static', proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static': '' } }));
 }
 
 app.use((req, res) => {
@@ -68,7 +66,7 @@ app.use((req, res) => {
         />);
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
         res.end();
-      }).catch(e => {
+      }).catch((e) => {
         console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
         res.status(500);
         res.end(`An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`);
