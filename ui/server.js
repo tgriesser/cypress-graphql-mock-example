@@ -49,7 +49,7 @@ app.use((req, res) => {
     } else if (renderProps) {
       const client = createApolloClient({
         ssrMode: true,
-        networkInterface: getNetworkInterface(API_HOST),
+        networkInterface: getNetworkInterface(API_HOST, { cookie: req.header('Cookie') }),
       });
 
       const component = (
