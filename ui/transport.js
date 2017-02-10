@@ -1,4 +1,4 @@
-import { PersistedQueryNetworkInterface } from 'persistgraphql/lib/src/network_interface/ApolloNetworkInterface';
+import { PersistedQueryNetworkInterface } from 'persistgraphql';
 import queryMap from '../extracted_queries.json';
 import config from './config';
 

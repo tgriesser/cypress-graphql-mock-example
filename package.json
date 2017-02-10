@@ -48,7 +48,7 @@
     "express": "^4.14.0",
     "graphql-anywhere": "^2.0.0",
     "graphql-tag": "^1.2.1",
-    "persistgraphql": "^0.2.9",
+    "persistgraphql": "^0.2.10",
     "http-proxy-middleware": "^0.17.1",
     "immutability-helper": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
