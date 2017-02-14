@@ -1,7 +1,9 @@
 node_modules
+npm-debug.log
 .DS_Store
 dev.sqlite3
 .env
 .idea/
+build
 
 ./extracted_queries.json

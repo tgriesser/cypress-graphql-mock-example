@@ -15,7 +15,7 @@ import createApolloClient from './helpers/create-apollo-client';
 import addGraphQLSubscriptions from './helpers/subscriptions';
 import getNetworkInterface from './transport';
 
-const wsClient = new Client('ws://localhost:8080');
+const wsClient = new Client(process.env.NODE_ENV !== 'production' ? 'ws://localhost:3010' : 'ws://api.githunt.com');
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   getNetworkInterface(),
