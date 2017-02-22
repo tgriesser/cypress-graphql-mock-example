@@ -2,20 +2,20 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, browserHistory } from 'react-router';
 import { ApolloProvider } from 'react-apollo';
-import { Client } from 'subscriptions-transport-ws';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import * as ReactGA from 'react-ga';
 
 // Polyfill fetch
 import 'isomorphic-fetch';
-
 import './style/index.css';
 
 import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
-import addGraphQLSubscriptions from './helpers/subscriptions';
 import getNetworkInterface from './transport';
 
-const wsClient = new Client(process.env.NODE_ENV !== 'production' ? 'ws://localhost:3010' : 'ws://api.githunt.com');
+const wsClient = new SubscriptionClient(process.env.NODE_ENV !== 'production' ? 'ws://localhost:3010' : 'ws://api.githunt.com', {
+  reconnect: true,
+});
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   getNetworkInterface(),

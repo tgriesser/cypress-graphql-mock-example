@@ -1,5 +1,5 @@
 import React from 'react';
-import ApolloClient from 'apollo-client';
+import { ApolloClient } from 'apollo-client';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router';
 import gql from 'graphql-tag';

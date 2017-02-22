@@ -1,9 +1,11 @@
 node_modules
-npm-debug.log
 .DS_Store
 dev.sqlite3
 .env
 .idea/
+npm-debug.log
+bundle.js
+server_bundle.js
+extracted_queries.json
 build
-
-./extracted_queries.json
+yarn.lock
