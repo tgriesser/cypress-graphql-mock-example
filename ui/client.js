@@ -13,7 +13,11 @@ import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import getNetworkInterface from './transport';
 
-const wsClient = new SubscriptionClient(process.env.NODE_ENV !== 'production' ? 'ws://localhost:3010' : 'ws://api.githunt.com', {
+const subscriptionsURL = process.env.NODE_ENV !== 'production'
+  ? 'ws://localhost:3010/subscriptions'
+  : 'ws://api.githunt.com/subscriptions';
+
+const wsClient = new SubscriptionClient(subscriptionsURL, {
   reconnect: true,
 });
 
