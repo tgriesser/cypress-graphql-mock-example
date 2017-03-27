@@ -1,7 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
-import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
 
 import InfoLabel from './InfoLabel';

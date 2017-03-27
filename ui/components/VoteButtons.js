@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import gql from 'graphql-tag';
+import { gql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
 
 export default function VoteButtons({ canVote, onVote, entry: { score, vote } }) {

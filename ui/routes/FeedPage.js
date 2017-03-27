@@ -52,7 +52,7 @@ const withData = graphql(FEED_QUERY, {
       offset: 0,
       limit: ITEMS_PER_PAGE,
     },
-    forceFetch: true,
+    fetchPolicy: 'cache-and-network',
   }),
   props: ({ data: { loading, feed, currentUser, fetchMore } }) => ({
     loading,

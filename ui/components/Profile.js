@@ -1,6 +1,5 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { gql, graphql } from 'react-apollo';
 import { Link } from 'react-router';
 
 function Profile({ loading, currentUser }) {
@@ -57,7 +56,9 @@ const PROFILE_QUERY = gql`
 `;
 
 export default graphql(PROFILE_QUERY, {
-  options: { forceFetch: true },
+  options: {
+    fetchPolicy: 'cache-and-network',
+  },
   props: ({ data: { loading, currentUser } }) => ({
     loading, currentUser,
   }),
