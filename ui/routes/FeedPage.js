@@ -63,9 +63,9 @@ const withData = graphql(FEED_QUERY, {
         offset: feed.length,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult.data) { return prev; }
+        if (!fetchMoreResult) { return prev; }
         return Object.assign({}, prev, {
-          feed: [...prev.feed, ...fetchMoreResult.data.feed],
+          feed: [...prev.feed, ...fetchMoreResult.feed],
         });
       },
     }),
