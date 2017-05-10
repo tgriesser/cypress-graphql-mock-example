@@ -27,7 +27,18 @@ cd GitHunt-React
 npm install
 ```
 
-### 4. Run the app
+### 4. Update config file
+Go to the folder `ui` and update the file `config.js` 
+where you'll be able to find two options: `persistedQueries` and `wsTransportType`.
+
+`persistedQueries` allow you to set if you want to use `extractgql` to generate persisted queries (more 
+info inside config file.). 
+
+`wsTransportType` allow you to set your desired websocket transport type. It can be `full` for full ws transport 
+mode (queries, mutations and subscriptions sent over websocket) or `hybrid` for hybrid ws 
+transport mode (queries and mutations sent over http and subscriptions sent over websocket).
+
+### 5. Run the app
 
 ```
 npm run dev
