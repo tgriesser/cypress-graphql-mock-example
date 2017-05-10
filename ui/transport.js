@@ -1,7 +1,17 @@
 import { PersistedQueryNetworkInterface, addPersistedQueries } from 'persistgraphql';
-import { addGraphQLSubscriptions  } from 'subscriptions-transport-ws';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import queryMap from '../extracted_queries.json';
 import config from './config';
+
+function createBaseWSTransport() {
+  const subscriptionsURL = process.env.NODE_ENV !== 'production'
+    ? 'ws://localhost:3010/subscriptions'
+    : 'ws://api.githunt.com/subscriptions';
+
+  return new SubscriptionClient(subscriptionsURL, {
+    reconnect: true,
+  });
+}
 
 function createFullNetworkInterface(baseWsTransport) {
   if (config.persistedQueries) {
@@ -33,8 +43,9 @@ function createHybridNetworkInterface(baseWsTransport = {}, host = '', headers =
   );
 }
 
-export function getHybridOrFullNetworkInterface(baseWsTransport, host = '', headers = {}) {
+export function getHybridOrFullNetworkInterface(host = '', headers = {}) {
   const isHybridWSTransportType = config.wsTransportType !== 'full';
+  const baseWsTransport = createBaseWSTransport();
 
   return isHybridWSTransportType
       ? createHybridNetworkInterface(baseWsTransport, host, headers)
