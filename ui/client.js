@@ -11,7 +11,7 @@ import './style/index.css';
 
 import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
-import getNetworkInterface from './transport';
+import { getHybridOrFullNetworkInterface } from './transport';
 
 // Initialize Analytics
 ReactGA.initialize('UA-74643563-4');
@@ -32,7 +32,7 @@ function logPageView() {
 }
 
 const client = createApolloClient({
-  networkInterface: getNetworkInterface(createBaseWSTransport()),
+  networkInterface: getHybridOrFullNetworkInterface(createBaseWSTransport()),
   initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
   ssrForceFetchDelay: 100,
   connectToDevTools: true,

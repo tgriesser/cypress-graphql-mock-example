@@ -14,8 +14,8 @@ function createFullNetworkInterface(baseWsTransport) {
 // Returns either a standard, fetch-full-query network interface or a
 // persisted query network interface (from `extractgql`) depending on
 // the configuration within `./config.js.`
-function createHybridNetworkInterface(baseWsTransport = {}, host = '', headers = {}) {
-  const persistedQueryNetworkInterface = new PersistedQueryNetworkInterface({
+export function getPersistedQueryNetworkInterface(host = '', headers = {}) {
+  return new PersistedQueryNetworkInterface({
     queryMap,
     uri: `${host}/graphql`,
     opts: {
@@ -24,14 +24,16 @@ function createHybridNetworkInterface(baseWsTransport = {}, host = '', headers =
     },
     enablePersistedQueries: config.persistedQueries,
   });
+}
 
+function createHybridNetworkInterface(baseWsTransport = {}, host = '', headers = {}) {
   return addGraphQLSubscriptions(
-    persistedQueryNetworkInterface,
+    getPersistedQueryNetworkInterface(host, headers),
     baseWsTransport,
   );
 }
 
-export default function getNetworkInterface(baseWsTransport, host = '', headers = {}) {
+export function getHybridOrFullNetworkInterface(baseWsTransport, host = '', headers = {}) {
   const isHybridWSTransportType = config.wsTransportType !== 'full';
 
   return isHybridWSTransportType
