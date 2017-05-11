@@ -4,11 +4,11 @@ import queryMap from '../extracted_queries.json';
 import config from './config';
 
 function createBaseWSTransport() {
-  const subscriptionsURL = process.env.NODE_ENV !== 'production'
+  const wsGqlURL = process.env.NODE_ENV !== 'production'
     ? 'ws://localhost:3010/graphql'
     : 'ws://api.githunt.com/graphql';
 
-  return new SubscriptionClient(subscriptionsURL, {
+  return new SubscriptionClient(wsGqlURL, {
     reconnect: true,
   });
 }
