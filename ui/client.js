@@ -15,7 +15,7 @@ import getNetworkInterface from './transport';
 
 const subscriptionsURL = process.env.NODE_ENV !== 'production'
   ? 'ws://localhost:3010/subscriptions'
-  : 'ws://api.githunt.com/subscriptions';
+  : 'wss://api.githunt.com/subscriptions';
 
 const wsClient = new SubscriptionClient(subscriptionsURL, {
   reconnect: true,
