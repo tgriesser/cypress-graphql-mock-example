@@ -18,7 +18,7 @@ if (process.env.PORT) {
   PORT = parseInt(process.env.PORT, 10);
 }
 
-const API_HOST = process.env.NODE_ENV !== 'production' ? 'http://localhost:3010' : 'http://api.githunt.com';
+const API_HOST = process.env.NODE_ENV !== 'production' ? 'http://localhost:3010' : 'https://api.githunt.com';
 
 const app = new Express();
 
