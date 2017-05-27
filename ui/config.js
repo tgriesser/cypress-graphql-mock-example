@@ -6,4 +6,5 @@ export default {
   // and the extracted_queries.json file in both the client and API server
   // must be the same.
   persistedQueries: false,
+  wsTransportType: 'full',
 };

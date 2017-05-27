@@ -11,7 +11,7 @@ import proxy from 'http-proxy-middleware';
 import routes from './routes';
 import Html from './routes/Html';
 import createApolloClient from './helpers/create-apollo-client';
-import getNetworkInterface from './transport';
+import { getPersistedQueryNetworkInterface } from './transport';
 
 let PORT = 3000;
 if (process.env.PORT) {
@@ -47,7 +47,7 @@ app.use((req, res) => {
     } else if (renderProps) {
       const client = createApolloClient({
         ssrMode: true,
-        networkInterface: getNetworkInterface(API_HOST, { cookie: req.header('Cookie') }),
+        networkInterface: getPersistedQueryNetworkInterface(API_HOST, { cookie: req.header('Cookie') }),
       });
 
       const component = (
