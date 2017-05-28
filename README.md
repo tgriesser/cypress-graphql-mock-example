@@ -50,6 +50,12 @@ npm run dev
 
 ![GitHunt App](screenshots/GitHunt-app.png)
 
+### Hybrid Transport / Full Transport
+
+The current implementation has support for hybrid websocket (HTTP for query and mutation, WebSocket for subscription) and full transport (execute all over WebSocket).
+
+You can toggle between the two in `ui/config.js` (set `wsTransportType` to `full` or `hybrid).
+
 #### Submit a Repo
 Click the green Submit button and add repo with the username/repo-name pattern.
 
