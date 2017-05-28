@@ -5,8 +5,8 @@ import config from './config';
 
 function createBaseWSTransport() {
   const wsGqlURL = process.env.NODE_ENV !== 'production'
-    ? 'ws://localhost:3010/graphql'
-    : 'ws://api.githunt.com/graphql';
+    ? 'ws://localhost:3010/subscriptions'
+    : 'ws://api.githunt.com/subscriptions';
 
   return new SubscriptionClient(wsGqlURL, {
     reconnect: true,
