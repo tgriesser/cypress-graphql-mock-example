@@ -125,7 +125,9 @@ class CommentsPage extends React.Component {
         <br />
         <div>
           <div>
-            {entry.comments.map(comment => (
+            {entry.comments
+              .filter(comment => comment && comment.postedBy)
+              .map(comment => (
               <Comment
                 key={comment.postedBy.login + comment.createdAt + repository.full_name}
                 username={comment.postedBy.login}
