@@ -7,7 +7,7 @@ query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
     login
   }
-  feed(type: $type, offset: $offset, limit: $limit) {
+  feed(type: $type, offset: $offset, limit: $limit) @connection(key: "feed", filter: ["type"]) {
     ...FeedEntry
   }
 }
