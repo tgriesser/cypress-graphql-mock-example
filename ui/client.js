@@ -1,24 +1,15 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
-import * as ReactGA from 'react-ga';
 
 // Polyfill fetch
 import 'isomorphic-fetch';
 import './style/index.css';
 
-import routes from './routes';
 import createApolloClient from './helpers/create-apollo-client';
 import { getHybridOrFullNetworkInterface } from './transport';
-
-// Initialize Analytics
-ReactGA.initialize('UA-74643563-4');
-
-function logPageView() {
-  ReactGA.set({ page: window.location.pathname });
-  ReactGA.pageview(window.location.pathname);
-}
+import Layout from './routes/Layout';
 
 const client = createApolloClient({
   networkInterface: getHybridOrFullNetworkInterface(),
@@ -29,8 +20,8 @@ const client = createApolloClient({
 
 render((
   <ApolloProvider client={client}>
-    <Router history={browserHistory} onUpdate={logPageView}>
-      {routes}
-    </Router>
+    <BrowserRouter>
+      <Layout />
+    </BrowserRouter>
   </ApolloProvider>
 ), document.getElementById('content'));

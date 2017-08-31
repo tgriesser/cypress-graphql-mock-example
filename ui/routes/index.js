@@ -1,30 +1,35 @@
-import React from 'react';
-import { Route, IndexRoute } from 'react-router';
-
 import FeedPage from './FeedPage';
-import Layout from './Layout';
 import NewEntryPage from './NewEntryPage';
 import CommentsPage from './CommentsPage';
+import NotFoundPage from './NotFoundPage';
 
-export default (
-  <Route
-    path="/"
-    component={Layout}
-  >
-    <IndexRoute
-      component={FeedPage}
-    />
-    <Route
-      path="feed/:type"
-      component={FeedPage}
-    />
-    <Route
-      path="submit"
-      component={NewEntryPage}
-    />
-    <Route
-      path="/:org/:repoName"
-      component={CommentsPage}
-    />
-  </Route>
-);
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    exact: true,
+    component: FeedPage,
+  },
+  {
+    path: '/feed/:type',
+    name: 'feed',
+    component: FeedPage,
+  },
+  {
+    path: '/submit',
+    name: 'submit',
+    component: NewEntryPage,
+  },
+  {
+    path: '/:org/:repoName',
+    name: 'submit',
+    component: CommentsPage,
+  },
+  {
+    path: '*',
+    name: 'notfound',
+    component: NotFoundPage,
+  },
+];
+
+export default routes;

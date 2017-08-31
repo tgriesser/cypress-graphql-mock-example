@@ -1,52 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Route, Switch } from 'react-router';
+import routes from './index';
+import Navbar from '../components/Navbar';
 
-import Profile from '../components/Profile';
-import NavbarLink from '../components/NavbarLink';
+const ReactGA = process.browser ? require('react-ga') : {};
 
-const Layout = ({ children, params, location }) => (
+if (process.browser) {
+  // Initialize Analytics
+  ReactGA.initialize('UA-74643563-4');
+}
+
+function logPageView() {
+  if (process.browser) {
+    ReactGA.set({ page: window.location.pathname });
+    ReactGA.pageview(window.location.pathname);
+  }
+
+  return null;
+}
+
+const Layout = () =>
   <div>
-    <nav className="navbar navbar-default">
-      <div className="container">
-        <div className="navbar-header">
-          <Link className="navbar-brand" to="/feed/top">GitHunt</Link>
-        </div>
-
-        <ul className="nav navbar-nav">
-          <NavbarLink
-            title="Top"
-            href="/feed/top"
-            active={location.pathname === '/' || params.type === 'top'}
-          />
-          <NavbarLink
-            title="Hot"
-            href="/feed/hot"
-            active={params.type === 'hot'}
-          />
-          <NavbarLink
-            title="New"
-            href="/feed/new"
-            active={params.type === 'new'}
-          />
-        </ul>
-
-        <Profile />
-      </div>
-    </nav>
+    <Route path="/" component={logPageView} />
+    <Navbar />
     <div className="container">
-      {children}
+      <Switch>
+        {routes.map(route => <Route key={`route-${route.name}`} {...route} />)}
+      </Switch>
     </div>
-  </div>
-);
-
-Layout.propTypes = {
-  location: React.PropTypes.shape({
-    pathname: React.PropTypes.string.isRequired,
-  }).isRequired,
-  params: React.PropTypes.shape({
-    type: React.PropTypes.string,
-  }).isRequired,
-  children: React.PropTypes.element,
-};
+  </div>;
 
 export default Layout;

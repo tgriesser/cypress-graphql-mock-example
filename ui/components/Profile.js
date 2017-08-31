@@ -1,6 +1,6 @@
 import React from 'react';
 import { gql, graphql } from 'react-apollo';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 function Profile({ loading, currentUser }) {
   if (loading) {

@@ -4,14 +4,13 @@ import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
-import { match, RouterContext } from 'react-router';
+import { StaticRouter } from 'react-router';
 import path from 'path';
 import proxy from 'http-proxy-middleware';
-
-import routes from './routes';
 import Html from './routes/Html';
 import createApolloClient from './helpers/create-apollo-client';
 import { getPersistedQueryNetworkInterface } from './transport';
+import Layout from './routes/Layout';
 
 let PORT = 3000;
 if (process.env.PORT) {
@@ -38,42 +37,35 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use((req, res) => {
-  match({ routes, location: req.originalUrl }, (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
-      res.redirect(redirectLocation.pathname + redirectLocation.search);
-    } else if (error) {
-      console.error('ROUTER ERROR:', error); // eslint-disable-line no-console
-      res.status(500);
-    } else if (renderProps) {
-      const client = createApolloClient({
-        ssrMode: true,
-        networkInterface: getPersistedQueryNetworkInterface(API_HOST, { cookie: req.header('Cookie') }),
-      });
+  const client = createApolloClient({
+    ssrMode: true,
+    networkInterface: getPersistedQueryNetworkInterface(API_HOST, { cookie: req.header('Cookie') }),
+  });
 
-      const component = (
-        <ApolloProvider client={client}>
-          <RouterContext {...renderProps} />
-        </ApolloProvider>
-      );
+  const context = {};
 
-      renderToStringWithData(component).then((content) => {
-        const data = client.store.getState().apollo.data;
-        res.status(200);
+  const component = (
+    <ApolloProvider client={client}>
+      <StaticRouter location={req.url} context={context}>
+        <Layout />
+      </StaticRouter>
+    </ApolloProvider>
+  );
 
-        const html = (<Html
-          content={content}
-          state={{ apollo: { data } }}
-        />);
-        res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
-        res.end();
-      }).catch((e) => {
-        console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
-        res.status(500);
-        res.end(`An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`);
-      });
-    } else {
-      res.status(404).send('Not found');
-    }
+  renderToStringWithData(component).then((content) => {
+    const data = client.store.getState().apollo.data;
+    res.status(200);
+
+    const html = (<Html
+      content={content}
+      state={{ apollo: { data } }}
+    />);
+    res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
+    res.end();
+  }).catch((e) => {
+    console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
+    res.status(500);
+    res.end(`An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`);
   });
 });
 

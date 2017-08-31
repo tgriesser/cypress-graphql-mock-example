@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import update from 'immutability-helper';
 import { filter } from 'graphql-anywhere';
+import { withRouter } from 'react-router';
 
 import RepoInfo from '../components/RepoInfo';
 import Comment from '../components/Comment';
@@ -128,13 +129,13 @@ class CommentsPage extends React.Component {
             {entry.comments
               .filter(comment => comment && comment.postedBy)
               .map(comment => (
-              <Comment
-                key={comment.postedBy.login + comment.createdAt + repository.full_name}
-                username={comment.postedBy.login}
-                content={comment.content}
-                createdAt={comment.createdAt}
-                userUrl={comment.postedBy.html_url}
-              />
+                <Comment
+                  key={comment.postedBy.login + comment.createdAt + repository.full_name}
+                  username={comment.postedBy.login}
+                  content={comment.content}
+                  createdAt={comment.createdAt}
+                  userUrl={comment.postedBy.html_url}
+                />
             ))}
           </div>
         </div>
@@ -203,12 +204,12 @@ const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
 });
 
 const withData = graphql(COMMENT_QUERY, {
-  options: ({ params }) => ({
-    variables: { repoName: `${params.org}/${params.repoName}` },
+  options: ({ match }) => ({
+    variables: { repoName: `${match.params.org}/${match.params.repoName}` },
   }),
   props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({
     loading, currentUser, entry, subscribeToMore,
   }),
 });
 
-export default withData(withMutations(CommentsPage));
+export default withRouter(withData(withMutations(CommentsPage)));

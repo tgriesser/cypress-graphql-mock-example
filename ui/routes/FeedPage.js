@@ -1,5 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import { withRouter } from 'react-router';
 
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
@@ -42,20 +43,21 @@ FeedPage.propTypes = {
 
 const ITEMS_PER_PAGE = 10;
 const withData = graphql(FEED_QUERY, {
-  options: props => ({
+  options: ({ match }) => ({
     variables: {
       type: (
-        props.params &&
-        props.params.type &&
-        props.params.type.toUpperCase()
+        match.params &&
+        match.params.type &&
+        match.params.type.toUpperCase()
       ) || 'TOP',
       offset: 0,
       limit: ITEMS_PER_PAGE,
     },
     fetchPolicy: 'cache-and-network',
   }),
-  props: ({ data: { loading, feed, currentUser, fetchMore } }) => ({
+  props: ({ data: { loading, feed, currentUser, fetchMore } }, match) => ({
     loading,
+    match,
     feed,
     currentUser,
     fetchMore: () => fetchMore({
@@ -80,4 +82,4 @@ const withMutations = graphql(VOTE_MUTATION, {
   }),
 });
 
-export default withMutations(withData(FeedPage));
+export default withRouter(withMutations(withData(FeedPage)));

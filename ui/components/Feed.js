@@ -6,16 +6,15 @@ import FeedEntry from './FeedEntry';
 const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
     return (
-      <div> {
-        entries.map(entry => (
+      <div>
+        {entries.map(entry => (
           entry ? <FeedEntry
             key={entry.repository.full_name}
             entry={entry}
             loggedIn={loggedIn}
             onVote={onVote}
           /> : null
-        ))
-      }
+        ))}
         <button onClick={onLoadMore}>Load more</button>
       </div>
     );

@@ -1,23 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
-const NavbarLink = ({ title, href, active = false }) => (
-  <li className={active && 'active'}>
-    <Link to={href}>
-      {title}
-      {active && (
-        <span className="sr-only">
-          (current)
-        </span>
-      )}
-    </Link>
-  </li>
-);
+const NavbarLink = ({ title, href, location }) => {
+  const isActive = location.pathname === href;
+
+  return (
+    <li className={isActive && 'active'}>
+      <NavLink to={href}>
+        {title}
+        {isActive && <span className="sr-only">(current)</span>}
+      </NavLink>
+    </li>
+  );
+};
 
 NavbarLink.propTypes = {
   title: React.PropTypes.string,
   href: React.PropTypes.string,
-  active: React.PropTypes.bool,
+  location: React.PropTypes.shape({
+    pathname: React.PropTypes.string,
+  }),
 };
 
-export default NavbarLink;
+export default withRouter(NavbarLink);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { gql, withApollo, ApolloClient } from 'react-apollo';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { filter, propType } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
