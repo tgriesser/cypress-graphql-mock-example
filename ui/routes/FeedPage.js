@@ -1,13 +1,12 @@
-import React from "react";
-import { graphql } from "react-apollo";
-import { withRouter } from "react-router";
+import React from 'react';
+import { graphql } from 'react-apollo';
 
-import Feed from "../components/Feed";
-import Loading from "../components/Loading";
+import Feed from '../components/Feed';
+import Loading from '../components/Loading';
 
-import FEED_QUERY from "../graphql/FeedQuery.graphql";
-import CURRENT_USER_QUERY from "../graphql/Profile.graphql";
-import VOTE_MUTATION from "../graphql/Vote.graphql";
+import FEED_QUERY from '../graphql/FeedQuery.graphql';
+import CURRENT_USER_QUERY from '../graphql/Profile.graphql';
+import VOTE_MUTATION from '../graphql/Vote.graphql';
 
 class FeedPage extends React.Component {
   constructor() {
@@ -55,11 +54,11 @@ const withData = graphql(FEED_QUERY, {
         (match.params &&
           match.params.type &&
           match.params.type.toUpperCase()) ||
-        "TOP",
+        'TOP',
       offset: 0,
       limit: ITEMS_PER_PAGE,
     },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   }),
   props: ({
     data: { loading, feed, fetchMore },
@@ -95,4 +94,4 @@ const withMutations = graphql(VOTE_MUTATION, {
   }),
 });
 
-export default withRouter(withMutations(withUser(withData(FeedPage))));
+export default withMutations(withUser(withData(FeedPage)));

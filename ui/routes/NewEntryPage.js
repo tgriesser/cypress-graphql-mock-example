@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { browserHistory } from 'react-router';
+import { withRouter } from 'react-router';
 
 import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
 
@@ -19,9 +19,9 @@ class NewEntryPage extends React.Component {
 
     const repoFullName = event.target.repoFullName.value;
 
-    return submit(repoFullName).then((res) => {
+    return submit(repoFullName).then(res => {
       if (!res.errors) {
-        browserHistory.push('/feed/new');
+        this.props.history.push('/feed/new');
       } else {
         this.setState({ errors: res.errors });
       }
@@ -36,9 +36,7 @@ class NewEntryPage extends React.Component {
 
         <form onSubmit={this.submitForm}>
           <div className="form-group">
-            <label htmlFor="exampleInputEmail1">
-              Repository name
-            </label>
+            <label htmlFor="exampleInputEmail1">Repository name</label>
 
             <input
               type="text"
@@ -55,7 +53,6 @@ class NewEntryPage extends React.Component {
             </div>
           )}
 
-
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
@@ -71,10 +68,11 @@ NewEntryPage.propTypes = {
 
 const withData = graphql(SUBMIT_REPOSITORY_MUTATION, {
   props: ({ mutate }) => ({
-    submit: repoFullName => mutate({
-      variables: { repoFullName },
-    }),
+    submit: repoFullName =>
+      mutate({
+        variables: { repoFullName },
+      }),
   }),
 });
 
-export default withData(NewEntryPage);
+export default withRouter(withData(NewEntryPage));
