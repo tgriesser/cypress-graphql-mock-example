@@ -1,12 +1,6 @@
 #import "./FeedFragments.graphql"
 
 query Feed($type: FeedType!, $offset: Int, $limit: Int) {
-  # Eventually move this into a no fetch query right on the entry
-  # since we literally just need this info to determine whether to
-  # show upvote/downvote buttons
-  currentUser {
-    login
-  }
   feed(type: $type, offset: $offset, limit: $limit) @connection(key: "feed", filter: ["type"]) {
     ...FeedEntry
   }
