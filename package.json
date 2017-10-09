@@ -5,11 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/server/bundle.js",
-    "build":
-      "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
+    "build": "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
     "postinstall": "npm run build",
-    "dev":
-      "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
+    "dev": "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
     "lint": "eslint ui",
     "lint:fix": "eslint --fix ui",
     "test": "npm run lint",
@@ -30,6 +28,7 @@
     "babel-core": "^6.8.0",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react-native": "^4.0.0",
     "babel-preset-stage-2": "^6.5.0",
@@ -41,6 +40,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.1",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^6.2.0",
+    "flow-bin": "^0.56.0",
     "graphql-tag": "^1.3.1",
     "nodemon": "^1.9.2",
     "prettier": "^1.7.4",

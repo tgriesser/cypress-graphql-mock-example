@@ -1,7 +1,14 @@
-import React from 'react';
-import { propType } from 'graphql-anywhere';
+// @flow
+import * as React from 'react';
 
 import FeedEntry from './FeedEntry';
+
+type Props = {
+  entries: Array<Object>,
+  loggedIn: boolean,
+  onVote: (repo: { repoFullName: string, type: string }) => void,
+  onLoadMore: () => void,
+};
 
 const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
@@ -23,15 +30,6 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
     );
   }
   return <div />;
-};
-
-Feed.propTypes = {
-  entries: React.PropTypes.arrayOf(
-    propType(FeedEntry.fragments.entry).isRequired,
-  ),
-  loggedIn: React.PropTypes.bool.isRequired,
-  onVote: React.PropTypes.func.isRequired,
-  onLoadMore: React.PropTypes.func.isRequired,
 };
 
 export default Feed;

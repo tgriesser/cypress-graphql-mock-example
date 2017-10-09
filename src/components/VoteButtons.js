@@ -1,13 +1,22 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import classNames from 'classnames';
-import { gql } from 'react-apollo';
-import { propType } from 'graphql-anywhere';
+import gql from 'graphql-tag';
+
+type Props = {
+  canVote: boolean,
+  onVote: (type: string) => void,
+  entry: {
+    score: number,
+    vote: Object,
+  },
+};
 
 export default function VoteButtons({
   canVote,
   onVote,
   entry: { score, vote },
-}) {
+}: Props): React.Element<*> {
   const buttonClasses = classNames('btn', 'btn-score', {
     invisible: !canVote,
   });
@@ -55,10 +64,4 @@ VoteButtons.fragments = {
       }
     }
   `,
-};
-
-VoteButtons.propTypes = {
-  canVote: React.PropTypes.bool.isRequired,
-  onVote: React.PropTypes.func.isRequired,
-  entry: propType(VoteButtons.fragments.entry).isRequired,
 };

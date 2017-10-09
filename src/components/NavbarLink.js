@@ -1,8 +1,16 @@
+/* @flow */
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
-const NavbarLink = ({ title, href, location }) => {
+export type Props = {
+  title?: string,
+  href?: string,
+  location?: { pathname?: string },
+};
+
+const NavbarLink = (props: Props) => {
+  const { title, href, location } = props;
   const isActive = location.pathname === href;
 
   return (
@@ -13,14 +21,6 @@ const NavbarLink = ({ title, href, location }) => {
       </NavLink>
     </li>
   );
-};
-
-NavbarLink.propTypes = {
-  title: React.PropTypes.string,
-  href: React.PropTypes.string,
-  location: React.PropTypes.shape({
-    pathname: React.PropTypes.string,
-  }),
 };
 
 export default withRouter(NavbarLink);

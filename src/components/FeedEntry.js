@@ -1,13 +1,27 @@
-import React from 'react';
-import { gql, withApollo, ApolloClient } from 'react-apollo';
+// @flow
+import * as React from 'react';
+import { withApollo, ApolloClient } from 'react-apollo';
+import gql from 'graphql-tag';
 import { Link } from 'react-router-dom';
-import { filter, propType } from 'graphql-anywhere';
+import { filter } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
 import COMMENT_QUERY from '../graphql/Comment.graphql';
 
-const FeedEntry = ({ loggedIn, onVote, entry, client }) => {
+type Props = {
+  loggedIn: boolean,
+  onVote: (repo: { repoFullName: string, type: string }) => void,
+  entry: Object,
+  client: Object,
+};
+
+const FeedEntry = ({
+  loggedIn,
+  onVote,
+  entry,
+  client,
+}: Props): React.Element<*> => {
   const {
     commentCount,
     repository: { full_name, html_url, owner: { avatar_url } },
@@ -80,13 +94,6 @@ FeedEntry.fragments = {
     ${VoteButtons.fragments.entry}
     ${RepoInfo.fragments.entry}
   `,
-};
-
-FeedEntry.propTypes = {
-  loggedIn: React.PropTypes.bool.isRequired,
-  onVote: React.PropTypes.func.isRequired,
-  entry: propType(FeedEntry.fragments.entry).isRequired,
-  client: React.PropTypes.instanceOf(ApolloClient).isRequired,
 };
 
 export default withApollo(FeedEntry);

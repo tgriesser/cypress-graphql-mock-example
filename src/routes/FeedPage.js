@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import { graphql } from 'react-apollo';
 
 import Feed from '../components/Feed';
@@ -8,7 +9,19 @@ import FEED_QUERY from '../graphql/FeedQuery.graphql';
 import CURRENT_USER_QUERY from '../graphql/Profile.graphql';
 import VOTE_MUTATION from '../graphql/Vote.graphql';
 
-class FeedPage extends React.Component {
+type Props = {
+  loading: boolean,
+  currentUser: {
+    login: string,
+  },
+  feed: Array<Object>,
+  fetchMore: () => void,
+  vote: (repo: { repoFullName: string, type: string }) => void,
+};
+
+class FeedPage extends React.Component<Props> {
+  offset: number;
+
   constructor() {
     super();
     this.offset = 0;
@@ -30,16 +43,6 @@ class FeedPage extends React.Component {
     );
   }
 }
-
-FeedPage.propTypes = {
-  loading: React.PropTypes.bool.isRequired,
-  currentUser: React.PropTypes.shape({
-    login: React.PropTypes.string.isRequired,
-  }),
-  feed: Feed.propTypes.entries,
-  fetchMore: React.PropTypes.func,
-  vote: React.PropTypes.func.isRequired,
-};
 
 const ITEMS_PER_PAGE = 10;
 const withUser = graphql(CURRENT_USER_QUERY, {

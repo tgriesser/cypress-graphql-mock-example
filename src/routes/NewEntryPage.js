@@ -1,8 +1,11 @@
+/* @flow */
 import React from 'react';
 import { graphql } from 'react-apollo';
 import { withRouter } from 'react-router';
 
 import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
+
+export type Props = { submit: Function };
 
 class NewEntryPage extends React.Component {
   constructor() {
@@ -11,6 +14,8 @@ class NewEntryPage extends React.Component {
 
     this.submitForm = this.submitForm.bind(this);
   }
+
+  props: Props;
 
   submitForm(event) {
     event.preventDefault();
@@ -61,10 +66,6 @@ class NewEntryPage extends React.Component {
     );
   }
 }
-
-NewEntryPage.propTypes = {
-  submit: React.PropTypes.func.isRequired,
-};
 
 const withData = graphql(SUBMIT_REPOSITORY_MUTATION, {
   props: ({ mutate }) => ({
