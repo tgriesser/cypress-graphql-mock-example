@@ -7,21 +7,10 @@ import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
 import COMMENT_QUERY from '../graphql/Comment.graphql';
 
-const FeedEntry = ({
-  loggedIn,
-  onVote,
-  entry,
-  client,
-}) => {
+const FeedEntry = ({ loggedIn, onVote, entry, client }) => {
   const {
     commentCount,
-    repository: {
-      full_name,
-      html_url,
-      owner: {
-        avatar_url,
-      },
-    },
+    repository: { full_name, html_url, owner: { avatar_url } },
   } = entry;
 
   const repoLink = `/${full_name}`;
@@ -38,10 +27,11 @@ const FeedEntry = ({
         <VoteButtons
           canVote={loggedIn}
           entry={filter(VoteButtons.fragments.entry, entry)}
-          onVote={type => onVote({
-            repoFullName: full_name,
-            type,
-          })}
+          onVote={type =>
+            onVote({
+              repoFullName: full_name,
+              type,
+            })}
         />
       </div>
       <div className="media-left">
@@ -58,8 +48,12 @@ const FeedEntry = ({
         <h4 className="media-heading">
           <a href={html_url}>{full_name}</a>
         </h4>
-        <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} >
-          <Link to={repoLink} onMouseOver={prefetchComments(entry.repository.full_name)}>
+        <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)}>
+          <Link
+            to={repoLink}
+            onFocus={prefetchComments(entry.repository.full_name)}
+            onMouseOver={prefetchComments(entry.repository.full_name)}
+          >
             View comments ({commentCount})
           </Link>
         </RepoInfo>

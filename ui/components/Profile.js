@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Profile({ loading, currentUser }) {
   if (loading) {
-    return (
-      <p className="navbar-text navbar-right">
-        Loading...
-      </p>
-    );
+    return <p className="navbar-text navbar-right">Loading...</p>;
   } else if (currentUser) {
     return (
       <span>
@@ -22,12 +18,8 @@ function Profile({ loading, currentUser }) {
           className="btn navbar-btn navbar-right btn-success"
           to="/submit"
         >
-          <span
-            className="glyphicon glyphicon-plus"
-            aria-hidden="true"
-          />
-          &nbsp;
-          Submit
+          <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+          &nbsp; Submit
         </Link>
       </span>
     );
@@ -60,6 +52,7 @@ export default graphql(PROFILE_QUERY, {
     fetchPolicy: 'cache-and-network',
   },
   props: ({ data: { loading, currentUser } }) => ({
-    loading, currentUser,
+    loading,
+    currentUser,
   }),
 })(Profile);

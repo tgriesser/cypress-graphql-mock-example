@@ -16,7 +16,10 @@ import COMMENT_QUERY from '../graphql/Comment.graphql';
 // TODO it's pretty inefficient to scan all the comments every time.
 // maybe only scan the first 10, or up to a certain timestamp
 function isDuplicateComment(newComment, existingComments) {
-  return newComment.id !== null && existingComments.some(comment => newComment.id === comment.id);
+  return (
+    newComment.id !== null &&
+    existingComments.some(comment => newComment.id === comment.id)
+  );
 }
 
 class CommentsPage extends React.Component {
@@ -74,7 +77,7 @@ class CommentsPage extends React.Component {
         repoFullName,
         commentContent,
         currentUser,
-      }).then((res) => {
+      }).then(res => {
         this.setState({ canSubmit: true });
 
         if (!res.errors) {
@@ -99,29 +102,41 @@ class CommentsPage extends React.Component {
     return (
       <div>
         <div>
-          <h1>Comments for <a href={repository.html_url}>{repository.full_name}</a></h1>
+          <h1>
+            Comments for{' '}
+            <a href={repository.html_url}>{repository.full_name}</a>
+          </h1>
           <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} />
-          {currentUser ? <form onSubmit={this.submitForm}>
-            <div className="form-group">
-
-              <input
-                type="text"
-                className="form-control"
-                ref={input => (this.newCommentInput = input)}
-                placeholder="Write your comment here!"
-              />
-            </div>
-
-            {errors && (
-              <div className="alert alert-danger" role="alert">
-                {errors[0].message}
+          {currentUser ? (
+            <form onSubmit={this.submitForm}>
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  ref={input => (this.newCommentInput = input)}
+                  placeholder="Write your comment here!"
+                />
               </div>
-            )}
 
-            <button type="submit" disabled={!canSubmit} className="btn btn-primary">
-              Submit
-            </button>
-          </form> : <div><em>Log in to comment.</em></div>}
+              {errors && (
+                <div className="alert alert-danger" role="alert">
+                  {errors[0].message}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="btn btn-primary"
+              >
+                Submit
+              </button>
+            </form>
+          ) : (
+            <div>
+              <em>Log in to comment.</em>
+            </div>
+          )}
         </div>
         <br />
         <div>
@@ -130,13 +145,17 @@ class CommentsPage extends React.Component {
               .filter(comment => comment && comment.postedBy)
               .map(comment => (
                 <Comment
-                  key={comment.postedBy.login + comment.createdAt + repository.full_name}
+                  key={
+                    comment.postedBy.login +
+                    comment.createdAt +
+                    repository.full_name
+                  }
                   username={comment.postedBy.login}
                   content={comment.content}
                   createdAt={comment.createdAt}
                   userUrl={comment.postedBy.html_url}
                 />
-            ))}
+              ))}
           </div>
         </div>
       </div>
@@ -158,7 +177,7 @@ CommentsPage.propTypes = {
         }),
         createdAt: React.PropTypes.number,
         content: React.PropTypes.string.isRequired,
-      })
+      }),
     ),
     repository: React.PropTypes.shape({
       full_name: React.PropTypes.string,
@@ -208,7 +227,10 @@ const withData = graphql(COMMENT_QUERY, {
     variables: { repoName: `${match.params.org}/${match.params.repoName}` },
   }),
   props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({
-    loading, currentUser, entry, subscribeToMore,
+    loading,
+    currentUser,
+    entry,
+    subscribeToMore,
   }),
 });
 

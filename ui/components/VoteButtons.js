@@ -3,7 +3,11 @@ import classNames from 'classnames';
 import { gql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
 
-export default function VoteButtons({ canVote, onVote, entry: { score, vote } }) {
+export default function VoteButtons({
+  canVote,
+  onVote,
+  entry: { score, vote },
+}) {
   const buttonClasses = classNames('btn', 'btn-score', {
     invisible: !canVote,
   });
@@ -22,12 +26,21 @@ export default function VoteButtons({ canVote, onVote, entry: { score, vote } })
       <button
         className={classNames(buttonClasses, { active: vote.vote_value === 1 })}
         onClick={() => submitVote('UP')}
-      ><span className="glyphicon glyphicon-triangle-top" aria-hidden="true" /></button>
+      >
+        <span className="glyphicon glyphicon-triangle-top" aria-hidden="true" />
+      </button>
       <div className="vote-score">{score}</div>
       <button
-        className={classNames(buttonClasses, { active: vote.vote_value === -1 })}
+        className={classNames(buttonClasses, {
+          active: vote.vote_value === -1,
+        })}
         onClick={() => submitVote('DOWN')}
-      ><span className="glyphicon glyphicon-triangle-bottom" aria-hidden="true" /></button>
+      >
+        <span
+          className="glyphicon glyphicon-triangle-bottom"
+          aria-hidden="true"
+        />
+      </button>
       &nbsp;
     </span>
   );

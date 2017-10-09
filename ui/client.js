@@ -18,10 +18,11 @@ const client = createApolloClient({
   connectToDevTools: true,
 });
 
-render((
+render(
   <ApolloProvider client={client}>
     <BrowserRouter>
       <Layout />
     </BrowserRouter>
-  </ApolloProvider>
-), document.getElementById('content'));
+  </ApolloProvider>,
+  document.getElementById('content'),
+);

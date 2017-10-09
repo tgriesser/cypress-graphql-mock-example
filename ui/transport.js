@@ -1,12 +1,19 @@
-import { PersistedQueryNetworkInterface, addPersistedQueries } from 'persistgraphql';
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
+import {
+  PersistedQueryNetworkInterface,
+  addPersistedQueries,
+} from 'persistgraphql';
+import {
+  SubscriptionClient,
+  addGraphQLSubscriptions,
+} from 'subscriptions-transport-ws';
 import queryMap from '../extracted_queries.json';
 import config from './config';
 
 function createBaseWSTransport() {
-  const wsGqlURL = process.env.NODE_ENV !== 'production'
-    ? 'ws://localhost:3010/subscriptions'
-    : 'wss://api.githunt.com/subscriptions';
+  const wsGqlURL =
+    process.env.NODE_ENV !== 'production'
+      ? 'ws://localhost:3010/subscriptions'
+      : 'wss://api.githunt.com/subscriptions';
 
   return new SubscriptionClient(wsGqlURL, {
     reconnect: true,
@@ -36,7 +43,11 @@ export function getPersistedQueryNetworkInterface(host = '', headers = {}) {
   });
 }
 
-function createHybridNetworkInterface(baseWsTransport = {}, host = '', headers = {}) {
+function createHybridNetworkInterface(
+  baseWsTransport = {},
+  host = '',
+  headers = {},
+) {
   return addGraphQLSubscriptions(
     getPersistedQueryNetworkInterface(host, headers),
     baseWsTransport,
@@ -48,6 +59,6 @@ export function getHybridOrFullNetworkInterface(host = '', headers = {}) {
   const baseWsTransport = createBaseWSTransport();
 
   return isHybridWSTransportType
-      ? createHybridNetworkInterface(baseWsTransport, host, headers)
-      : createFullNetworkInterface(baseWsTransport);
+    ? createHybridNetworkInterface(baseWsTransport, host, headers)
+    : createFullNetworkInterface(baseWsTransport);
 }
