@@ -1,14 +1,17 @@
 {
   "name": "githunt",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Example app for Apollo",
   "main": "index.js",
   "scripts": {
     "start": "node build/server/bundle.js",
-    "build": "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
+    "build":
+      "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
     "postinstall": "npm run build",
-    "dev": "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
+    "dev":
+      "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
     "lint": "eslint ui",
+    "lint:fix": "eslint --fix ui",
     "test": "npm run lint",
     "persistgraphql": "persistgraphql ui --add_typename"
   },
@@ -24,68 +27,46 @@
   "homepage": "https://github.com/apollographql/GitHunt#readme",
   "devDependencies": {
     "babel-cli": "^6.8.0",
+    "babel-core": "^6.8.0",
     "babel-eslint": "^7.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react-native": "^4.0.0",
+    "babel-preset-stage-2": "^6.5.0",
     "babel-register": "^6.9.0",
     "concurrently": "^3.0.0",
+    "css-loader": "^0.26.1",
     "eslint": "^3.8.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-babel": "^4.0.0",
-    "eslint-plugin-import": "^1.8.1",
+    "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-jsx-a11y": "^2.2.1",
+    "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^6.2.0",
+    "graphql-tag": "^1.3.1",
     "nodemon": "^1.9.2",
+    "prettier": "^1.7.4",
+    "style-loader": "^0.19.0",
+    "webpack": "2.2.1",
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "apollo-client": "^1.8.0",
-    "babel-core": "^6.8.0",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-preset-react": "^6.5.0",
-    "babel-preset-stage-2": "^6.5.0",
+    "apollo-client": "2.0.0-beta.4",
     "classnames": "^2.2.5",
-    "css-loader": "^0.26.1",
     "express": "^4.14.0",
     "graphql": "^0.9.6",
     "graphql-anywhere": "^2.2.0",
-    "graphql-tag": "^1.3.1",
     "http-proxy-middleware": "^0.17.1",
     "immutability-helper": "^2.1.0",
-    "isomorphic-fetch": "^2.2.1",
-    "json-loader": "^0.5.4",
     "node-emoji": "^1.3.0",
+    "node-fetch": "^1.7.3",
     "persistgraphql": "^0.3.0",
-    "react": "^15.4.2",
-    "react-apollo": "^1.0.0-rc.3",
-    "react-dom": "^15.1.0",
+    "react": "^16.0.0",
+    "react-apollo": "^2.0.0-beta.0",
+    "react-dom": "^16.0.0",
     "react-ga": "^2.1.0",
-    "react-router": "^4.1.2",
-    "react-router-dom": "^4.1.2",
+    "react-native-web": "^0.1.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-timeago": "^3.0.0",
-    "redux": "^3.5.2",
-    "style-loader": "^0.13.1",
-    "subscriptions-transport-ws": "^0.7.0",
-    "webpack": "2.2.1"
-  },
-  "eslintConfig": {
-    "env": {
-      "node": true,
-      "browser": true,
-      "mocha": true
-    },
-    "extends": "airbnb",
-    "globals": {
-      "ga": true
-    },
-    "rules": {
-      "camelcase": 0,
-      "react/jsx-filename-extension": 0,
-      "react/no-unused-prop-types": [
-        2,
-        {
-          "skipShapeProps": true
-        }
-      ]
-    }
+    "subscriptions-transport-ws": "^0.7.0"
   }
 }

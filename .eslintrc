@@ -1,0 +1,35 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "mocha": true
+  },
+  "plugins": ["react", "jsx-a11y", "prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "globals": {
+    "ga": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": 0,
+    "react/no-unused-prop-types": [
+      2,
+      {
+        "skipShapeProps": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": true,
+        "parser": "flow"
+      }
+    ]
+  }
+}

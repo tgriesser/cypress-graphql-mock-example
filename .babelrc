@@ -1,7 +1,16 @@
 {
+  "plugins": ["react-native-web/babel"],
   "presets": [
-    "es2015",
     "stage-2",
-    "react"
+    "react-native",
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current",
+          "browsers": ["last 2 versions"]
+        }
+      }
+    ]
   ]
 }
