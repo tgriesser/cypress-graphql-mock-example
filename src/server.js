@@ -1,15 +1,26 @@
-import 'isomorphic-fetch';
-
 import Express from 'express';
-import React from 'react';
-import ReactDOM from 'react-dom/server';
-import { ApolloProvider, renderToStringWithData } from 'react-apollo';
-import { StaticRouter } from 'react-router';
 import path from 'path';
 import proxy from 'http-proxy-middleware';
+
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+
+import ApolloClient from 'apollo-client';
+import { ApolloProvider, renderToStringWithData } from 'react-apollo';
+import Cache from 'apollo-cache-inmemory';
+import ApolloLink from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import fetch from 'node-fetch';
+import ws from 'ws';
+
+import {
+  errorLink,
+  subscriptionLink,
+  requestLink,
+  queryOrMutationLink,
+} from './links';
 import Html from './routes/Html';
-import createApolloClient from './helpers/create-apollo-client';
-import { getPersistedQueryNetworkInterface } from './transport';
 import Layout from './routes/Layout';
 
 let PORT = 3000;
@@ -43,11 +54,23 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use((req, res) => {
-  const client = createApolloClient({
+  const client = new ApolloClient({
     ssrMode: true,
-    networkInterface: getPersistedQueryNetworkInterface(API_HOST, {
-      cookie: req.header('Cookie'),
-    }),
+    addTypename: true,
+    dataIdFromObject: result => {
+      if (result.id && result.__typename) {
+        return result.__typename + result.id;
+      }
+      return null;
+    },
+    cache: new Cache(),
+    link: ApolloLink.from([
+      errorLink,
+      requestLink({
+        queryOrMutationLink: queryOrMutationLink({ fetch }),
+        subscriptionLink: subscriptionLink({ webSocketImpl: ws }),
+      }),
+    ]),
   });
 
   const context = {};

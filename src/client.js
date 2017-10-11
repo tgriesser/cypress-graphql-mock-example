@@ -1,21 +1,40 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
 
-// Polyfill fetch
-import 'isomorphic-fetch';
+import ApolloClient from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloLink } from 'apollo-link';
+import Cache from 'apollo-cache-inmemory';
+
 import './style/index.css';
 
-import createApolloClient from './helpers/create-apollo-client';
-import { getHybridOrFullNetworkInterface } from './transport';
+import {
+  errorLink,
+  queryOrMutationLink,
+  subscriptionLink,
+  requestLink,
+} from './links';
 import Layout from './routes/Layout';
 
-const client = createApolloClient({
-  networkInterface: getHybridOrFullNetworkInterface(),
-  initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
-  ssrForceFetchDelay: 100,
+const client = new ApolloClient({
   connectToDevTools: true,
+  ssrForceFetchDelay: 100,
+  addTypename: true,
+  dataIdFromObject: result => {
+    if (result.id && result.__typename) {
+      return result.__typename + result.id;
+    }
+    return null;
+  },
+  cache: new Cache().restore(window.__APOLLO_STATE__ || {}),
+  link: ApolloLink.from([
+    errorLink,
+    requestLink({
+      queryOrMutationLink: queryOrMutationLink(),
+      subscriptionLink: subscriptionLink(),
+    }),
+  ]),
 });
 
 render(
