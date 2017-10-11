@@ -20,14 +20,6 @@ import Layout from './routes/Layout';
 const client = new ApolloClient({
   connectToDevTools: true,
   ssrForceFetchDelay: 100,
-  addTypename: true,
-  dataIdFromObject: result => {
-    if (result.id && result.__typename) {
-      return result.__typename + result.id;
-    }
-    return null;
-  },
-  cache: new Cache().restore(window.__APOLLO_STATE__ || {}),
   link: ApolloLink.from([
     errorLink,
     requestLink({
@@ -35,6 +27,7 @@ const client = new ApolloClient({
       subscriptionLink: subscriptionLink(),
     }),
   ]),
+  cache: new Cache().restore(window.__APOLLO_STATE__),
 });
 
 render(

@@ -49,8 +49,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "apollo-cache-inmemory": "^0.1.0-0",
-    "apollo-client": "2.0.0-beta.4",
+    "apollo-cache-inmemory": "^0.2.0-rc.0",
+    "apollo-client": "2.0.0-rc.1",
     "apollo-link": "^0.7.0",
     "apollo-link-error": "^0.1.0",
     "apollo-link-http": "^0.7.0",
@@ -72,7 +72,6 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-timeago": "^3.0.0",
-    "subscriptions-transport-ws": "^0.7.0",
-    "ws": "^3.2.0"
+    "subscriptions-transport-ws": "^0.7.0"
   }
 }

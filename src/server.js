@@ -9,10 +9,9 @@ import { StaticRouter } from 'react-router';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import Cache from 'apollo-cache-inmemory';
-import ApolloLink from 'apollo-link';
+import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
-import ws from 'ws';
 
 import {
   errorLink,
@@ -56,21 +55,17 @@ if (process.env.NODE_ENV === 'production') {
 app.use((req, res) => {
   const client = new ApolloClient({
     ssrMode: true,
-    addTypename: true,
-    dataIdFromObject: result => {
-      if (result.id && result.__typename) {
-        return result.__typename + result.id;
-      }
-      return null;
-    },
-    cache: new Cache(),
     link: ApolloLink.from([
       errorLink,
-      requestLink({
-        queryOrMutationLink: queryOrMutationLink({ fetch }),
-        subscriptionLink: subscriptionLink({ webSocketImpl: ws }),
+      queryOrMutationLink({
+        fetch,
+        uri:
+          process.env.NODE_ENV !== 'production'
+            ? 'http://localhost:3010/graphql'
+            : 'https://api.githunt.com/graphql',
       }),
     ]),
+    cache: new Cache(),
   });
 
   const context = {};
@@ -85,10 +80,8 @@ app.use((req, res) => {
 
   renderToStringWithData(component)
     .then(content => {
-      const data = client.store.getState().apollo.data;
       res.status(200);
-
-      const html = <Html content={content} state={{ apollo: { data } }} />;
+      const html = <Html content={content} client={client} />;
       res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
       res.end();
     })
