@@ -39,9 +39,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        DEV ? 'development' : 'production',
-      ),
+      // prettier-ignore
+      'process.env.NODE_ENV': JSON.stringify(DEV ? 'development' : 'production'),
     }),
   ],
   node: {
