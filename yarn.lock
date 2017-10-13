@@ -159,9 +159,9 @@ apollo-cache@^0.2.0-rc.0:
   dependencies:
     apollo-utilities "^0.2.0-rc.0"
 
-apollo-client@2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.0.0-rc.1.tgz#570ff59bf083d2b2327b6eeec02d16687a9a98b1"
+apollo-client@2.0.0-rc.2:
+  version "2.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.0.0-rc.2.tgz#bbdbcf594cf9bea607e4d8b902b146d1df7ad911"
   dependencies:
     apollo-cache "^0.2.0-rc.0"
     apollo-link "0.7.0"
@@ -237,6 +237,10 @@ apollo-link@^0.6.1-beta.6:
     apollo-utilities "^0.2.0-beta.0"
     graphql "^0.11.3"
     zen-observable-ts "^0.4.3-beta.4"
+
+apollo-utilities@^0.1.1-0:
+  version "0.1.1-0"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-0.1.1-0.tgz#c76f6f9b085ae775c14d549f85c9d52ef6412c86"
 
 apollo-utilities@^0.2.0-beta.0:
   version "0.2.0-beta.2"

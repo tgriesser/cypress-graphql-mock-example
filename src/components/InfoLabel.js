@@ -6,14 +6,10 @@ export type Props = {
   value?: number,
 };
 
-const InfoLabel = (props: Props) => {
-  const { label, value } = props;
-
-  return (
-    <span className="label label-info">
-      {label}: {value}
-    </span>
-  );
-};
+const InfoLabel = ({ label, value }: Props) => (
+  <span className="label label-info">
+    {label}: {value}
+  </span>
+);
 
 export default InfoLabel;

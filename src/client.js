@@ -18,7 +18,6 @@ import {
 import Layout from './routes/Layout';
 
 const client = new ApolloClient({
-  connectToDevTools: true,
   ssrForceFetchDelay: 100,
   link: ApolloLink.from([
     errorLink,
@@ -27,6 +26,7 @@ const client = new ApolloClient({
       subscriptionLink: subscriptionLink(),
     }),
   ]),
+  // here we're initializing the cache with the data from the server's cache
   cache: new Cache().restore(window.__APOLLO_STATE__),
 });
 

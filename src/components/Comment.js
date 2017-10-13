@@ -9,16 +9,12 @@ export type Props = {
   createdAt?: number,
 };
 
-const Comment = (props: Props) => {
-  const { username, userUrl, content, createdAt } = props;
-
-  return (
-    <div className="comment-box">
-      <b>{content}</b>
-      <br />
-      Submitted <TimeAgo date={createdAt} /> by <a href={userUrl}>{username}</a>
-    </div>
-  );
-};
+const Comment = ({ username, userUrl, content, createdAt }: Props) => (
+  <div className="comment-box">
+    <b>{content}</b>
+    <br />
+    Submitted <TimeAgo date={createdAt} /> by <a href={userUrl}>{username}</a>
+  </div>
+);
 
 export default Comment;

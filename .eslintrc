@@ -15,15 +15,6 @@
     "ga": true
   },
   "rules": {
-    "react/prop-types": 0,
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "trailingComma": "all",
-        "bracketSpacing": true,
-        "parser": "flow"
-      }
-    ]
+    "react/prop-types": 0
   }
 }

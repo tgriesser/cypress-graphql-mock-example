@@ -41,8 +41,7 @@ app.use('/login', apiProxy);
 app.use('/logout', apiProxy);
 
 if (process.env.NODE_ENV === 'production') {
-  // In production we want to serve our JavaScripts from a file on the file
-  // system.
+  // In production we want to serve our JS from a file on the filesystem.
   app.use('/static', Express.static(path.join(process.cwd(), 'build/client')));
 } else {
   // Otherwise we want to proxy the webpack development server.
@@ -59,10 +58,7 @@ app.use((req, res) => {
       errorLink,
       queryOrMutationLink({
         fetch,
-        uri:
-          process.env.NODE_ENV !== 'production'
-            ? 'http://localhost:3010/graphql'
-            : 'https://api.githunt.com/graphql',
+        uri: `${API_HOST}/graphql`,
       }),
     ]),
     cache: new Cache(),

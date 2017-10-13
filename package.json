@@ -50,11 +50,12 @@
   },
   "dependencies": {
     "apollo-cache-inmemory": "^0.2.0-rc.0",
-    "apollo-client": "2.0.0-rc.1",
+    "apollo-client": "2.0.0-rc.2",
     "apollo-link": "^0.7.0",
     "apollo-link-error": "^0.1.0",
     "apollo-link-http": "^0.7.0",
     "apollo-link-ws": "^0.5.0",
+    "apollo-utilities": "^0.1.1-0",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
     "graphql": "^0.11.7",

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { withApollo, ApolloClient } from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Link } from 'react-router-dom';
 import { filter } from 'graphql-anywhere';
