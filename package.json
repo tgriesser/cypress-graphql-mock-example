@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/server/bundle.js",
-    "build": "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
+    "build":
+      "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
     "postinstall": "npm run build",
-    "dev": "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
+    "dev":
+      "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
     "lint": "eslint ui",
     "lint:fix": "eslint --fix ui",
     "test": "npm run lint",
@@ -15,10 +17,7 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --single-quote --trailing-comma es5 --write",
-      "git add"
-    ]
+    "*.js": ["prettier --single-quote --trailing-comma es5 --write", "git add"]
   },
   "repository": {
     "type": "git",
@@ -57,11 +56,11 @@
   },
   "dependencies": {
     "apollo-cache-inmemory": "^0.2.0-rc.0",
-    "apollo-client": "2.0.0-rc.2",
-    "apollo-link": "^0.7.0",
-    "apollo-link-error": "^0.1.0",
-    "apollo-link-http": "^0.7.0",
-    "apollo-link-ws": "^0.5.0",
+    "apollo-client": "2.0.0-rc.3",
+    "apollo-link": "^0.8.0",
+    "apollo-link-error": "^0.2.0",
+    "apollo-link-http": "^0.8.0",
+    "apollo-link-ws": "^0.6.0",
     "apollo-utilities": "^0.1.1-0",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
