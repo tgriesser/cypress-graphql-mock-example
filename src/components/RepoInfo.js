@@ -1,15 +1,12 @@
-// @flow
-import * as React from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import { emojify } from 'node-emoji';
+
 import gql from 'graphql-tag';
+import { propType } from 'graphql-anywhere';
 
 import InfoLabel from './InfoLabel';
-
-type Props = {
-  entry: Object,
-  children?: React.Node,
-};
 
 const RepoInfo = ({
   entry: {
@@ -18,7 +15,7 @@ const RepoInfo = ({
     postedBy: { html_url, login },
   },
   children,
-}: Props): React.Element<*> => (
+}) => (
   <div>
     <p>{description && emojify(description)}</p>
     <p>
@@ -50,6 +47,11 @@ RepoInfo.fragments = {
       }
     }
   `,
+};
+
+RepoInfo.propTypes = {
+  entry: propType(RepoInfo.fragments.entry).isRequired,
+  children: PropTypes.node,
 };
 
 export default RepoInfo;

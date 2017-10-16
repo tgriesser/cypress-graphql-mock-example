@@ -1,5 +1,5 @@
-/* @flow */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import update from 'immutability-helper';
 import { filter } from 'graphql-anywhere';
@@ -163,6 +163,31 @@ class CommentsPage extends React.Component {
     );
   }
 }
+
+CommentsPage.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  currentUser: PropTypes.shape({
+    login: PropTypes.string,
+  }),
+  entry: PropTypes.shape({
+    id: PropTypes.number,
+    comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        postedBy: PropTypes.shape({
+          login: PropTypes.string.isRequired,
+        }),
+        createdAt: PropTypes.number,
+        content: PropTypes.string.isRequired,
+      })
+    ),
+    repository: PropTypes.shape({
+      full_name: PropTypes.string,
+      html_url: PropTypes.string,
+    }),
+  }),
+  submit: PropTypes.func.isRequired,
+  subscribeToMore: PropTypes.func,
+};
 
 const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
   props: ({ ownProps, mutate }) => ({

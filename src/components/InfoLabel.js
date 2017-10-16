@@ -1,15 +1,15 @@
-/* @flow */
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export type Props = {
-  label?: string,
-  value?: number,
-};
-
-const InfoLabel = ({ label, value }: Props) => (
+const InfoLabel = ({ label, value }) => (
   <span className="label label-info">
     {label}: {value}
   </span>
 );
+
+InfoLabel.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.number,
+};
 
 export default InfoLabel;

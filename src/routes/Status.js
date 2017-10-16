@@ -1,30 +1,26 @@
-/* @flow */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
-export type Props = {
-  code?: number,
-  children: React.Element,
-};
+const Status = ({ code, children }) => (
+  <Route
+    render={({ staticContext }) => {
+      if (staticContext) {
+        staticContext.status = code; // eslint-disable-line
+      }
 
-const Status = (props: Props) => {
-  const { code, children } = props;
-
-  return (
-    <Route
-      render={({ staticContext }) => {
-        if (staticContext) {
-          staticContext.status = code; // eslint-disable-line
-        }
-
-        return children;
-      }}
-    />
-  );
-};
+      return children;
+    }}
+  />
+);
 
 Status.defaultProps = {
   code: 200,
+};
+
+Status.propTypes = {
+  code: PropTypes.number,
+  children: PropTypes.element.isRequired,
 };
 
 export default Status;

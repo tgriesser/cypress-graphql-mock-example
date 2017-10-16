@@ -1,16 +1,11 @@
-/* @flow */
 import React from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-export type Props = {
-  loading?: boolean,
-  currentUser?: { login: string },
-};
+import gql from 'graphql-tag';
+import { graphql } from 'react-apollo';
 
-function Profile(props: Props) {
-  const { loading, currentUser } = props;
+function Profile({ loading, currentUser }) {
   if (loading) {
     return <p className="navbar-text navbar-right">Loading...</p>;
   } else if (currentUser) {
@@ -38,6 +33,13 @@ function Profile(props: Props) {
     </p>
   );
 }
+
+Profile.propTypes = {
+  loading: PropTypes.bool,
+  currentUser: PropTypes.shape({
+    login: PropTypes.string.isRequired,
+  }),
+};
 
 const PROFILE_QUERY = gql`
   query CurrentUserForLayout {
