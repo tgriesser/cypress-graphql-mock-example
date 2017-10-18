@@ -19,7 +19,7 @@ function logPageView() {
   return null;
 }
 
-const Layout = () =>
+const Layout = () => (
   <div>
     <Route path="/" component={logPageView} />
     <Navbar />
@@ -28,6 +28,7 @@ const Layout = () =>
         {routes.map(route => <Route key={`route-${route.name}`} {...route} />)}
       </Switch>
     </div>
-  </div>;
+  </div>
+);
 
 export default Layout;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Profile from './Profile';
 import NavbarLink from './NavbarLink';
 
-const Navbar = () =>
+const Navbar = () => (
   <nav className="navbar navbar-default">
     <div className="container">
       <div className="navbar-header">
@@ -19,6 +19,7 @@ const Navbar = () =>
 
       <Profile />
     </div>
-  </nav>;
+  </nav>
+);
 
 export default Navbar;

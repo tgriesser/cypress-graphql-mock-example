@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const InfoLabel = ({ label, value }) => (
   <span className="label label-info">
@@ -7,8 +8,8 @@ const InfoLabel = ({ label, value }) => (
 );
 
 InfoLabel.propTypes = {
-  label: React.PropTypes.string,
-  value: React.PropTypes.number,
+  label: PropTypes.string,
+  value: PropTypes.number,
 };
 
 export default InfoLabel;

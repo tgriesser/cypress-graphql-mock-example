@@ -1,27 +1,20 @@
 import React from 'react';
-import { gql, withApollo, ApolloClient } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+import ApolloClient from 'apollo-client';
+import { withApollo } from 'react-apollo';
+import gql from 'graphql-tag';
 import { filter, propType } from 'graphql-anywhere';
 
 import VoteButtons from './VoteButtons';
 import RepoInfo from './RepoInfo';
 import COMMENT_QUERY from '../graphql/Comment.graphql';
 
-const FeedEntry = ({
-  loggedIn,
-  onVote,
-  entry,
-  client,
-}) => {
+const FeedEntry = ({ loggedIn, onVote, entry, client }) => {
   const {
     commentCount,
-    repository: {
-      full_name,
-      html_url,
-      owner: {
-        avatar_url,
-      },
-    },
+    repository: { full_name, html_url, owner: { avatar_url } },
   } = entry;
 
   const repoLink = `/${full_name}`;
@@ -38,10 +31,11 @@ const FeedEntry = ({
         <VoteButtons
           canVote={loggedIn}
           entry={filter(VoteButtons.fragments.entry, entry)}
-          onVote={type => onVote({
-            repoFullName: full_name,
-            type,
-          })}
+          onVote={type =>
+            onVote({
+              repoFullName: full_name,
+              type,
+            })}
         />
       </div>
       <div className="media-left">
@@ -58,8 +52,11 @@ const FeedEntry = ({
         <h4 className="media-heading">
           <a href={html_url}>{full_name}</a>
         </h4>
-        <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)} >
-          <Link to={repoLink} onMouseOver={prefetchComments(entry.repository.full_name)}>
+        <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)}>
+          <Link
+            to={repoLink}
+            onMouseOver={prefetchComments(entry.repository.full_name)}
+          >
             View comments ({commentCount})
           </Link>
         </RepoInfo>
@@ -89,10 +86,10 @@ FeedEntry.fragments = {
 };
 
 FeedEntry.propTypes = {
-  loggedIn: React.PropTypes.bool.isRequired,
-  onVote: React.PropTypes.func.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
+  onVote: PropTypes.func.isRequired,
   entry: propType(FeedEntry.fragments.entry).isRequired,
-  client: React.PropTypes.instanceOf(ApolloClient).isRequired,
+  client: PropTypes.instanceOf(ApolloClient).isRequired,
 };
 
 export default withApollo(FeedEntry);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 
@@ -6,7 +7,7 @@ const NavbarLink = ({ title, href, location }) => {
   const isActive = location.pathname === href;
 
   return (
-    <li className={isActive && 'active'}>
+    <li className={isActive ? 'active' : ''}>
       <NavLink to={href}>
         {title}
         {isActive && <span className="sr-only">(current)</span>}
@@ -16,10 +17,10 @@ const NavbarLink = ({ title, href, location }) => {
 };
 
 NavbarLink.propTypes = {
-  title: React.PropTypes.string,
-  href: React.PropTypes.string,
-  location: React.PropTypes.shape({
-    pathname: React.PropTypes.string,
+  title: PropTypes.string,
+  href: PropTypes.string,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
   }),
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
+import PropTypes from 'prop-types';
 
 const Comment = ({ username, userUrl, content, createdAt }) => (
   <div className="comment-box">
@@ -10,10 +11,10 @@ const Comment = ({ username, userUrl, content, createdAt }) => (
 );
 
 Comment.propTypes = {
-  username: React.PropTypes.string,
-  userUrl: React.PropTypes.string,
-  content: React.PropTypes.string,
-  createdAt: React.PropTypes.number,
+  username: PropTypes.string,
+  userUrl: PropTypes.string,
+  content: PropTypes.string,
+  createdAt: PropTypes.number,
 };
 
 export default Comment;

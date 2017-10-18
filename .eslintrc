@@ -1,0 +1,20 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "mocha": true
+  },
+  "plugins": ["react", "jsx-a11y"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "globals": {
+    "ga": true
+  },
+  "rules": {
+    "react/prop-types": 0
+  }
+}

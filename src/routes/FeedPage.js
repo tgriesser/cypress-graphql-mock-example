@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 
 import Feed from '../components/Feed';
@@ -32,13 +33,13 @@ class FeedPage extends React.Component {
 }
 
 FeedPage.propTypes = {
-  loading: React.PropTypes.bool.isRequired,
-  currentUser: React.PropTypes.shape({
-    login: React.PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  currentUser: PropTypes.shape({
+    login: PropTypes.string.isRequired,
   }),
   feed: Feed.propTypes.entries,
-  fetchMore: React.PropTypes.func,
-  vote: React.PropTypes.func.isRequired,
+  fetchMore: PropTypes.func,
+  vote: PropTypes.func.isRequired,
 };
 
 const ITEMS_PER_PAGE = 10;

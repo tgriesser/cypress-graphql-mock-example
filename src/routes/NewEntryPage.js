@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { withRouter } from 'react-router';
 
@@ -63,7 +64,7 @@ class NewEntryPage extends React.Component {
 }
 
 NewEntryPage.propTypes = {
-  submit: React.PropTypes.func.isRequired,
+  submit: PropTypes.func.isRequired,
 };
 
 const withData = graphql(SUBMIT_REPOSITORY_MUTATION, {

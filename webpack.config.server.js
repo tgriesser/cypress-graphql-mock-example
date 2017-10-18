@@ -6,7 +6,7 @@ module.exports = {
   bail: !DEV,
   devtool: DEV ? 'cheap-module-source-map' : 'source-map',
   target: 'node',
-  entry: './ui/server.js',
+  entry: './src/server.js',
   output: {
     path: 'build/server',
     filename: 'bundle.js',
@@ -39,6 +39,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      // prettier-ignore
       'process.env.NODE_ENV': JSON.stringify(DEV ? 'development' : 'production'),
     }),
   ],

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { propType } from 'graphql-anywhere';
 
 import FeedEntry from './FeedEntry';
@@ -16,7 +17,7 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
                 loggedIn={loggedIn}
                 onVote={onVote}
               />
-            ) : null,
+            ) : null
         )}
         <button onClick={onLoadMore}>Load more</button>
       </div>
@@ -26,12 +27,10 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
 };
 
 Feed.propTypes = {
-  entries: React.PropTypes.arrayOf(
-    propType(FeedEntry.fragments.entry).isRequired,
-  ),
-  loggedIn: React.PropTypes.bool.isRequired,
-  onVote: React.PropTypes.func.isRequired,
-  onLoadMore: React.PropTypes.func.isRequired,
+  entries: PropTypes.arrayOf(propType(FeedEntry.fragments.entry).isRequired),
+  loggedIn: PropTypes.bool.isRequired,
+  onVote: PropTypes.func.isRequired,
+  onLoadMore: PropTypes.func.isRequired,
 };
 
 export default Feed;

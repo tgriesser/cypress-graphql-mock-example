@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
 const Status = ({ code, children }) => (
@@ -18,8 +19,8 @@ Status.defaultProps = {
 };
 
 Status.propTypes = {
-  code: React.PropTypes.number,
-  children: React.PropTypes.element.isRequired,
+  code: PropTypes.number,
+  children: PropTypes.element.isRequired,
 };
 
 export default Status;
