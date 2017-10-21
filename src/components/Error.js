@@ -13,8 +13,10 @@ export default class ErrorBoundary extends Component {
   render() {
     return this.state.hasError ? (
       <p>
-        Something went wrong :( please report any console errors to:
-        https://github.com/apollographql/GitHunt-React/issues
+        Something went wrong :( please report any console errors{' '}
+        <a href="https://github.com/apollographql/GitHunt-React/issues">
+          here
+        </a>.
       </p>
     ) : (
       this.props.children
