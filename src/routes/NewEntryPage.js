@@ -8,10 +8,16 @@ import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
 class NewEntryPage extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      formNotValid: false,
+    };
 
     this.submitForm = this.submitForm.bind(this);
   }
+
+  validateForm = repo => {
+    return /^[\w\/-]+$/.test(repo);
+  };
 
   submitForm(event) {
     event.preventDefault();
@@ -20,31 +26,36 @@ class NewEntryPage extends React.Component {
 
     const repoFullName = event.target.repoFullName.value;
 
-    return submit(repoFullName).then(res => {
-      if (!res.errors) {
-        this.props.history.push('/feed/new');
-      } else {
-        this.setState({ errors: res.errors });
-      }
-    });
+    return this.validateForm(repoFullName)
+      ? submit(repoFullName).then(res => {
+          if (!res.errors) {
+            this.props.history.push('/feed/new');
+          } else {
+            this.setState({ errors: res.errors });
+          }
+        })
+      : this.setState(() => ({ formNotValid: true }));
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors, formNotValid } = this.state;
     return (
       <div>
         <h1>Submit a repository</h1>
 
         <form onSubmit={this.submitForm}>
           <div className="form-group">
-            <label htmlFor="exampleInputEmail1">Repository name</label>
-
+            <label htmlFor="exampleInputEmail1">
+              {!formNotValid
+                ? 'Repository name'
+                : 'Please submit your repository like this: yourusername/yourrepo'}
+            </label>
             <input
               type="text"
               className="form-control"
               id="exampleInputEmail1"
               name="repoFullName"
-              placeholder="apollostack/GitHunt"
+              placeholder="apollographql/GitHunt-React"
             />
           </div>
 

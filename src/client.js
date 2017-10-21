@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloLink } from 'apollo-link';
-import Cache from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import './style/index.css';
 
@@ -27,7 +27,7 @@ const client = new ApolloClient({
     }),
   ]),
   // here we're initializing the cache with the data from the server's cache
-  cache: new Cache().restore(window.__APOLLO_STATE__),
+  cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
 });
 
 render(
@@ -36,5 +36,5 @@ render(
       <Layout />
     </BrowserRouter>
   </ApolloProvider>,
-  document.getElementById('content'),
+  document.getElementById('content')
 );
