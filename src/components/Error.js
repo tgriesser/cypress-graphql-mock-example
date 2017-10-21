@@ -13,7 +13,7 @@ export default class ErrorBoundary extends Component {
   render() {
     return this.state.hasError ? (
       <p>
-        Something went wront :( please report any console errors to:
+        Something went wrong :( please report any console errors to:
         https://github.com/apollographql/GitHunt-React/issues
       </p>
     ) : (
