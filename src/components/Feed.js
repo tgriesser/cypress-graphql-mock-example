@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { propType } from 'graphql-anywhere';
 
 import FeedEntry from './FeedEntry';
+import ErrorBoundary from './Error';
 
 const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
@@ -11,12 +12,9 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
         {entries.map(
           entry =>
             entry ? (
-              <FeedEntry
-                key={entry.repository.full_name}
-                entry={entry}
-                loggedIn={loggedIn}
-                onVote={onVote}
-              />
+              <ErrorBoundary key={entry.repository.full_name}>
+                <FeedEntry entry={entry} loggedIn={loggedIn} onVote={onVote} />
+              </ErrorBoundary>
             ) : null
         )}
         <button onClick={onLoadMore}>Load more</button>

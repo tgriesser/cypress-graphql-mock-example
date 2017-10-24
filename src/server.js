@@ -8,7 +8,7 @@ import { StaticRouter } from 'react-router';
 
 import ApolloClient from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
-import Cache from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV === 'production') {
   // Otherwise we want to proxy the webpack development server.
   app.use(
     '/static',
-    proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static': '' } }),
+    proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static': '' } })
   );
 }
 
@@ -61,7 +61,7 @@ app.use((req, res) => {
         uri: `${API_HOST}/graphql`,
       }),
     ]),
-    cache: new Cache(),
+    cache: new InMemoryCache(),
   });
 
   const context = {};
@@ -85,7 +85,7 @@ app.use((req, res) => {
       console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
       res.status(500);
       res.end(
-        `An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`,
+        `An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`
       );
     });
 });
@@ -93,6 +93,6 @@ app.use((req, res) => {
 app.listen(PORT, () =>
   console.log(
     // eslint-disable-line no-console
-    `App Server is now running on http://localhost:${PORT}`,
-  ),
+    `App Server is now running on http://localhost:${PORT}`
+  )
 );
