@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path');
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -7,7 +8,7 @@ module.exports = {
   devtool: DEV ? 'cheap-module-source-map' : 'source-map',
   entry: './src/client.js',
   output: {
-    path: 'build/client',
+    path: path.resolve(__dirname, 'build/client'),
     filename: 'bundle.js',
     publicPath: '/',
   },
