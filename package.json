@@ -8,10 +8,10 @@
     "build": "rm -rf build && NODE_ENV=production webpack --progress --config webpack.config.server.js && NODE_ENV=production webpack --progress --config webpack.config.client.js",
     "postinstall": "npm run build",
     "dev": "NODE_ENV=development concurrently -c blue,cyan,magenta \"webpack --watch --config webpack.config.server.js\" \"sleep 3 && nodemon --watch build/server build/server/bundle.js\" \"webpack-dev-server -d --hot --inline --no-info --port 3020 --config webpack.config.client.js\"",
-    "lint": "eslint ui",
-    "lint:fix": "eslint --fix ui",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "test": "npm run lint",
-    "persistgraphql": "persistgraphql ui --add_typename",
+    "persistgraphql": "persistgraphql src --add_typename",
     "precommit": "lint-staged"
   },
   "lint-staged": {
