@@ -12,7 +12,7 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
   to an error.
   */
   if (graphQLErrors)
-    graphQLErrors.map(({ message, locations, path }) =>
+    graphQLErrors.map(({ message, location, path }) =>
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${location}, Path: ${path}`
       )
