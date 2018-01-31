@@ -61,6 +61,7 @@
     "apollo-link": "^1.0.0",
     "apollo-link-error": "^1.0.0",
     "apollo-link-http": "^1.0.0",
+    "apollo-link-persisted-queries": "^0.1.0",
     "apollo-link-ws": "^1.0.0",
     "apollo-utilities": "^1.0.1",
     "classnames": "^2.2.5",
