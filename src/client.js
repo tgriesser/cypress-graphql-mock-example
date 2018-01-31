@@ -27,9 +27,9 @@ const links = [
 ];
 
 // support APQ in production
-if (process.env.NODE_ENV === 'production') {
-  links.unshift(createPersistedQueryLink());
-}
+// if (process.env.NODE_ENV === 'production') {
+//   links.unshift(createPersistedQueryLink());
+// }
 const client = new ApolloClient({
   ssrForceFetchDelay: 100,
   link: ApolloLink.from(links),
