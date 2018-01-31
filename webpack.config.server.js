@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path');
 
 const DEV = process.env.NODE_ENV !== 'production';
 
@@ -8,7 +9,7 @@ module.exports = {
   target: 'node',
   entry: './src/server.js',
   output: {
-    path: 'build/server',
+    path: path.resolve(__dirname, 'build/server'),
     filename: 'bundle.js',
     publicPath: '/',
   },

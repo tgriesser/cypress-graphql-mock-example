@@ -45,6 +45,7 @@ const FeedEntry = ({ loggedIn, onVote, entry, client }) => {
             style={{ width: '64px', height: '64px' }}
             src={avatar_url}
             role="presentation"
+            alt={avatar_url}
           />
         </button>
       </div>
@@ -55,6 +56,7 @@ const FeedEntry = ({ loggedIn, onVote, entry, client }) => {
         <RepoInfo entry={filter(RepoInfo.fragments.entry, entry)}>
           <Link
             to={repoLink}
+            onFocus={prefetchComments(entry.repository.full_name)}
             onMouseOver={prefetchComments(entry.repository.full_name)}
           >
             View comments ({commentCount})

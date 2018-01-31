@@ -53,14 +53,14 @@ class NewEntryPage extends React.Component {
               {!formNotValid
                 ? 'Repository name'
                 : 'Please submit your repository like this: yourusername/yourrepo'}
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputEmail1"
+                name="repoFullName"
+                placeholder="apollographql/GitHunt-React"
+              />
             </label>
-            <input
-              type="text"
-              className="form-control"
-              id="exampleInputEmail1"
-              name="repoFullName"
-              placeholder="apollographql/GitHunt-React"
-            />
           </div>
 
           {errors &&
