@@ -8,4 +8,4 @@ bundle.js
 server_bundle.js
 extracted_queries.json
 build
-package-lock.json
+yarn.lock
