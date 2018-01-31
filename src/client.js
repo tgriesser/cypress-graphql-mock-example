@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import ApolloClient from 'apollo-client';
@@ -17,6 +17,7 @@ import {
   requestLink,
 } from './links';
 import Layout from './routes/Layout';
+
 const links = [
   errorLink,
   requestLink({
@@ -37,7 +38,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
 });
 
-render(
+hydrate(
   <ApolloProvider client={client}>
     <BrowserRouter>
       <Layout />
