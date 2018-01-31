@@ -9,14 +9,11 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
     return (
       <div>
-        {entries.map(
-          entry =>
-            entry ? (
-              <ErrorBoundary key={entry.repository.full_name}>
-                <FeedEntry entry={entry} loggedIn={loggedIn} onVote={onVote} />
-              </ErrorBoundary>
-            ) : null
-        )}
+        {entries.filter(x => x && x.repository).map(entry => (
+          <ErrorBoundary key={entry.repository.full_name}>
+            <FeedEntry entry={entry} loggedIn={loggedIn} onVote={onVote} />
+          </ErrorBoundary>
+        ))}
         <button onClick={onLoadMore}>Load more</button>
       </div>
     );
