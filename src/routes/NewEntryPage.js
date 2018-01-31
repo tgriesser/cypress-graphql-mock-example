@@ -27,13 +27,17 @@ class NewEntryPage extends React.Component {
     const repoFullName = event.target.repoFullName.value;
 
     return this.validateForm(repoFullName)
-      ? submit(repoFullName).then(res => {
-          if (!res.errors) {
-            this.props.history.push('/feed/new');
-          } else {
-            this.setState({ errors: res.errors });
-          }
-        })
+      ? submit(repoFullName)
+          .then(res => {
+            if (!res.errors) {
+              this.props.history.push('/feed/new');
+            } else {
+              this.setState({ errors: res.errors });
+            }
+          })
+          .catch(err => {
+            this.setState({ errors: err.graphQLErrors });
+          })
       : this.setState(() => ({ formNotValid: true }));
   }
 
@@ -59,11 +63,16 @@ class NewEntryPage extends React.Component {
             />
           </div>
 
-          {errors && (
-            <div className="alert alert-danger" role="alert">
-              {errors[0].message}
-            </div>
-          )}
+          {errors &&
+            errors.map((error, index) => (
+              <div
+                key={`error-${index}`}
+                className="alert alert-danger"
+                role="alert"
+              >
+                {error.message}
+              </div>
+            ))}
 
           <button type="submit" className="btn btn-primary">
             Submit
