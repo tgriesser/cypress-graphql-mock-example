@@ -98,6 +98,11 @@ class CommentsPage extends React.Component {
       return <div>Loading...</div>;
     }
 
+    console.log(this.props);
+    if (!entry) {
+      return <div>error..</div>;
+    }
+
     const repository = entry.repository;
 
     return (
@@ -226,6 +231,7 @@ const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
 const withData = graphql(COMMENT_QUERY, {
   options: ({ match }) => ({
     variables: { repoName: `${match.params.org}/${match.params.repoName}` },
+    ssr: false,
   }),
   props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({
     loading,

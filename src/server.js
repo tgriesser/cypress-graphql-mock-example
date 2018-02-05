@@ -12,6 +12,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 
 import {
   errorLink,
@@ -50,17 +51,21 @@ if (process.env.NODE_ENV === 'production') {
     proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static': '' } })
   );
 }
-
+const links = [
+  errorLink,
+  queryOrMutationLink({
+    fetch,
+    uri: `${API_HOST}/graphql`,
+  }),
+];
+// support APQ in production
+if (process.env.NODE_ENV === 'production') {
+  links.unshift(createPersistedQueryLink());
+}
 app.use((req, res) => {
   const client = new ApolloClient({
     ssrMode: true,
-    link: ApolloLink.from([
-      errorLink,
-      queryOrMutationLink({
-        fetch,
-        uri: `${API_HOST}/graphql`,
-      }),
-    ]),
+    link: ApolloLink.from(links),
     cache: new InMemoryCache(),
   });
 
@@ -85,7 +90,9 @@ app.use((req, res) => {
       console.error('RENDERING ERROR:', e); // eslint-disable-line no-console
       res.status(500);
       res.end(
-        `An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${e.stack}`
+        `An error occurred. Please submit an issue to [https://github.com/apollographql/GitHunt-React] with the following stack trace:\n\n${
+          e.stack
+        }`
       );
     });
 });
