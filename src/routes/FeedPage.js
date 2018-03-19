@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { graphql, Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 
 import Feed from '../components/Feed';
 import Loading from '../components/Loading';
@@ -10,74 +9,67 @@ import CURRENT_USER_QUERY from '../graphql/Profile.graphql';
 import VOTE_MUTATION from '../graphql/Vote.graphql';
 
 const ITEMS_PER_PAGE = 10;
-class FeedPage extends React.Component {
+export default class FeedPage extends React.Component {
   constructor() {
     super();
     this.offset = 0;
   }
 
   render() {
-    const { vote, fetchMore, match } = this.props;
+    const { match } = this.props;
 
     return (
-      <Query query={CURRENT_USER_QUERY}>
-        {({ data: { currentUser } = {} }) => (
-          <Query
-            query={FEED_QUERY}
-            variables={{
-              type:
-                (match.params &&
-                  match.params.type &&
-                  match.params.type.toUpperCase()) ||
-                'TOP',
-              offset: 0,
-              limit: ITEMS_PER_PAGE,
-            }}
-            fetchPolicy="cache-and-network"
-          >
-            {({ loading, data, fetchMore }) => {
-              return (
-                <div>
-                  <Feed
-                    entries={data.feed || []}
-                    loggedIn={!!this.props.currentUser}
-                    onVote={vote}
-                    onLoadMore={() =>
-                      fetchMore({
-                        variables: {
-                          offset: data.feed.length,
-                        },
-                        updateQuery: (prev, { fetchMoreResult }) => {
-                          if (!fetchMoreResult) return prev;
-                          return Object.assign({}, prev, {
-                            feed: [...prev.feed, ...fetchMoreResult.feed],
-                          });
-                        },
-                      })
-                    }
-                  />
-                  {loading ? <Loading /> : null}
-                </div>
-              );
-            }}
+      <Mutation mutation={VOTE_MUTATION}>
+        {mutate => (
+          <Query query={CURRENT_USER_QUERY}>
+            {({ data: { currentUser } = {} }) => (
+              <Query
+                query={FEED_QUERY}
+                variables={{
+                  type:
+                    (match.params &&
+                      match.params.type &&
+                      match.params.type.toUpperCase()) ||
+                    'TOP',
+                  offset: 0,
+                  limit: ITEMS_PER_PAGE,
+                }}
+                fetchPolicy="cache-and-network"
+              >
+                {({ loading, data, fetchMore }) => {
+                  return (
+                    <div>
+                      <Feed
+                        entries={data.feed || []}
+                        loggedIn={!!currentUser}
+                        onVote={({ repoFullName, type }) =>
+                          mutate({
+                            variables: { repoFullName, type },
+                          })
+                        }
+                        onLoadMore={() =>
+                          fetchMore({
+                            variables: {
+                              offset: data.feed.length,
+                            },
+                            updateQuery: (prev, { fetchMoreResult }) => {
+                              if (!fetchMoreResult) return prev;
+                              return Object.assign({}, prev, {
+                                feed: [...prev.feed, ...fetchMoreResult.feed],
+                              });
+                            },
+                          })
+                        }
+                      />
+                      {loading ? <Loading /> : null}
+                    </div>
+                  );
+                }}
+              </Query>
+            )}
           </Query>
         )}
-      </Query>
+      </Mutation>
     );
   }
 }
-
-FeedPage.propTypes = {
-  vote: PropTypes.func.isRequired,
-};
-
-const withMutations = graphql(VOTE_MUTATION, {
-  props: ({ mutate }) => ({
-    vote: ({ repoFullName, type }) =>
-      mutate({
-        variables: { repoFullName, type },
-      }),
-  }),
-});
-
-export default withMutations(FeedPage);
