@@ -3,6 +3,7 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';
+import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 
 export const errorLink = onError(({ graphQLErrors, networkError }) => {
   /*
@@ -31,20 +32,11 @@ export const subscriptionLink = (config = {}) =>
   });
 
 export const queryOrMutationLink = (config = {}) =>
-  new ApolloLink((operation, forward) => {
-    /*
-    You can use a simple middleware link like this one to set credentials,
-    headers, or whatever else you need on the context.
-    All links in the chain will have access to the context.
-    */
-    operation.setContext({
-      credentials: 'same-origin',
-    });
-
-    return forward(operation);
-  }).concat(
+  // turn on CDN support via GET
+  createPersistedQueryLink({ useGETForHashedQueries: true }).concat(
     new HttpLink({
       ...config,
+      credentials: 'same-origin',
     })
   );
 

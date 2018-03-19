@@ -6,7 +6,6 @@ import ApolloClient from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloLink } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 
 import './style/index.css';
 
@@ -26,10 +25,6 @@ const links = [
   }),
 ];
 
-// support APQ in production
-if (process.env.NODE_ENV === 'production') {
-  links.unshift(createPersistedQueryLink());
-}
 const client = new ApolloClient({
   ssrForceFetchDelay: 100,
   link: ApolloLink.from(links),
