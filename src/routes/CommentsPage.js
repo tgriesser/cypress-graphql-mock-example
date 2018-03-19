@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import update from 'immutability-helper';
 import { filter } from 'graphql-anywhere';
 import { withRouter } from 'react-router';
@@ -194,51 +194,53 @@ CommentsPage.propTypes = {
   subscribeToMore: PropTypes.func,
 };
 
-const withMutations = graphql(SUBMIT_COMMENT_MUTATION, {
-  props: ({ ownProps, mutate }) => ({
-    submit: ({ repoFullName, commentContent }) =>
-      mutate({
-        variables: { repoFullName, commentContent },
-        optimisticResponse: {
-          __typename: 'Mutation',
-          submitComment: {
-            __typename: 'Comment',
-            id: null,
-            postedBy: ownProps.currentUser,
-            createdAt: +new Date(),
-            content: commentContent,
-          },
-        },
-        updateQueries: {
-          Comment: (prev, { mutationResult }) => {
-            const newComment = mutationResult.data.submitComment;
-            if (isDuplicateComment(newComment, prev.entry.comments)) {
-              return prev;
-            }
-            return update(prev, {
-              entry: {
-                comments: {
-                  $unshift: [newComment],
+export default withRouter(({ match }) => (
+  <Query
+    query={COMMENT_QUERY}
+    variables={{ repoName: `${match.params.org}/${match.params.repoName}` }}
+    ssr={false}
+  >
+    {({ data: { currentUser, entry } = {}, subscribeToMore, loading }) => (
+      <Mutation mutation={SUBMIT_COMMENT_MUTATION}>
+        {mutate => (
+          <CommentsPage
+            currentUser={currentUser}
+            loading={loading}
+            entry={entry}
+            subscribeToMore={subscribeToMore}
+            submit={({ repoFullName, commentContent }) =>
+              mutate({
+                variables: { repoFullName, commentContent },
+                optimisticResponse: {
+                  __typename: 'Mutation',
+                  submitComment: {
+                    __typename: 'Comment',
+                    id: null,
+                    postedBy: currentUser,
+                    createdAt: +new Date(),
+                    content: commentContent,
+                  },
                 },
-              },
-            });
-          },
-        },
-      }),
-  }),
-});
-
-const withData = graphql(COMMENT_QUERY, {
-  options: ({ match }) => ({
-    variables: { repoName: `${match.params.org}/${match.params.repoName}` },
-    ssr: false,
-  }),
-  props: ({ data: { loading, currentUser, entry, subscribeToMore } }) => ({
-    loading,
-    currentUser,
-    entry,
-    subscribeToMore,
-  }),
-});
-
-export default withRouter(withData(withMutations(CommentsPage)));
+                update: (store, { data: { submitComment } }) => {
+                  // Read the data from our cache for this query.
+                  const data = store.readQuery({
+                    query: COMMENT_QUERY,
+                    variables: { repoName: repoFullName },
+                  });
+                  // Add our comment from the mutation to the end.
+                  data.entry.comments.push(submitComment);
+                  // Write our data back to the cache.
+                  store.writeQuery({
+                    query: COMMENT_QUERY,
+                    variables: { repoName: repoFullName },
+                    data,
+                  });
+                },
+              })
+            }
+          />
+        )}
+      </Mutation>
+    )}
+  </Query>
+));
