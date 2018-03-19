@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import { withRouter } from 'react-router';
 
 import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
@@ -83,17 +83,14 @@ class NewEntryPage extends React.Component {
   }
 }
 
-NewEntryPage.propTypes = {
-  submit: PropTypes.func.isRequired,
-};
-
-const withData = graphql(SUBMIT_REPOSITORY_MUTATION, {
-  props: ({ mutate }) => ({
-    submit: repoFullName =>
-      mutate({
-        variables: { repoFullName },
-      }),
-  }),
-});
-
-export default withRouter(withData(NewEntryPage));
+export default withRouter(props => (
+  <Mutation mutation={SUBMIT_REPOSITORY_MUTATION}>
+    {mutate => (
+      <NewEntryPage
+        {...props}
+        loading={loading}
+        submit={repoFullName => mutate({ variables: { repoFullName } })}
+      />
+    )}
+  </Mutation>
+));
