@@ -1,48 +1,48 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Mutation } from 'react-apollo';
-import { withRouter } from 'react-router';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Mutation } from 'react-apollo'
+import { withRouter } from 'react-router'
 
-import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql';
+import SUBMIT_REPOSITORY_MUTATION from '../graphql/SubmitRepository.graphql'
 
 class NewEntryPage extends React.Component {
   constructor() {
-    super();
+    super()
     this.state = {
       formNotValid: false,
-    };
+    }
 
-    this.submitForm = this.submitForm.bind(this);
+    this.submitForm = this.submitForm.bind(this)
   }
 
   validateForm = repo => {
-    return /^[\w\/-]+$/.test(repo);
-  };
+    return /^[\w\/-]+$/.test(repo)
+  }
 
   submitForm(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const { submit } = this.props;
+    const { submit } = this.props
 
-    const repoFullName = event.target.repoFullName.value;
+    const repoFullName = event.target.repoFullName.value
 
     return this.validateForm(repoFullName)
       ? submit(repoFullName)
           .then(res => {
             if (!res.errors) {
-              this.props.history.push('/feed/new');
+              this.props.history.push('/feed/new')
             } else {
-              this.setState({ errors: res.errors });
+              this.setState({ errors: res.errors })
             }
           })
           .catch(err => {
-            this.setState({ errors: err.graphQLErrors });
+            this.setState({ errors: err.graphQLErrors })
           })
-      : this.setState(() => ({ formNotValid: true }));
+      : this.setState(() => ({ formNotValid: true }))
   }
 
   render() {
-    const { errors, formNotValid } = this.state;
+    const { errors, formNotValid } = this.state
     return (
       <div>
         <h1>Submit a repository</h1>
@@ -79,7 +79,7 @@ class NewEntryPage extends React.Component {
           </button>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -88,9 +88,8 @@ export default withRouter(props => (
     {mutate => (
       <NewEntryPage
         {...props}
-        loading={loading}
         submit={repoFullName => mutate({ variables: { repoFullName } })}
       />
     )}
   </Mutation>
-));
+))
