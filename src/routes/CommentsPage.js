@@ -227,8 +227,8 @@ export default withRouter(({ match }) => (
                     query: COMMENT_QUERY,
                     variables: { repoName: repoFullName },
                   });
-                  // Add our comment from the mutation to the end.
-                  data.entry.comments.push(submitComment);
+                  // Add our comment from the mutation to the beginning.
+                  data.entry.comments.unshift(submitComment);
                   // Write our data back to the cache.
                   store.writeQuery({
                     query: COMMENT_QUERY,
