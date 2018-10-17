@@ -1,16 +1,22 @@
 /// <reference types="cypress" />
-import { ExecutionResult } from 'apollo-link';
 import { graphql } from 'graphql';
-import { schema } from '../src/mock-schema';
-import { Mocks_AllOperations } from '../src/mock-types';
+import introspectionSchema from '../../schema.json';
+import { buildClientSchema, printSchema } from 'graphql';
+import {
+  makeExecutableSchema,
+  addMockFunctionsToSchema,
+  IMocks,
+} from 'graphql-tools';
 
-interface MockGraphQLOptions {
+interface MockGraphQLOptions<AllOperations extends Record<string, any>> {
+  schema: object | string | string[];
+  mocks?: IMocks;
   endpoint?: string;
-  operations?: Partial<Mocks_AllOperations>;
+  operations?: Partial<AllOperations>;
 }
 
-interface GQLRequestPayload {
-  operationName: keyof Mocks_AllOperations;
+interface GQLRequestPayload<AllOperations extends Record<string, any>> {
+  operationName: Extract<keyof AllOperations, string>;
   query: string;
   variables: any;
 }
@@ -18,7 +24,9 @@ interface GQLRequestPayload {
 declare global {
   namespace Cypress {
     interface Chainable {
-      mockGraphql(options?: MockGraphQLOptions): any;
+      mockGraphql<AllOperations = any>(
+        options?: MockGraphQLOptions<AllOperations>
+      ): Cypress.Chainable;
     }
   }
 }
@@ -40,19 +48,28 @@ declare global {
  * look something like:
  *
  * {
+ *   schema: ...,
  *   operations: {
  *     UserQuery: {
  *       viewer: null
  *     }
  *   }
  * }
- *
  */
 Cypress.Commands.add(
   'mockGraphql',
-  (options: MockGraphQLOptions = { endpoint: '/graphql' }) => {
+  <AllOperations extends Record<string, any>>(
+    options: MockGraphQLOptions<AllOperations>
+  ) => {
     const endpoint = options.endpoint || '/graphql';
     const operations = options.operations || {};
+    const schema = makeExecutableSchema({
+      typeDefs: schemaAsSDL(options.schema),
+    });
+    addMockFunctionsToSchema({
+      schema,
+      mocks: options.mocks || {},
+    });
     cy.on('window:before:load', win => {
       const originalFetch = win.fetch;
       function fetch(input: RequestInfo, init?: RequestInit) {
@@ -62,17 +79,21 @@ Cypress.Commands.add(
           );
         }
         if (input.includes(endpoint) && init && init.method === 'POST') {
-          const payload: GQLRequestPayload = JSON.parse(init.body as string);
+          const payload: GQLRequestPayload<AllOperations> = JSON.parse(
+            init.body as string
+          );
           const { operationName, query, variables } = payload;
           return graphql({
             schema,
             source: query,
             variableValues: variables,
             operationName,
-            rootValue: getRootValue(operations, operationName, variables),
-          }).then(
-            (data: ExecutionResult) => new Response(JSON.stringify(data))
-          );
+            rootValue: getRootValue<AllOperations>(
+              operations,
+              operationName,
+              variables
+            ),
+          }).then((data: any) => new Response(JSON.stringify(data)));
         }
         return originalFetch(input, init);
       }
@@ -81,9 +102,18 @@ Cypress.Commands.add(
   }
 );
 
-function getRootValue(
-  operations: Partial<Mocks_AllOperations>,
-  operationName: keyof Mocks_AllOperations,
+// Takes the schema either as the full .graphql file (string) or
+// the introspection object.
+function schemaAsSDL(schema: string | string[] | object) {
+  if (typeof schema === 'string' || Array.isArray(schema)) {
+    return schema;
+  }
+  return printSchema(buildClientSchema(introspectionSchema as any));
+}
+
+function getRootValue<AllOperations>(
+  operations: Partial<AllOperations>,
+  operationName: Extract<keyof AllOperations, string>,
   variables: any
 ) {
   if (!operationName || !operations[operationName]) {
@@ -91,8 +121,6 @@ function getRootValue(
   }
   const op = operations[operationName];
   if (typeof op === 'function') {
-    // Blah I'm not narrowing the type correctly or something here
-    // @ts-ignore
     return op(variables);
   }
   return op;
