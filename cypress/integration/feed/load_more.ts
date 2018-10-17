@@ -6,12 +6,12 @@ import { Mocks_AllOperations } from '../../src/mock-types';
 describe('load more', () => {
   beforeEach(() => {
     cy.server();
+    cy.mockGraphql({ schema });
     cy.route('/sockjs-node', {});
   });
 
   it('Should show submit button when logged in', () => {
-    cy.mockGraphql<Mocks_AllOperations>({
-      schema,
+    cy.mockGraphqlOps<Mocks_AllOperations>({
       operations: {
         CurrentUserForLayout: {
           currentUser: {
@@ -23,11 +23,19 @@ describe('load more', () => {
     });
     cy.visit('/');
     cy.get('[data-e2e="submit_btn"]').should('have.attr', 'href', '/submit');
+    cy.mockGraphqlOps<Mocks_AllOperations>({
+      operations: {
+        CurrentUserForLayout: {
+          currentUser: null,
+        },
+      },
+    });
+    cy.reload();
+    cy.get('[data-e2e="submit_btn"]').should('not.exist');
   });
 
   it('Should show submit button when logged in', () => {
-    cy.mockGraphql<Mocks_AllOperations>({
-      schema,
+    cy.mockGraphqlOps<Mocks_AllOperations>({
       operations: {
         CurrentUserForLayout: {
           currentUser: null,
@@ -39,8 +47,7 @@ describe('load more', () => {
   });
 
   it('Renders an empty state', () => {
-    cy.mockGraphql<Mocks_AllOperations>({
-      schema,
+    cy.mockGraphqlOps<Mocks_AllOperations>({
       operations: {
         Feed: {
           feed: [],

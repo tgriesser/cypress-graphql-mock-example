@@ -10,9 +10,16 @@ import {
 
 interface MockGraphQLOptions<AllOperations extends Record<string, any>> {
   schema: object | string | string[];
+  name?: string;
   mocks?: IMocks;
   endpoint?: string;
   operations?: Partial<AllOperations>;
+}
+
+interface SetOperationsOpts<AllOperations> {
+  name?: string;
+  endpoint?: string;
+  operations: Partial<AllOperations>;
 }
 
 interface GQLRequestPayload<AllOperations extends Record<string, any>> {
@@ -27,49 +34,59 @@ declare global {
       mockGraphql<AllOperations = any>(
         options?: MockGraphQLOptions<AllOperations>
       ): Cypress.Chainable;
+      mockGraphqlOps<AllOperations = any>(
+        options?: SetOperationsOpts<AllOperations>
+      ): Cypress.Chainable;
     }
   }
 }
 
 /**
- * Adds a .mockGraphql() method to the cypress chain. It should be
- * called before the GraphQL operations are executed and takes an optional "options"
- * config which helps configure the test conditions.
+ * Adds a .mockGraphql() and .mockGraphqlOps() methods to the cypress chain.
+ *
+ * The .mockGraphql should be called in the cypress "before" or "beforeEach" block
+ * config to setup the server.
  *
  * By default, it will use the /graphql endpoint, but this can be changed
  * depending on the server implementation
  *
  * It takes an "operations" object, representing the named operations
- * of the GraphQL server. This is combined with the mocked graphql
- * server resolvers, to modify the output behavior per test.
+ * of the GraphQL server. This is combined with the "mocks" option,
+ * to modify the output behavior per test.
+ *
+ * The .mockGraphqlOps() allows you to configure the mock responses at a
+ * more granular level
  *
  * For example, if we has a query called "UserQuery" and wanted to
  * explicitly force a state where a viewer is null (logged out), it would
  * look something like:
  *
- * {
- *   schema: ...,
+ * .mockGraphqlOps({
  *   operations: {
  *     UserQuery: {
  *       viewer: null
  *     }
  *   }
- * }
+ * })
  */
 Cypress.Commands.add(
   'mockGraphql',
   <AllOperations extends Record<string, any>>(
     options: MockGraphQLOptions<AllOperations>
   ) => {
-    const endpoint = options.endpoint || '/graphql';
-    const operations = options.operations || {};
+    const { endpoint = '/graphql', operations = {}, mocks = {} } = options;
+
     const schema = makeExecutableSchema({
       typeDefs: schemaAsSDL(options.schema),
     });
+
     addMockFunctionsToSchema({
       schema,
-      mocks: options.mocks || {},
+      mocks,
     });
+
+    let currentOps = operations;
+
     cy.on('window:before:load', win => {
       const originalFetch = win.fetch;
       function fetch(input: RequestInfo, init?: RequestInit) {
@@ -89,7 +106,7 @@ Cypress.Commands.add(
             variableValues: variables,
             operationName,
             rootValue: getRootValue<AllOperations>(
-              operations,
+              currentOps,
               operationName,
               variables
             ),
@@ -97,10 +114,38 @@ Cypress.Commands.add(
         }
         return originalFetch(input, init);
       }
-      cy.stub(win, 'fetch', fetch).as('graphqlStub');
+      cy.stub(win, 'fetch', fetch).as('fetchStub');
     });
+    //
+    cy.wrap({
+      setOperations: (newOperations: Partial<AllOperations>) => {
+        currentOps = {
+          ...(operations as object),
+          ...(newOperations as object),
+        };
+      },
+    }).as(getAlias(options));
   }
 );
+
+Cypress.Commands.add(
+  'mockGraphqlOps',
+  <AllOperations extends Record<string, any>>(
+    options: SetOperationsOpts<AllOperations>
+  ) => {
+    cy.get(`@${getAlias(options)}`).invoke(
+      'setOperations' as any,
+      options.operations
+    );
+  }
+);
+
+const getAlias = ({ name, endpoint }: { name?: string; endpoint?: string }) => {
+  if (name || endpoint) {
+    return `mockGraphqlOps:${name || endpoint}`;
+  }
+  return 'mockGraphqlOps';
+};
 
 // Takes the schema either as the full .graphql file (string) or
 // the introspection object.
