@@ -19,7 +19,7 @@ interface MockGraphQLOptions<AllOperations extends Record<string, any>> {
 interface SetOperationsOpts<AllOperations> {
   name?: string;
   endpoint?: string;
-  operations: Partial<AllOperations>;
+  operations?: Partial<AllOperations>;
 }
 
 interface GQLRequestPayload<AllOperations extends Record<string, any>> {
@@ -135,7 +135,7 @@ Cypress.Commands.add(
   ) => {
     cy.get(`@${getAlias(options)}`).invoke(
       'setOperations' as any,
-      options.operations
+      options.operations || {}
     );
   }
 );
