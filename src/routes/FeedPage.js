@@ -34,7 +34,6 @@ export default class FeedPage extends React.Component {
                   offset: 0,
                   limit: ITEMS_PER_PAGE,
                 }}
-                fetchPolicy="cache-and-network"
               >
                 {({ loading, data, fetchMore }) => {
                   return (

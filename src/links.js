@@ -1,9 +1,9 @@
 import { ApolloLink } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
+import { createHttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
+import fetch from 'isomorphic-fetch';
 
 export const errorLink = onError(({ graphQLErrors, networkError }) => {
   /*
@@ -31,16 +31,7 @@ export const subscriptionLink = (config = {}) =>
     ...config,
   });
 
-export const queryOrMutationLink = (config = {}) =>
-  // turn on CDN support via GET
-  createPersistedQueryLink({ useGETForHashedQueries: true }).concat(
-    new HttpLink({
-      ...config,
-      credentials: 'same-origin',
-    })
-  );
-
-export const requestLink = ({ queryOrMutationLink, subscriptionLink }) =>
+export const requestLink = () =>
   /*
     This link checks if the operation is a subscription.
     If it is, we use our subscription link to retrieve data over WebSockets.
@@ -51,6 +42,9 @@ export const requestLink = ({ queryOrMutationLink, subscriptionLink }) =>
       const { kind, operation } = getMainDefinition(query);
       return kind === 'OperationDefinition' && operation === 'subscription';
     },
-    subscriptionLink,
-    queryOrMutationLink
+    subscriptionLink(),
+    createHttpLink({
+      credentials: 'same-origin',
+      fetch: typeof window !== 'undefined' ? window.fetch : fetch,
+    })
   );

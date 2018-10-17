@@ -5,7 +5,7 @@ const DEV = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   bail: !DEV,
-  devtool: DEV ? 'cheap-module-source-map' : 'source-map',
+  devtool: 'source-map',
   entry: './src/client.js',
   output: {
     path: path.resolve(__dirname, 'build/client'),

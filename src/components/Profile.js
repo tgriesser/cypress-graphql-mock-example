@@ -27,6 +27,7 @@ export default function Profile() {
                 <a href="/logout">Log out</a>
               </p>
               <Link
+                data-e2e="submit_btn"
                 type="submit"
                 className="btn navbar-btn navbar-right btn-success"
                 to="/submit"

@@ -8,7 +8,7 @@ import ErrorBoundary from './Error';
 const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
   if (entries && entries.length) {
     return (
-      <div>
+      <div key="feed" data-e2e="feed">
         {entries.filter(x => x && x.repository).map(entry => (
           <ErrorBoundary key={entry.repository.full_name}>
             <FeedEntry entry={entry} loggedIn={loggedIn} onVote={onVote} />
@@ -18,7 +18,11 @@ const Feed = ({ entries = [], loggedIn, onVote, onLoadMore }) => {
       </div>
     );
   }
-  return <div />;
+  return (
+    <div key="empty_state" data-e2e="empty_state">
+      Empty State!
+    </div>
+  );
 };
 
 Feed.propTypes = {
