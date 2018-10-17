@@ -45,8 +45,8 @@ describe('load more', () => {
     cy.visit('http://localhost:3000');
 
     // I'm sort of confused by this. The correct value is being rendered but
-    // the data attribute is incorrect. Need to dig in and see if this is an
-    // issue with React or with cypress.
+    // the data-e2e is incorrect, even when adding a React "key" on the div.
+    // Need to dig in and see if this is an issue with React or with cypress.
     cy.get('[data-e2e="empty_state"]').should('be.visible');
   });
 });

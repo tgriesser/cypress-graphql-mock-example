@@ -1,11 +1,18 @@
 /// <reference types="cypress" />
-import { GraphQLRequest, ExecutionResult } from 'apollo-link';
+import { ExecutionResult } from 'apollo-link';
 import { graphql } from 'graphql';
 import { schema } from '../src/mock-schema';
+import { Mocks_AllOperations } from '../src/mock-types';
 
 interface MockGraphQLOptions {
   endpoint?: string;
-  operations?: Record<string, any>;
+  operations?: Partial<Mocks_AllOperations>;
+}
+
+interface GQLRequestPayload {
+  operationName: keyof Mocks_AllOperations;
+  query: string;
+  variables: any;
 }
 
 declare global {
@@ -55,15 +62,14 @@ Cypress.Commands.add(
           );
         }
         if (input.includes(endpoint) && init && init.method === 'POST') {
-          const { operationName, query, variables } = JSON.parse(
-            init.body as string
-          ) as GraphQLRequest;
+          const payload: GQLRequestPayload = JSON.parse(init.body as string);
+          const { operationName, query, variables } = payload;
           return graphql({
             schema,
-            source: query as any,
+            source: query,
             variableValues: variables,
             operationName,
-            rootValue: getRootValue(operations, operationName),
+            rootValue: getRootValue(operations, operationName, variables),
           }).then(
             (data: ExecutionResult) => new Response(JSON.stringify(data))
           );
@@ -75,9 +81,19 @@ Cypress.Commands.add(
   }
 );
 
-function getRootValue(operations: Record<string, any>, operationName?: string) {
+function getRootValue(
+  operations: Partial<Mocks_AllOperations>,
+  operationName: keyof Mocks_AllOperations,
+  variables: any
+) {
   if (!operationName || !operations[operationName]) {
     return {};
   }
-  return operations[operationName];
+  const op = operations[operationName];
+  if (typeof op === 'function') {
+    // Blah I'm not narrowing the type correctly or something here
+    // @ts-ignore
+    return op(variables);
+  }
+  return op;
 }

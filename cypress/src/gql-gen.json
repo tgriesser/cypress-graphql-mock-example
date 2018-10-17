@@ -1,0 +1,6 @@
+{
+  "generatorConfig": {
+    "noNamespaces": true,
+    "resolvers": false
+  }
+}
