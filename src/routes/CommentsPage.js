@@ -38,12 +38,12 @@ class CommentsPage extends React.Component {
     this.subscription = null;
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate() {
     // we don't resubscribe on changed props, because it never happens in our app
-    if (!this.subscription && !nextProps.loading) {
+    if (!this.subscription && !this.props.loading) {
       this.subscription = this.props.subscribeToMore({
         document: SUBSCRIPTION_QUERY,
-        variables: { repoFullName: nextProps.entry.repository.full_name },
+        variables: { repoFullName: this.props.entry.repository.full_name },
         updateQuery: (previousResult, { subscriptionData }) => {
           const newComment = subscriptionData.data.commentAdded;
           // if it's our own mutation, we might get the subscription result

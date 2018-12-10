@@ -1,0 +1,61 @@
+{{#each operations }}
+
+{{#unless @root.config.noNamespaces}}
+export namespace {{ toPascalCase name }} {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables = {
+  {{#each variables}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
+  {{/each}}
+  }
+
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{ toPascalCase operationType }} ={{#if hasFields}} Partial<{
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ toPascalCase operationType }}";
+    {{> selectionSet fields=fields prefix=name }}
+  }>{{/if}}{{> fragments this=this prefix=name }}
+  {{#each innerModels }}
+
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} ={{#if hasFields}} Partial<{
+  {{#unless hasInlineFragments}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
+  {{else}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ toPascalCase ../../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
+    {{> selectionSet fields=fields prefix=../name }}
+  }>{{/if}}{{> fragments this=this prefix=../name }}
+  {{/each}}
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
+{{/each}}
+{{#each fragments }}
+
+{{#unless @root.config.noNamespaces}}
+export namespace {{ toPascalCase name }} {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Fragment ={{#if hasFields}} Partial<{
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
+    {{> selectionSet fields=fields prefix=name }}
+  }>{{/if}}{{> fragments this=this prefix=name }}
+  {{#each innerModels }}
+
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} ={{#if hasFields}} Partial<{
+  {{#unless hasInlineFragments}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
+  {{else}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
+    {{> selectionSet fields=fields prefix=../name }}
+  }>{{/if}}{{> fragments this=this prefix=../name}}
+  {{/each}}
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
+{{/each}}
+
+export interface Mocks_AllOperations {
+  {{#each operations }}
+  {{ toPascalCase name }}: {{ toPascalCase name }}{{ toPascalCase operationType }} | ((args: {{ toPascalCase name }}Variables) => {{ toPascalCase name }}{{ toPascalCase operationType }});
+  {{/each}}
+}
+

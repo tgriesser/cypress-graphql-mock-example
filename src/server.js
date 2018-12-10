@@ -10,16 +10,11 @@ import ApolloClient from 'apollo-client';
 import { ApolloProvider, renderToStringWithData } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
+import { createHttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
 import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 
-import {
-  errorLink,
-  subscriptionLink,
-  requestLink,
-  queryOrMutationLink,
-} from './links';
+import { errorLink } from './links';
 import Html from './routes/Html';
 import Layout from './routes/Layout';
 
@@ -51,18 +46,20 @@ if (process.env.NODE_ENV === 'production') {
     proxy({ target: 'http://localhost:3020', pathRewrite: { '^/static': '' } })
   );
 }
-const links = [
-  errorLink,
-  queryOrMutationLink({
-    fetch,
-    uri: `${API_HOST}/graphql`,
-  }),
-];
-// support APQ in production
-if (process.env.NODE_ENV === 'production') {
-  links.unshift(createPersistedQueryLink());
-}
+
 app.use((req, res) => {
+  const links = [
+    errorLink,
+    createHttpLink({
+      fetch,
+      uri: `${API_HOST}/graphql`,
+      credentials: 'same-origin',
+      headers: {
+        cookie: req.header('cookie'),
+      },
+    }),
+  ];
+
   const client = new ApolloClient({
     ssrMode: true,
     link: ApolloLink.from(links),
