@@ -1,12 +1,17 @@
 /// <reference types="cypress" />
-/// <reference path="../../support/commands.ts" />
+/// <reference types="cypress-graphql-mock" />
 import schema from '../../../schema.json';
 import { Mocks_AllOperations } from '../../src/mock-types';
+import { IntrospectionQuery } from 'graphql';
 
 describe('load more', () => {
   beforeEach(() => {
     cy.server();
-    cy.mockGraphql({ schema });
+    cy.mockGraphql({
+      // Casting here likely due to slight inconsistencies between
+      // GraphQL versions
+      schema: (schema as any) as IntrospectionQuery,
+    });
     cy.route('/sockjs-node', {});
   });
 
